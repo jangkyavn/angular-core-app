@@ -189,11 +189,6 @@ export const navigation = [
         icon: 'icon-star'
       },
       {
-        name: 'Register',
-        url: '/pages/register',
-        icon: 'icon-star'
-      },
-      {
         name: 'Error 404',
         url: '/pages/404',
         icon: 'icon-star'
