@@ -8,13 +8,6 @@ export class UtilityService {
 
   constructor(private router: Router) { }
 
-  parseToken(token: any) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace('-', '+').replace('_', '/');
-    const user = JSON.parse(window.atob(base64));
-    return user;
-  }
-
   navigate(path: string) {
     this.router.navigate([path]);
   }

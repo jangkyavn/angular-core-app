@@ -1,7 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { tap, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { UtilityService } from '../../services/utility.service';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
+import { SystemConstants } from 'app/common/system.constants';
+import { MessageConstants } from 'app/common/message.constants';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'login.component.html'
@@ -9,7 +20,13 @@ import { NotificationService } from '../../services/notification.service';
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private notificationService: NotificationService) { }
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private utilityService: UtilityService,
+    private spinnerService: Ng4LoadingSpinnerService) { }
 
   ngOnInit() {
     this.createForm();
@@ -31,8 +48,20 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmitForm() {
-    const { email, password } = this.loginForm.value;
+    const data = this.loginForm.value;
 
-    console.log(email + ' - ' + password);  
+    this.spinnerService.show();
+
+    this.authService.login(data).subscribe(data => {
+      localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
+      localStorage.setItem(SystemConstants.ACCESS_TOKEN, data.token);
+
+      this.spinnerService.hide();
+      this.utilityService.navigate('/');
+    }, err => {
+      console.log(err);
+      this.notificationService.printErrorMessage(err.error);
+      this.spinnerService.hide();
+    })
   }
 }

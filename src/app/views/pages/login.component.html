@@ -19,15 +19,15 @@
                     'is-invalid': loginForm.controls['email'].errors && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)
                   }">
                   <div class="invalid-feedback">
-                      <div *ngIf="loginForm.get('email').hasError('required')">
-                          Vui lòng nhập email.
-                      </div>
-                      <div *ngIf="loginForm.get('email').hasError('email') && !loginForm.get('email').hasError('required')">
-                          Vui lòng nhập email hợp lệ.
-                      </div>
-                      <div *ngIf="loginForm.get('email').hasError('maxlength')">
-                          Vui lòng nhập email không quá 50 ký tự.
-                      </div>
+                    <div *ngIf="loginForm.get('email').hasError('required')">
+                      Vui lòng nhập email.
+                    </div>
+                    <div *ngIf="loginForm.get('email').hasError('email') && !loginForm.get('email').hasError('required')">
+                      Vui lòng nhập email hợp lệ.
+                    </div>
+                    <div *ngIf="loginForm.get('email').hasError('maxlength')">
+                      Vui lòng nhập email không quá 50 ký tự.
+                    </div>
                   </div>
                 </div>
                 <div class="input-group mb-4">
@@ -60,6 +60,7 @@
                     <button type="button" class="btn btn-link px-0">Quên mật khẩu?</button>
                   </div>
                 </div>
+                <ng4-loading-spinner> </ng4-loading-spinner>
               </form>
             </div>
           </div>

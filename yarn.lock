@@ -4550,6 +4550,10 @@ ng2-charts@1.6.0:
   dependencies:
     chart.js "^2.6.0"
 
+ng4-loading-spinner@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ng4-loading-spinner/-/ng4-loading-spinner-1.1.1.tgz#f8a6244bfce72925788169db53f0389f6338e312"
+
 ngx-bootstrap@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.0.tgz#aadfb6aa0f2591c91a787e74fea4d153a1791b4c"
