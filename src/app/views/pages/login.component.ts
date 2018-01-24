@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { NotificationService } from '../../services/notification.service';
+
 @Component({
   templateUrl: 'login.component.html'
 })
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.createForm();

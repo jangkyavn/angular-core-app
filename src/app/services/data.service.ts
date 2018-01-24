@@ -19,9 +19,11 @@ export class DataService {
     private authService: AuthService) { }
 
   private httpOptions() {
+    let token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
+
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     headers.delete('Authorization');
-    headers.append('Authorization', 'Bearer' + this.authService.getLoggedInUser().access_token);
+    headers.append('Authorization', 'Bearer ' + token);
 
     return headers;
   }
@@ -47,7 +49,7 @@ export class DataService {
   /** DELETE data to server */
   delete(url: string): Observable<any> {
     return this.http.delete<any>(this.baseUrl + url, { headers: this.httpOptions() })
-      .pipe(catchError(this.handleError<any>('delete')));
+      .pipe(catchError(this.handleError<any>('deleteData')));
   }
 
   /**

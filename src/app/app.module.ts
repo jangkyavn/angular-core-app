@@ -4,6 +4,12 @@ import { LocationStrategy, HashLocationStrategy, PathLocationStrategy } from '@a
 
 import { AppComponent } from './app.component';
 
+// Import services
+import * as fromServices from './services';
+
+// Import guards
+import * as fromGuards from './guards';
+
 // Import containers
 import {
   FullLayoutComponent,
@@ -82,7 +88,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy
-  }],
+  }, ...fromServices.services, ...fromGuards.guards],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

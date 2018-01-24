@@ -5,7 +5,6 @@ import { tap } from 'rxjs/operators';
 
 import { SystemConstants } from '../common/system.constants';
 import { LoggedInUser } from '../models/logged-in-user.model';
-import { DataService } from './data.service';
 import { UtilityService } from './utility.service';
 
 @Injectable()
@@ -13,30 +12,27 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private dataService: DataService,
     private utilityService: UtilityService) { }
 
   login(data: any) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.dataService.post('/api/account/login', JSON.stringify(data))
+    this.http.post('/api/account/login', JSON.stringify(data), { headers })
       .pipe(tap((result: any) => {
         if (result && result.token) {
-          const user = this.utilityService.parseTokenBase(result);
-
-          localStorage.removeItem(SystemConstants.CURRENT_USER);
-          localStorage.setItem(SystemConstants.CURRENT_USER, JSON.stringify(user));
+          localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
+          localStorage.setItem(SystemConstants.ACCESS_TOKEN, result.token);
         }
       }));
   }
 
   logout() {
-    localStorage.removeItem(SystemConstants.CURRENT_USER);
+    localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
   }
 
   isUserAuthenticated(): boolean {
-    const user = localStorage.getItem(SystemConstants.CURRENT_USER);
-    if (user !== null) {
+    const token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
+    if (token !== null) {
       return true;
     }
     else
@@ -46,9 +42,10 @@ export class AuthService {
   getLoggedInUser(): LoggedInUser {
     let user: LoggedInUser;
     if (this.isUserAuthenticated()) {
-      const userData = JSON.parse(localStorage.getItem(SystemConstants.CURRENT_USER));
+      const token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
+      const userData = this.utilityService.parseToken(token);
+
       user = new LoggedInUser(
-        userData.access_token,
         userData.fullName,
         userData.email,
         userData.avatar,
@@ -57,7 +54,7 @@ export class AuthService {
     }
     else
       user = null;
-      
+
     return user;
   }
 }
