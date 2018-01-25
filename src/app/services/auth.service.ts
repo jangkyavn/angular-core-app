@@ -16,7 +16,7 @@ export class AuthService {
   login(data: any): Observable<any> {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post(`${SystemConstants.BASE_API}/api/Account/login`, data, { headers })
+    return this.http.post(`${SystemConstants.BASE_API}/api/Account`, data, { headers })
       .pipe(catchError((error: any) => Observable.throw(error)));
   }
 

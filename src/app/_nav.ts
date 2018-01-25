@@ -27,63 +27,63 @@ export const navigation = [
     name: 'Components'
   },
   {
-    name: 'Base',
-    url: '/base',
+    name: 'System',
+    url: '/system',
     icon: 'icon-puzzle',
     children: [
       {
-        name: 'Cards',
-        url: '/base/cards',
+        name: 'Role',
+        url: '/system/role',
         icon: 'icon-puzzle'
       },
       {
         name: 'Carousels',
-        url: '/base/carousels',
+        url: '/system/carousels',
         icon: 'icon-puzzle'
       },
       {
         name: 'Collapses',
-        url: '/base/collapses',
+        url: '/system/collapses',
         icon: 'icon-puzzle'
       },
       {
         name: 'Forms',
-        url: '/base/forms',
+        url: '/system/forms',
         icon: 'icon-puzzle'
       },
       {
         name: 'Pagination',
-        url: '/base/paginations',
+        url: '/system/paginations',
         icon: 'icon-puzzle'
       },
       {
         name: 'Popovers',
-        url: '/base/popovers',
+        url: '/system/popovers',
         icon: 'icon-puzzle'
       },
       {
         name: 'Progress',
-        url: '/base/progress',
+        url: '/system/progress',
         icon: 'icon-puzzle'
       },
       {
         name: 'Switches',
-        url: '/base/switches',
+        url: '/system/switches',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tables',
-        url: '/base/tables',
+        url: '/system/tables',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tabs',
-        url: '/base/tabs',
+        url: '/system/tabs',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tooltips',
-        url: '/base/tooltips',
+        url: '/system/tooltips',
         icon: 'icon-puzzle'
       }
     ]

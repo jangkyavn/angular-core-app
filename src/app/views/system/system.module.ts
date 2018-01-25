@@ -1,9 +1,11 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
-import { CardsComponent } from './cards.component';
+import { RoleComponent } from './role/role.component';
+
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 // Forms Component
 import { FormsComponent } from './forms.component';
@@ -44,13 +46,14 @@ import { TooltipsComponent } from './tooltips.component';
 
 
 // Components Routing
-import { BaseRoutingModule } from './base-routing.module';
+import { SystemRoutingModule } from './system-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    BaseRoutingModule,
+    ReactiveFormsModule,
+    SystemRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule,
     CarouselModule.forRoot(),
@@ -58,10 +61,11 @@ import { BaseRoutingModule } from './base-routing.module';
     PaginationModule.forRoot(),
     PopoverModule.forRoot(),
     ProgressbarModule.forRoot(),
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    ModalModule.forRoot()
   ],
   declarations: [
-    CardsComponent,
+    RoleComponent,
     FormsComponent,
     SwitchesComponent,
     TablesComponent,
@@ -74,4 +78,4 @@ import { BaseRoutingModule } from './base-routing.module';
     TooltipsComponent
   ]
 })
-export class BaseModule { }
+export class SystemModule { }

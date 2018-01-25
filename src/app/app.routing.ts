@@ -24,8 +24,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'base',
-        loadChildren: './views/base/base.module#BaseModule'
+        path: 'system',
+        loadChildren: './views/system/system.module#SystemModule'
       },
       {
         path: 'buttons',
