@@ -1,8 +1,6 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Observable } from 'rxjs/Observable';
-
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { DataService } from '../../../services/data.service';
@@ -21,10 +19,14 @@ export class RoleComponent implements OnInit {
 
   roleForm: FormGroup;
 
-  roles$: Observable<any[]>;
+  roles: any[];
   pageIndex: number = 1;
   pageSize: number = 10;
   pageDisplay: number = 5;
+  lengthMenu: number = 10;
+  pageCount: number;
+  totalRow: number;
+  keyword: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -51,7 +53,15 @@ export class RoleComponent implements OnInit {
   }
 
   loadData() {
-    this.roles$ = this.dataService.get('/api/Role');
+    const url = `/api/Role/GetAllPaging?keyword=${this.keyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
+
+    this.dataService.get(url).subscribe((data: any) => {
+      this.roles = data.Results;
+      this.pageIndex = data.CurrentPage;
+      this.pageSize = data.PageSize;
+      this.totalRow = data.RowCount;
+      this.pageCount = data.PageCount;
+    });
   }
 
   showAddNew() {
@@ -96,5 +106,23 @@ export class RoleComponent implements OnInit {
         this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
       })
     })
+  }
+
+  search(value: string) {
+    this.keyword = value;
+
+    this.loadData();
+  }
+  
+  onChange(value: number) {
+    this.pageSize = value;
+
+    this.loadData();
+  }
+
+  pageChanged(event: any) {
+    this.pageIndex = event.page;
+
+    this.loadData();
   }
 }

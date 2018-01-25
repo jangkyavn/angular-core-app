@@ -7,8 +7,16 @@
             </div>
             <div class="card-body">
                 <div class="row my-2">
-                    <div class="col-6"></div>
-                    <div class="col-6">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fa fa-search"></i> Tìm kiếm</button>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Nhập từ khóa" (keyup)="search($event.target.value)">
+                        </div>
+                    </div>
+                    <div class="col-8">
                         <button type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
                         </button>
@@ -23,11 +31,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngIf="!((roles$ | async)?.length); else hasData">
+                        <tr *ngIf="!(totalRow); else hasData">
                             <td colspan="3" class="text-center text-danger">Không có dữ liệu</td>
                         </tr>
                         <ng-template #hasData>
-                            <tr *ngFor="let item of roles$ | async">
+                            <tr *ngFor="let item of roles">
                                 <td>{{item.Name}}</td>
                                 <td>{{item.Description}}</td>
                                 <td>
@@ -44,38 +52,24 @@
                     <tfoot>
                         <tr>
                             <td colspan="3">Tổng số:
-                                <strong>{{((roles$ | async)?.length)}}</strong> bản ghi</td>
+                                <strong>{{totalRow}}</strong> bản ghi</td>
                         </tr>
                     </tfoot>
                 </table>
                 <div class="d-flex flex-row justify-content-between">
                     <div>
-                        <select class="form-control">
-                            <option>sadad</option>
-                            <option>sadad</option>
-                            <option>sadad</option>
+                        <select class="form-control" (change)="onChange($event.target.value)">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="-1">Tất cả</option>
                         </select>
                     </div>
                     <div>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Previous</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">1</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <pagination *ngIf="!(pageCount === 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
+                            [totalItems]="totalRow" [(ngModel)]="pageIndex" class="pagination-md" previousText="&lsaquo;" nextText="&rsaquo;"
+                            firstText="&laquo;" lastText="&raquo;"></pagination>
                     </div>
                 </div>
             </div>
@@ -135,8 +129,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="modalAddEdit.hide()">Hủy</button>
-                    <button type="submit" [disabled]="roleForm.invalid" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide()">
+                        <i class="fa fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" [disabled]="roleForm.invalid" class="btn btn-success">
+                        <i class="fa fa-floppy-o"></i> Lưu
+                    </button>
                 </div>
             </form>
         </div>
