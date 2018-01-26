@@ -27,6 +27,7 @@
     "@angular/router": "5.2.1",
     "@angular/upgrade": "5.2.1",
     "alertifyjs": "^1.11.0",
+    "angular-tree-component": "^7.0.1",
     "bootstrap": "4.0.0",
     "chart.js": "2.7.1",
     "core-js": "2.5.3",

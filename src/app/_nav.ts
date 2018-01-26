@@ -27,63 +27,80 @@ export const navigation = [
     name: 'Components'
   },
   {
-    name: 'System',
-    url: '/system',
+    name: 'Systems',
+    url: '/systems',
     icon: 'icon-puzzle',
     children: [
       {
         name: 'Role',
-        url: '/system/role',
+        url: '/systems/role',
         icon: 'icon-puzzle'
       },
       {
         name: 'Carousels',
-        url: '/system/carousels',
+        url: '/systems/carousels',
         icon: 'icon-puzzle'
       },
       {
         name: 'Collapses',
-        url: '/system/collapses',
+        url: '/systems/collapses',
         icon: 'icon-puzzle'
       },
       {
         name: 'Forms',
-        url: '/system/forms',
+        url: '/systems/forms',
         icon: 'icon-puzzle'
       },
       {
         name: 'Pagination',
-        url: '/system/paginations',
+        url: '/systems/paginations',
         icon: 'icon-puzzle'
       },
       {
         name: 'Popovers',
-        url: '/system/popovers',
+        url: '/systems/popovers',
         icon: 'icon-puzzle'
       },
       {
         name: 'Progress',
-        url: '/system/progress',
+        url: '/systems/progress',
         icon: 'icon-puzzle'
       },
       {
         name: 'Switches',
-        url: '/system/switches',
+        url: '/systems/switches',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tables',
-        url: '/system/tables',
+        url: '/systems/tables',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tabs',
-        url: '/system/tabs',
+        url: '/systems/tabs',
         icon: 'icon-puzzle'
       },
       {
         name: 'Tooltips',
-        url: '/system/tooltips',
+        url: '/systems/tooltips',
+        icon: 'icon-puzzle'
+      }
+    ]
+  },
+  {
+    name: 'Products',
+    url: '/products',
+    icon: 'icon-puzzle',
+    children: [
+      {
+        name: 'product',
+        url: '/products/product',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: 'product-category',
+        url: '/products/product-category',
         icon: 'icon-puzzle'
       }
     ]

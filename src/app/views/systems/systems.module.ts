@@ -46,14 +46,15 @@ import { TooltipsComponent } from './tooltips.component';
 
 
 // Components Routing
-import { SystemRoutingModule } from './system-routing.module';
+import { SystemsRoutingModule } from './systems-routing.module';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SystemRoutingModule,
+    SystemsRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule,
     CarouselModule.forRoot(),
@@ -75,7 +76,8 @@ import { SystemRoutingModule } from './system-routing.module';
     PaginationsComponent,
     PopoversComponent,
     ProgressComponent,
-    TooltipsComponent
+    TooltipsComponent,
+    UserComponent
   ]
 })
-export class SystemModule { }
+export class SystemsModule { }

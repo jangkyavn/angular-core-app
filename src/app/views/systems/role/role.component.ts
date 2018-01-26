@@ -3,11 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService } from '../../../services/data.service';
-import { NotificationService } from 'app/services';
-
-import { SystemConstants } from 'app/common/system.constants';
-import { MessageConstants } from 'app/common/message.constants';
+import { DataService, NotificationService } from '../../../services';
+import { SystemConstants, MessageConstants } from '../../../common';
 
 @Component({
   templateUrl: 'role.component.html',

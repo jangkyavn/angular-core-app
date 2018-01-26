@@ -17,7 +17,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'System'
+      title: 'Systems'
     },
     children: [
       {
@@ -105,4 +105,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SystemRoutingModule { }
+export class SystemsRoutingModule { }

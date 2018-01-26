@@ -94,7 +94,33 @@ export class UtilityService {
     return roots;
   }
 
-  makeSeoTitle(input: any) {
+  fuzzySearch (needle: string, haystack: string) {
+    const haystackLC = haystack.toLowerCase();
+    const needleLC = needle.toLowerCase();
+  
+    const hlen = haystack.length;
+    const nlen = needleLC.length;
+  
+    if (nlen > hlen) {
+      return false;
+    }
+    if (nlen === hlen) {
+      return needleLC === haystackLC;
+    }
+    outer: for (let i = 0, j = 0; i < nlen; i++) {
+      const nch = needleLC.charCodeAt(i);
+  
+      while (j < hlen) {
+        if (haystackLC.charCodeAt(j++) === nch) {
+          continue outer;
+        }
+      }
+      return false;
+    }
+    return true;
+  }
+
+  makeSeoAlias(input: any) {
     if (input == undefined || input == '')
       return '';
     //Đổi chữ hoa thành chữ thường

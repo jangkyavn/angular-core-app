@@ -1,0 +1,148 @@
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+      <div class="card">
+          <div class="card-header">
+              <i class="fa fa-align-justify"></i> Danh sách người dùng
+          </div>
+          <div class="card-body">
+              <div class="row my-2">
+                  <div class="col-4">
+                      <div class="input-group">
+                          <span class="input-group-prepend">
+                              <button type="button" class="btn btn-primary">
+                                  <i class="fa fa-search"></i> Tìm kiếm</button>
+                          </span>
+                          <input type="text" class="form-control" placeholder="Nhập từ khóa" (keyup)="search($event.target.value)">
+                      </div>
+                  </div>
+                  <div class="col-8">
+                      <button type="button" (click)="showAddNew()" class="btn btn-success float-right">
+                          <i class="fa fa-plus"></i> Thêm mới
+                      </button>
+                  </div>
+              </div>
+              <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                      <tr>
+                          <th style="width: 5%">
+                            
+                          </th>
+                          <th style="width: 40%">Ảnh đại diện</th>
+                          <th style="width: 50%">Email</th>
+                          <th style="width: 50%">Họ tên</th>
+                          <th style="width: 50%">Ngày tạo</th>
+                          <th style="width: 50%">Trạng thái</th>
+                          <th style="width: 10%">Hành động</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngIf="!(totalRow); else hasData">
+                          <td colspan="3" class="text-center text-danger">Không có dữ liệu</td>
+                      </tr>
+                      <ng-template #hasData>
+                          <tr *ngFor="let item of roles">
+                              <td>{{item.Name}}</td>
+                              <td>{{item.Description}}</td>
+                              <td>
+                                  <button type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
+                                      <i class="fa fa-pencil"></i>
+                                  </button>
+                                  <button type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                                      <i class="fa fa-trash"></i>
+                                  </button>
+                              </td>
+                          </tr>
+                      </ng-template>
+                  </tbody>
+                  <tfoot>
+                      <tr>
+                          <td colspan="3">Tổng số:
+                              <strong>{{totalRow}}</strong> bản ghi</td>
+                      </tr>
+                  </tfoot>
+              </table>
+              <div class="d-flex flex-row justify-content-between">
+                  <div>
+                      <select class="form-control" (change)="onChange($event.target.value)">
+                          <option value="10" selected>10</option>
+                          <option value="20">20</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                          <option value="-1">Tất cả</option>
+                      </select>
+                  </div>
+                  <div>
+                      <pagination *ngIf="!(pageCount === 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
+                          [totalItems]="totalRow" [(ngModel)]="pageIndex" class="pagination-md" previousText="&lsaquo;" nextText="&rsaquo;"
+                          firstText="&laquo;" lastText="&raquo;"></pagination>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!--/.col-->
+</div>
+
+<div bsModal #modalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">{{modalTitle}}</h4>
+              <button type="button" class="close" (click)="modalAddEdit.hide()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="onSubmitForm()" novalidate>
+              <input type="hidden" formControlName="Id">
+
+              <div class="modal-body">
+                  <div class="form-group row">
+                      <label class="col-md-2 col-form-label" for="txtName">Tên quyền</label>
+                      <div class="col-md-10">
+                          <input type="text" id="txtName" class="form-control" formControlName="Name" [ngClass]="{
+                              'is-valid': !roleForm.controls['Name'].errors,
+                              'is-invalid': roleForm.controls['Name'].errors && (roleForm.controls['Name'].dirty || roleForm.controls['Name'].touched)
+                            }">
+
+                          <div class="invalid-feedback">
+                              <div *ngIf="roleForm.get('Name').hasError('required')">
+                                  Vui lòng nhập tên quyền.
+                              </div>
+                              <div *ngIf="roleForm.get('Name').hasError('maxlength')">
+                                  Vui lòng nhập tên quyền không quá 50 ký tự.
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-md-2 col-form-label" for="txtDescription">Mô tả</label>
+                      <div class="col-md-10">
+                          <textarea id="txtDescription" class="form-control" formControlName="Description" [ngClass]="{
+                              'is-valid': !roleForm.controls['Description'].errors,
+                              'is-invalid': roleForm.controls['Description'].errors && (roleForm.controls['Description'].dirty || roleForm.controls['Description'].touched)
+                            }"></textarea>
+                          <div class="invalid-feedback">
+                              <div *ngIf="roleForm.get('Description').hasError('required')">
+                                  Vui lòng nhập mô tả.
+                              </div>
+                              <div *ngIf="roleForm.get('Description').hasError('maxlength')">
+                                  Vui lòng nhập mô tả không quá 100 ký tự.
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide()">
+                      <i class="fa fa-times"></i> Hủy
+                  </button>
+                  <button type="submit" [disabled]="roleForm.invalid" class="btn btn-success">
+                      <i class="fa fa-floppy-o"></i> Lưu
+                  </button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
