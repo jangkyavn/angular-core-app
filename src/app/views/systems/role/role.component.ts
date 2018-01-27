@@ -61,17 +61,18 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  showAddNew() {
-    this.modalTitle = 'Thêm mới thông tin quyền';
+  showModal(title: string) {
+    this.modalTitle = title;
     this.modalAddEdit.show();
-
     this.roleForm.reset();
   }
 
+  showAddNew() {
+    this.showModal('Thêm mới thông tin quyền');
+  }
+
   showEdit(id: string) {
-    this.modalTitle = 'Sửa thông tin quyền';
-    this.modalAddEdit.show();
-    this.roleForm.reset();
+    this.showModal('Sửa thông tin quyền');
 
     this.dataService.get(`/api/Role/${id}`).subscribe(data => {
       this.roleForm.setValue(data);
@@ -82,7 +83,7 @@ export class RoleComponent implements OnInit {
     const data = this.roleForm.value;
 
     if (data.Id === null) {
-      this.dataService.post('/api/Role', JSON.stringify(data)).subscribe(() => {
+      this.dataService.post('/api/Role', data).subscribe(() => {
         this.loadData();
         this.modalAddEdit.hide();
         this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);

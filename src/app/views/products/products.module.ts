@@ -6,6 +6,8 @@ import { ProductsRoutingModule } from './products-routing.module';
 
 import { TreeModule } from 'angular-tree-component';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
@@ -17,7 +19,9 @@ import { ProductCategoryComponent } from './product-category/product-category.co
     ReactiveFormsModule,
     ProductsRoutingModule,
     TreeModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    AlertModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   declarations: [
     ProductComponent,

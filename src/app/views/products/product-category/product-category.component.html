@@ -24,13 +24,16 @@
                 </div>
                 <hr />
                 <div>
+                    <alert type="danger" class="text-center" *ngIf="!(productCategorySearchResult?.length)">
+                        Không tìm thấy dữ liệu.
+                    </alert>
                     <tree-root #tree [nodes]="productCategoryHierarchies" [options]="options">
                         <ng-template #treeNodeTemplate let-node let-index="index">
                             <span>{{ node.data.Name }}</span>
-                            <button class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)">
+                            <button class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)" tooltip="Sửa" placement="left">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" (click)="delete(node.data.Id)">
+                            <button class="btn btn-sm btn-danger" (click)="delete(node.data.Id)" tooltip="Xóa" placement="right">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
                         </ng-template>
@@ -52,7 +55,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-horizontal" [formGroup]="productCategoryForm" (ngSubmit)="onSubmitForm()" novalidate>
+            <form class="form-horizontal" [formGroup]="productCategoryForm" (ngSubmit)="onSubmitForm()" novalidate autocomplete="off">
                 <input type="hidden" formControlName="Id" value="0">
                 <input type="hidden" formControlName="SeoAlias" [value]="seoAlias">
 
@@ -67,7 +70,7 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtName">Tên thể loại:</label>
-                        <div class="col-md-10">
+                        <div class="col-md-4">
                             <input type="text" id="txtName" class="form-control" formControlName="Name" [ngClass]="{
                               'is-valid': !productCategoryForm.controls['Name'].errors,
                               'is-invalid': productCategoryForm.controls['Name'].errors && (productCategoryForm.controls['Name'].dirty || productCategoryForm.controls['Name'].touched)
@@ -81,6 +84,14 @@
                                     Vui lòng nhập tên thể loại không quá 200 ký tự.
                                 </div>
                             </div>
+                        </div>
+
+                        <label class="col-md-2 col-form-label" for="ddlParent">Danh mục cha:</label>
+                        <div class="col-md-4">
+                            <select id="ddlParent" class="form-control" formControlName="ParentId">
+                                <option value="" selected="selected">--- Chọn danh mục ---</option>
+                                <option *ngFor="let item of parentProductCategories" [value]="item.Id">{{item.Name}}</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -164,7 +175,7 @@
                         <label class="col-md-2 col-form-label">Trạng thái:</label>
                         <div class="col-md-10 d-flex align-items-center">
                             <label class="switch switch-icon switch-success switch-lg">
-                                <input type="checkbox" class="switch-input">
+                                <input type="checkbox" class="switch-input" formControlName="Status">
                                 <span class="switch-label" data-on="&#xf00c;" data-off="&#xf023;"></span>
                                 <span class="switch-handle"></span>
                             </label>

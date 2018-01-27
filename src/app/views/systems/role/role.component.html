@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <tr *ngIf="!(totalRow); else hasData">
-                            <td colspan="3" class="text-center text-danger">Không có dữ liệu</td>
+                            <td colspan="3" class="text-center text-danger">Không tìm thấy dữ liệu.</td>
                         </tr>
                         <ng-template #hasData>
                             <tr *ngFor="let item of roles">
@@ -88,7 +88,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="onSubmitForm()" novalidate>
+            <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="onSubmitForm()" novalidate autocomplete="off">
                 <input type="hidden" formControlName="Id">
 
                 <div class="modal-body">

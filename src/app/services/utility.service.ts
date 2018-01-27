@@ -101,6 +101,9 @@ export class UtilityService {
     const hlen = haystack.length;
     const nlen = needleLC.length;
   
+    if(needleLC.charAt(0) === needleLC.charAt(1) && haystackLC.indexOf(needleLC) === -1) {
+      return false;
+    }
     if (nlen > hlen) {
       return false;
     }
