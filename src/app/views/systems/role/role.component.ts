@@ -5,6 +5,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { DataService, NotificationService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
+import { PagedResult } from 'app/models/paged-result.model';
 
 @Component({
   templateUrl: 'role.component.html',
@@ -52,7 +53,9 @@ export class RoleComponent implements OnInit {
   loadData() {
     const url = `/api/Role/GetAllPaging?keyword=${this.keyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
-    this.dataService.get(url).subscribe((data: any) => {
+    this.dataService.get(url).subscribe((response: any) => {
+      const data: PagedResult = response;
+
       this.roles = data.Results;
       this.pageIndex = data.CurrentPage;
       this.pageSize = data.PageSize;

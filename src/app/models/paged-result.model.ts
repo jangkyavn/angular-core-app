@@ -1,5 +1,5 @@
 export interface PagedResult {
-    Result?: any[];
+    Results?: any[];
     CurrentPage?: number;
     PageCount?: number;
     PageSize?: number;

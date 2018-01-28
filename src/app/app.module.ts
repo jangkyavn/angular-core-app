@@ -47,7 +47,7 @@ const APP_COMPONENTS = [
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
-  APP_SIDEBAR_NAV
+  APP_SIDEBAR_NAV,
 ]
 
 // Import directives
@@ -72,6 +72,7 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { GetCurrencyPipe } from './pipes/get-currency.pipe';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES
+    ...APP_DIRECTIVES,
+    GetCurrencyPipe
   ],
   providers: [{
     provide: LocationStrategy,

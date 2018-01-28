@@ -5,8 +5,8 @@ export interface ProductCategory {
     ParentId?: any;
     Description?: string;
     Image?: string;
-    DateCreated?: () => number,
-    DateModified?: () => number,
+    DateCreated?: any,
+    DateModified?: any,
     SortOrder?: number;
     SeoPageTitle?: string;
     SeoKeywords?: string;
