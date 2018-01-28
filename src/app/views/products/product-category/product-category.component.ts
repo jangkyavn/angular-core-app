@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -7,6 +7,8 @@ import { TreeModel, TreeNode, TreeComponent } from 'angular-tree-component';
 
 import { DataService, NotificationService, UtilityService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
+
+import { ProductCategory } from '../../../models/product-category.model';
 
 @Component({
   selector: 'app-product-category',
@@ -17,11 +19,9 @@ export class ProductCategoryComponent implements OnInit {
   @ViewChild('tree') reportsTree: TreeComponent;
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   modalTitle: string = '';
-  seoAlias: string = '';
   baseApi: string = SystemConstants.BASE_API;
-  urlImage: string = '';
 
-  productCategoryForm: FormGroup;
+  entity: ProductCategory = {};
 
   parentProductCategories: any[];
   productCategorySearchResult: any[];
@@ -30,45 +30,12 @@ export class ProductCategoryComponent implements OnInit {
   options = {};
 
   constructor(
-    private fb: FormBuilder,
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService) { }
 
   ngOnInit() {
     this.loadData();
-    this.createForm();
-
-  }
-
-  createForm() {
-    this.productCategoryForm = this.fb.group({
-      Id: [0],
-      Name: ['', [
-        Validators.required,
-        Validators.maxLength(200)
-      ]],
-      SeoAlias: [''],
-      ParentId: [''],
-      Image: [''],
-      Description: ['', Validators.maxLength(500)],
-      SortOrder: [0, [
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ]],
-      SeoPageTitle: ['', Validators.maxLength(200)],
-      SeoKeywords: ['', Validators.maxLength(200)],
-      SeoDescription: ['', Validators.maxLength(200)],
-      Status: [false]
-    });
-  }
-
-  setDefaultValue() {
-    this.productCategoryForm.patchValue({
-      Id: 0,
-      ParentId: '',
-      SortOrder: 0
-    });
   }
 
   loadData() {
@@ -77,58 +44,70 @@ export class ProductCategoryComponent implements OnInit {
       this.productCategorySearchResult = data;
       this.productCategoryHierarchies = this.utilityService.unflatten(data);
     })
+  }
 
-    this.dataService.get('/api/ProductCategory/LoadParent').subscribe(data => {
+  setDefaultValue() {
+    let state = {};
+
+    this.entity = {
+      ...state,
+      Id: 0,
+      ParentId: '',
+      DateCreated: null,
+      SortOrder: 0,
+      Status: false
+    }
+  }
+
+  showModal(title: string, id?: number) {
+    this.entity.SeoAlias = '';
+
+    if (id !== undefined) {
+      this.dataService.get(`/api/ProductCategory/${id}`).subscribe((data: any) => {
+        this.entity = data;
+  
+        this.entity.ParentId = (this.entity.ParentId === null) ? '' : this.entity.ParentId;
+      });
+    } else {
+      this.setDefaultValue();
+    }
+
+    this.dataService.get(`/api/ProductCategory/LoadParent/${id}`).subscribe(data => {
       this.parentProductCategories = data;
+      this.modalTitle = title;
+      this.modalAddEdit.show();
     })
   }
 
-  showModal(title: string) {
-    this.modalTitle = title;
-    this.seoAlias = '';
-    this.modalAddEdit.show();
-    this.productCategoryForm.reset();
-  }
-
-  hideModal() {
+  hideModal(form: NgForm) {
     this.loadData();
     this.modalAddEdit.hide();
+    form.resetForm();
   }
 
   showAddNew() {
     this.showModal('Thêm mới thông tin thể loại sản phẩm');
-    this.setDefaultValue();
   }
 
   showEdit(id: number) {
-    this.showModal('Sửa thông tin thể loại sản phẩm');
-
-    this.dataService.get(`/api/ProductCategory/${id}`).subscribe((data: any) => {
-      delete data['DateCreated'];
-      delete data['DateModified'];
-      delete data['Products'];
-      this.seoAlias = data.SeoAlias;
-
-      data.ParentId = (data.ParentId === null) ? '' : data.ParentId;
-
-      this.productCategoryForm.setValue(data);
-    });
+    this.showModal('Sửa thông tin thể loại sản phẩm', id);
   }
 
-  onSubmitForm() {
-    const data = this.productCategoryForm.value;
-    data.SeoAlias = this.seoAlias;
+  saveChanges(form: NgForm) {
+    if (form.valid) {
+      const data = this.entity;
 
-    if (data.Id === 0) {
-      this.dataService.post('/api/ProductCategory', data).subscribe(() => {
-        this.hideModal();
-        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
-      });
-    } else {
-      this.dataService.put('/api/ProductCategory', data).subscribe(() => {
-        this.hideModal();
-        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-      });
+      if (data.Id === 0) {
+        this.dataService.post('/api/ProductCategory', JSON.stringify(data)).subscribe(() => {
+          this.hideModal(form);
+          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+        });
+      } else {
+        this.dataService.put('/api/ProductCategory', JSON.stringify(data)).subscribe(() => {
+          this.hideModal(form);
+          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+        });
+      }
     }
   }
 
@@ -150,6 +129,6 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   makeSeoAlias(value: string) {
-    this.seoAlias = this.utilityService.makeSeoAlias(value);
+    this.entity.SeoAlias = this.utilityService.makeSeoAlias(value);
   }
 }
