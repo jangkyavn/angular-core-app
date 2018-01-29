@@ -49,25 +49,26 @@
                             </tr>
                         </ng-template>
                     </tbody>
-                    <tfoot>
+                    <tfoot *ngIf="!(totalRow === 0)">
                         <tr>
-                            <td colspan="3">Tổng số:
-                                <strong>{{totalRow}}</strong> bản ghi</td>
+                            <td colspan="3">Đang xem {{firstRow}} đến {{lastRow}} trong tổng số {{totalRow}} mục</td>
                         </tr>
                     </tfoot>
                 </table>
-                <div class="d-flex flex-row justify-content-between">
-                    <div>
-                        <select class="form-control" (change)="onChange($event.target.value)">
+                <div class="row" *ngIf="!(totalRow === 0)">
+                    <div class="col-6 d-flex flex-row justify-content-start align-items-center">
+                        <div>Hiển thị:</div>
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event.target.value)">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                             <option value="-1">Tất cả</option>
                         </select>
+                        <div class="float-left">mục</div>
                     </div>
-                    <div>
-                        <pagination *ngIf="!(pageCount === 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
+                    <div class="col-6 d-flex flex-row justify-content-end align-items-center">
+                        <pagination *ngIf="!(pageCount <= 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
                             [totalItems]="totalRow" [(ngModel)]="pageIndex" class="pagination-md" previousText="&lsaquo;" nextText="&rsaquo;"
                             firstText="&laquo;" lastText="&raquo;"></pagination>
                     </div>

@@ -14,7 +14,6 @@ export interface Product {
     ViewCount?: number;
     DateCreated?: any,
     DateModified?: any,
-    SortOrder?: number;
     SeoPageTitle?: string;
     SeoKeywords?: string;
     SeoDescription?: string;

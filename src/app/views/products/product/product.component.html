@@ -30,7 +30,7 @@
                     <thead>
                         <tr>
                             <th style="width: 5%; text-align: center;">
-                                <div class="custom-control custom-checkbox">
+                                <div class="custom-control custom-checkbox" *ngIf="!(totalRow === 0)">
                                     <input type="checkbox" class="custom-control-input" id="customCheckAll" [(ngModel)]="selectedAll" (change)="selectAll();">
                                     <label class="custom-control-label" for="customCheckAll"></label>
                                 </div>
@@ -85,25 +85,26 @@
                             </tr>
                         </ng-template>
                     </tbody>
-                    <tfoot>
+                    <tfoot *ngIf="!(totalRow === 0)">
                         <tr>
-                            <td colspan="8">Tổng số:
-                                <strong>{{totalRow}}</strong> bản ghi</td>
+                            <td colspan="8">Đang xem {{firstRow}} đến {{lastRow}} trong tổng số {{totalRow}} mục</td>
                         </tr>
                     </tfoot>
                 </table>
-                <div class="d-flex flex-row justify-content-between">
-                    <div>
-                        <select class="form-control" (change)="onChange($event.target.value)">
+                <div class="row" *ngIf="!(totalRow === 0)">
+                    <div class="col-6 d-flex flex-row justify-content-start align-items-center">
+                        <div>Hiển thị:</div>
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event.target.value)">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                             <option value="-1">Tất cả</option>
                         </select>
+                        <div class="float-left">mục</div>
                     </div>
-                    <div>
-                        <pagination *ngIf="!(pageCount === 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
+                    <div class="col-6 d-flex flex-row justify-content-end align-items-center">
+                        <pagination *ngIf="!(pageCount <= 1)" [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="pageDisplay" (pageChanged)="pageChanged($event)"
                             [totalItems]="totalRow" [(ngModel)]="pageIndex" class="pagination-md" previousText="&lsaquo;" nextText="&rsaquo;"
                             firstText="&laquo;" lastText="&raquo;"></pagination>
                     </div>
@@ -114,65 +115,120 @@
     <!--/.col-->
 </div>
 
-<!-- <div bsModal #modalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h4 class="modal-title">{{modalTitle}}</h4>
-              <button type="button" class="close" (click)="modalAddEdit.hide()" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="onSubmitForm()" novalidate autocomplete="off">
-              <input type="hidden" formControlName="Id">
+<div bsModal #modalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{modalTitle}}</h4>
+                <button type="button" class="close" (click)="modalAddEdit.hide(); formAddEdit.resetForm()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" #formAddEdit="ngForm" (ngSubmit)="saveChanges(formAddEdit)" novalidate autocomplete="off">
+                <input type="hidden" [value]="entity.Id" name="id">
+                <input type="hidden" [value]="entity.SeoAlias" name="seoAlias">
+                <input type="hidden" [value]="entity.DateCreated" name="dateCreated">
 
-              <div class="modal-body">
-                  <div class="form-group row">
-                      <label class="col-md-2 col-form-label" for="txtName">Tên quyền:</label>
-                      <div class="col-md-10">
-                          <input type="text" id="txtName" class="form-control" formControlName="Name" [ngClass]="{
-                              'is-valid': !roleForm.controls['Name'].errors,
-                              'is-invalid': roleForm.controls['Name'].errors && (roleForm.controls['Name'].dirty || roleForm.controls['Name'].touched)
-                            }">
-
-                          <div class="invalid-feedback">
-                              <div *ngIf="roleForm.get('Name').hasError('required')">
-                                  Vui lòng nhập tên quyền.
-                              </div>
-                              <div *ngIf="roleForm.get('Name').hasError('maxlength')">
-                                  Vui lòng nhập tên quyền không quá 50 ký tự.
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="form-group row">
-                      <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
-                      <div class="col-md-10">
-                          <textarea id="txtDescription" class="form-control" formControlName="Description" [ngClass]="{
-                              'is-valid': !roleForm.controls['Description'].errors,
-                              'is-invalid': roleForm.controls['Description'].errors && (roleForm.controls['Description'].dirty || roleForm.controls['Description'].touched)
-                            }"></textarea>
-                          <div class="invalid-feedback">
-                              <div *ngIf="roleForm.get('Description').hasError('required')">
-                                  Vui lòng nhập mô tả.
-                              </div>
-                              <div *ngIf="roleForm.get('Description').hasError('maxlength')">
-                                  Vui lòng nhập mô tả không quá 100 ký tự.
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide()">
-                      <i class="fa fa-times"></i> Hủy
-                  </button>
-                  <button type="submit" [disabled]="roleForm.invalid" class="btn btn-success">
-                      <i class="fa fa-floppy-o"></i> Lưu
-                  </button>
-              </div>
-          </form>
-      </div>
-  </div>
-</div> -->
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Đường dẫn SEO:</label>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <a href="javascript:void(0)">
+                                {{baseApi}}/{{entity.SeoAlias}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtName">Tên sản phẩm:</label>
+                        <div class="col-md-4">
+                            <input type="text" id="txtName" class="form-control" name="name" [(ngModel)]="entity.Name" #name="ngModel" required maxlength="200"
+                                (keyup)="makeSeoAlias($event.target.value)" [ngClass]="{
+                                    'is-valid': name.valid,
+                                    'is-invalid': name.invalid && (name.dirty || name.touched)
+                                  }">
+                            <div class="invalid-feedback">
+                                <div *ngIf="name.errors?.required">
+                                    Vui lòng nhập tên sản phẩm.
+                                </div>
+                            </div>
+                        </div>
+                        <label class="col-md-2 col-form-label" for="ddlParent">Thể loại:</label>
+                        <div class="col-md-4">
+                            <select id="ddlParent" class="form-control" name="categoryId" [(ngModel)]="entity.CategoryId">
+                                <option value="">--- Chọn thể loại ---</option>
+                                <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
+                        <div class="col-md-10">
+                            <textarea id="txtDescription" rows="3" class="form-control" name="description" [(ngModel)]="entity.Description" #description="ngModel"
+                                maxlength="500"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtImage">Hình ảnh:</label>
+                        <div class="col-md-5">
+                            <input id="txtImage" class="form-control" type="file" placeholder="Đường dẫn ảnh" (change)="readUrl($event)">
+                        </div>
+                        <!-- <label class="col-md-2 col-form-label" for="txtSortOrder">Thứ tự hiện thị:</label>
+                        <div class="col-md-3">
+                            <input type="number" class="form-control" id="txtSortOrder" name="sortOrder" [(ngModel)]="entity.SortOrder" #sortOrder="ngModel">
+                        </div> -->
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtSeoPageTitle">Tiêu đề SEO:</label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtSeoPageTitle" class="form-control" name="seoPageTitle" [(ngModel)]="entity.SeoPageTitle" #seoPageTitle="ngModel"
+                                maxlength="200">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtSeoKeywords">Từ khóa SEO:</label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtSeoKeywords" class="form-control" name="seoKeywords" [(ngModel)]="entity.SeoKeywords" #seoKeywords="ngModel"
+                                maxlength="200">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtSeoDescription">Mô tả SEO:</label>
+                        <div class="col-md-10">
+                            <input type="text" id="txtSeoDescription" class="form-control" name="seoDescription" [(ngModel)]="entity.SeoDescription"
+                                maxlength="200">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Trạng thái:</label>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <label class="switch switch-icon switch-success switch-lg">
+                                <input type="checkbox" class="switch-input" name="status" [(ngModel)]="entity.Status">
+                                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf023;"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Sản phẩm hot:</label>
+                        <div class="col-md-10 d-flex align-items-center">
+                            <label class="switch switch-icon switch-danger switch-lg">
+                                <input type="checkbox" class="switch-input" name="hotFlag" [(ngModel)]="entity.HotFlag">
+                                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf00d;"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide(); formAddEdit.resetForm()">
+                        <i class="fa fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" [disabled]="!formAddEdit.form.valid" class="btn btn-success">
+                        <i class="fa fa-floppy-o"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

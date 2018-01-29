@@ -24,6 +24,8 @@ export class RoleComponent implements OnInit {
   lengthMenu: number = 10;
   pageCount: number;
   totalRow: number;
+  firstRow: number;
+  lastRow: number;
   keyword: string = '';
 
   constructor(
@@ -61,6 +63,8 @@ export class RoleComponent implements OnInit {
       this.pageSize = data.PageSize;
       this.totalRow = data.RowCount;
       this.pageCount = data.PageCount;
+      this.firstRow = data.FirstRowOnPage;
+      this.lastRow = data.LastRowOnPage;
     });
   }
 
@@ -115,7 +119,7 @@ export class RoleComponent implements OnInit {
     this.loadData();
   }
   
-  onChange(value: number) {
+  changeLengthMenu(value: number) {
     this.pageSize = value;
 
     this.loadData();
