@@ -18,10 +18,20 @@ export class DataService {
     private messageService: MessageService,
     private authService: AuthService) { }
 
-  private httpOptions() {
+  private httpOptions(): HttpHeaders {
     let token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
 
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    headers.delete('Authorization');
+    headers.append('Authorization', 'Bearer ' + token);
+
+    return headers;
+  }
+
+  private httpFileOptions(): HttpHeaders {
+    let token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
+
+    let headers = new HttpHeaders();
     headers.delete('Authorization');
     headers.append('Authorization', 'Bearer ' + token);
 
@@ -50,6 +60,11 @@ export class DataService {
   delete(url: string): Observable<any> {
     return this.http.delete<any>(this.baseUrl + url, { headers: this.httpOptions() })
       .pipe(catchError(this.handleError<any>('deleteData')));
+  }
+
+  postFile(url: string, data?: any) {
+    return this.http.post(this.baseUrl + url, data, { headers: this.httpFileOptions() })
+      .pipe(catchError(this.handleError<any>('postFile')));
   }
 
   /**

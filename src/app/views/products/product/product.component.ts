@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, NotificationService, UtilityService } from '../../../services';
+import { DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
@@ -18,6 +18,8 @@ export class ProductComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   modalTitle: string = '';
   baseApi: string = SystemConstants.BASE_API;
+  imageUrl: string;
+  noImage: string = this.baseApi + '/uploaded/images/no_image.png';
 
   entity: Product = {};
   tagItems: any[];
@@ -39,7 +41,8 @@ export class ProductComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService) { }
+    private utilityService: UtilityService,
+    private uploadService: UploadService) { }
 
   ngOnInit() {
     this.loadData();
@@ -85,12 +88,12 @@ export class ProductComponent implements OnInit {
 
   showModal(title: string, id?: number) {
     this.entity.SeoAlias = '';
+    this.imageUrl = '';
 
     if (id !== undefined) {
       this.dataService.get(`/api/Product/${id}`).subscribe((data: any) => {
         this.entity = data;
-
-        this.entity.CategoryId = (this.entity.CategoryId === null) ? '' : this.entity.CategoryId;
+        this.imageUrl = this.entity.Image == null ? '' : this.baseApi + this.entity.Image;
 
         if (this.entity.Tags !== null && this.entity.Tags !== '') {
           const tagArr = this.entity.Tags.split(',');
@@ -127,6 +130,8 @@ export class ProductComponent implements OnInit {
     if (form.valid) {
       const data = this.entity;
       data.Tags = this.tagItems.toString();
+
+      console.log(data);
 
       if (data.Id === 0) {
         this.dataService.post('/api/Product', data).subscribe(() => {
@@ -203,5 +208,16 @@ export class ProductComponent implements OnInit {
     } else {
       $('#customCheckAll').prop('indeterminate', false);
     }
+  }
+
+  btnSelectImage() {
+    $('#fileInputImage').click();
+  }
+
+  changeFileInputImage(files: any) {
+    this.uploadService.postWithFile('/api/Upload/UploadImage?type=products', null, files).then((imageUrl: string) => {
+      this.entity.Image = imageUrl;
+      this.imageUrl = imageUrl == '' ? '' : this.baseApi + imageUrl;
+    })
   }
 }

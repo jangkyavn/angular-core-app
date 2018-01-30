@@ -10,6 +10,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TagInputModule } from 'ngx-chips';
+import { CKEditorModule } from 'ng2-ckeditor';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
@@ -25,7 +26,8 @@ import { ProductCategoryComponent } from './product-category/product-category.co
     AlertModule.forRoot(),
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
-    TagInputModule
+    TagInputModule,
+    CKEditorModule
   ],
   declarations: [
     ProductComponent,

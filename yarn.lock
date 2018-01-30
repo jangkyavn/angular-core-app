@@ -4566,6 +4566,10 @@ ng2-charts@1.6.0:
   dependencies:
     chart.js "^2.6.0"
 
+ng2-ckeditor@^1.1.14:
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/ng2-ckeditor/-/ng2-ckeditor-1.1.14.tgz#f66e35c7dd609e4775f2fdc685289aa3fc7cea52"
+
 ng2-material-dropdown@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.2.tgz#2acd3f781030ef92bf31f05543d91148e68528ef"
