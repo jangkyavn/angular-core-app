@@ -20,6 +20,7 @@ export class ProductComponent implements OnInit {
   baseApi: string = SystemConstants.BASE_API;
 
   entity: Product = {};
+  tagItems: any[];
 
   products: any[];
   productCategoryHierachies: any[];
@@ -78,6 +79,8 @@ export class ProductComponent implements OnInit {
       HotFlag: false,
       Status: false
     }
+
+    this.tagItems = [];
   }
 
   showModal(title: string, id?: number) {
@@ -88,6 +91,15 @@ export class ProductComponent implements OnInit {
         this.entity = data;
 
         this.entity.CategoryId = (this.entity.CategoryId === null) ? '' : this.entity.CategoryId;
+
+        if (this.entity.Tags !== null && this.entity.Tags !== '') {
+          const tagArr = this.entity.Tags.split(',');
+
+          this.tagItems = tagArr;
+        }
+        else {
+          this.tagItems = [];
+        }
       });
     } else {
       this.setDefaultValue();
@@ -114,6 +126,7 @@ export class ProductComponent implements OnInit {
   saveChanges(form: NgForm) {
     if (form.valid) {
       const data = this.entity;
+      data.Tags = this.tagItems.toString();
 
       if (data.Id === 0) {
         this.dataService.post('/api/Product', data).subscribe(() => {

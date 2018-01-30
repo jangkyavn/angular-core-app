@@ -65,12 +65,12 @@ export class UtilityService {
     return sDay + "/" + sMonth + "/" + year + " " + sHH + ":" + sMM + ":" + sSS;
   }
 
-  formatNumber(number: number, precision: number) {
-    if (!isFinite(number)) {
-      return number.toString();
+  formatNumber(value: number, precision: number) {
+    if (!isFinite(value)) {
+      return value + '';
     }
 
-    let a = number.toFixed(precision).split('.');
+    let a = parseFloat(value.toString()).toFixed(precision).split('.');
     a[0] = a[0].replace(/\d(?=(\d{3})+$)/g, '$&,');
     return a.join('.');
   }
