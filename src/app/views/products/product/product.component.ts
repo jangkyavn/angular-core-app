@@ -115,6 +115,7 @@ export class ProductComponent implements OnInit {
   hideModal(form: NgForm) {
     this.loadData();
     this.modalAddEdit.hide();
+    $('#fileInputImage').val(null);
     form.resetForm();
   }
 
@@ -219,5 +220,11 @@ export class ProductComponent implements OnInit {
       this.entity.Image = imageUrl;
       this.imageUrl = imageUrl == '' ? '' : this.baseApi + imageUrl;
     })
+  }
+
+  closeModal(form: NgForm) {
+    this.modalAddEdit.hide(); 
+    form.resetForm();
+    $('#fileInputImage').val(null);
   }
 }

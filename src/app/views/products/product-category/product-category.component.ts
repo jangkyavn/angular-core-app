@@ -5,7 +5,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { TreeModel, TreeNode, TreeComponent } from 'angular-tree-component';
 
-import { DataService, NotificationService, UtilityService } from '../../../services';
+import { DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
 
 import { ProductCategory } from '../../../models/product-category.model';
@@ -20,6 +20,7 @@ export class ProductCategoryComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
   modalTitle: string = '';
   baseApi: string = SystemConstants.BASE_API;
+  imageUrl: string;
 
   entity: ProductCategory = {};
 
@@ -32,7 +33,8 @@ export class ProductCategoryComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService) { }
+    private utilityService: UtilityService,
+    private uploadService: UploadService) { }
 
   ngOnInit() {
     this.loadData();
@@ -61,11 +63,12 @@ export class ProductCategoryComponent implements OnInit {
 
   showModal(title: string, id?: number) {
     this.entity.SeoAlias = '';
+    this.imageUrl = '';
 
     if (id !== undefined) {
       this.dataService.get(`/api/ProductCategory/${id}`).subscribe((data: any) => {
         this.entity = data;
-  
+        this.imageUrl = this.entity.Image == null ? '' : this.baseApi + this.entity.Image;
         this.entity.ParentId = (this.entity.ParentId === null) ? '' : this.entity.ParentId;
       });
     } else {
@@ -82,6 +85,7 @@ export class ProductCategoryComponent implements OnInit {
   hideModal(form: NgForm) {
     this.loadData();
     this.modalAddEdit.hide();
+    $('#fileInputImage').val(null);
     form.resetForm();
   }
 
@@ -130,5 +134,22 @@ export class ProductCategoryComponent implements OnInit {
 
   makeSeoAlias(value: string) {
     this.entity.SeoAlias = this.utilityService.makeSeoAlias(value);
+  }
+
+  btnSelectImage() {
+    $('#fileInputImage').click();
+  }
+
+  changeFileInputImage(files: any) {
+    this.uploadService.postWithFile('/api/Upload/UploadImage?type=products', null, files).then((imageUrl: string) => {
+      this.entity.Image = imageUrl;
+      this.imageUrl = imageUrl == '' ? '' : this.baseApi + imageUrl;
+    })
+  }
+
+  closeModal(form: NgForm) {
+    this.modalAddEdit.hide(); 
+    form.resetForm();
+    $('#fileInputImage').val(null);
   }
 }

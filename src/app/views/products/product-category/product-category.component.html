@@ -51,7 +51,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">{{modalTitle}}</h4>
-                <button type="button" class="close" (click)="modalAddEdit.hide(); formAddEdit.resetForm()" aria-label="Close">
+                <button type="button" class="close" (click)="closeModal(formAddEdit);" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -59,7 +59,7 @@
                 <input type="hidden" [value]="entity.Id" name="id">
                 <input type="hidden" [value]="entity.SeoAlias" name="seoAlias">
                 <input type="hidden" [value]="entity.DateCreated" name="dateCreated">
-                
+
                 <div class="modal-body">
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label">Đường dẫn SEO:</label>
@@ -94,35 +94,48 @@
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
                         <div class="col-md-10">
-                            <textarea id="txtDescription" rows="3" class="form-control" name="description" [(ngModel)]="entity.Description" #description="ngModel" maxlength="500"></textarea>
+                            <textarea id="txtDescription" rows="3" class="form-control" name="description" [(ngModel)]="entity.Description" #description="ngModel"
+                                maxlength="500"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtImage">Hình ảnh:</label>
-                        <div class="col-md-5">
-                            <input id="txtImage" class="form-control" type="file" placeholder="Đường dẫn ảnh" (change)="readUrl($event)">
+                        <div class="col-md-10">
+                            <div class="input-group" (click)="btnSelectImage()">
+                                <input id="txtImage" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" name="image" [(ngModel)]="entity.Image">
+                                <input type="file" id="fileInputImage" (change)="changeFileInputImage($event.target.files)">
+                                <span class="input-group-append">
+                                    <button class="btn btn-default" type="button">Trình duyệt</button>
+                                </span>
+                            </div>
+                            <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
                         </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtSortOrder">Thứ tự hiện thị:</label>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <input type="number" class="form-control" id="txtSortOrder" name="sortOrder" [(ngModel)]="entity.SortOrder" #sortOrder="ngModel">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtSeoPageTitle">Tiêu đề SEO:</label>
                         <div class="col-md-10">
-                            <input type="text" id="txtSeoPageTitle" class="form-control" name="seoPageTitle" [(ngModel)]="entity.SeoPageTitle" #seoPageTitle="ngModel" maxlength="200">
+                            <input type="text" id="txtSeoPageTitle" class="form-control" name="seoPageTitle" [(ngModel)]="entity.SeoPageTitle" #seoPageTitle="ngModel"
+                                maxlength="200">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtSeoKeywords">Từ khóa SEO:</label>
                         <div class="col-md-10">
-                            <input type="text" id="txtSeoKeywords" class="form-control" name="seoKeywords" [(ngModel)]="entity.SeoKeywords" #seoKeywords="ngModel" maxlength="200">
+                            <input type="text" id="txtSeoKeywords" class="form-control" name="seoKeywords" [(ngModel)]="entity.SeoKeywords" #seoKeywords="ngModel"
+                                maxlength="200">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtSeoDescription">Mô tả SEO:</label>
                         <div class="col-md-10">
-                            <input type="text" id="txtSeoDescription" class="form-control" name="seoDescription" [(ngModel)]="entity.SeoDescription" maxlength="200">
+                            <input type="text" id="txtSeoDescription" class="form-control" name="seoDescription" [(ngModel)]="entity.SeoDescription"
+                                maxlength="200">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -134,10 +147,10 @@
                                 <span class="switch-handle"></span>
                             </label>
                         </div>
-                    </div> 
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide(); formAddEdit.resetForm()">
+                    <button type="button" class="btn btn-danger" (click)="closeModal(formAddEdit);">
                         <i class="fa fa-times"></i> Hủy
                     </button>
                     <button type="submit" [disabled]="!formAddEdit.form.valid" class="btn btn-success">

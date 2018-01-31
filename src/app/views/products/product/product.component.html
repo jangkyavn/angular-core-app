@@ -121,7 +121,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">{{modalTitle}}</h4>
-                <button type="button" class="close" (click)="modalAddEdit.hide(); formAddEdit.resetForm()" aria-label="Close">
+                <button type="button" class="close" (click)="closeModal(formAddEdit);" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -180,7 +180,7 @@
                     <div class="form-group row">
                         <label class="col-md-2 col-form-label" for="txtContent">Nội dung:</label>
                         <div class="col-md-10">
-                            <ckeditor [(ngModel)]="entity.Content" [ngModelOptions]="{standalone: true}" [config]="{uiColor: '#a4a4a4', extraPlugins: 'colorbutton'}"
+                            <ckeditor [(ngModel)]="entity.Content" [ngModelOptions]="{standalone: true}" [config]="{uiColor: '#a4a4a4', extraPlugins: 'colorbutton,uploadimage', filebrowserImageUploadUrl: 'http://localhost:53887/api/Upload/UploadImageForCKEditor'}"
                                 debounce="500">
                             </ckeditor>
                         </div>
@@ -286,7 +286,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="modalAddEdit.hide(); formAddEdit.resetForm()">
+                    <button type="button" class="btn btn-danger" (click)="closeModal(formAddEdit);">
                         <i class="fa fa-times"></i> Hủy
                     </button>
                     <button type="submit" [disabled]="!formAddEdit.form.valid" class="btn btn-success">
