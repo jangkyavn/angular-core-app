@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RoleComponent } from './role/role.component';
+import { UserComponent } from './user/user.component';
+
 import { FormsComponent } from './forms.component';
 import { SwitchesComponent } from './switches.component';
 import { TablesComponent } from './tables.component';
@@ -25,6 +27,13 @@ const routes: Routes = [
         component: RoleComponent,
         data: {
           title: 'Role'
+        }
+      },
+      {
+        path: 'user',
+        component: UserComponent,
+        data: {
+          title: 'User'
         }
       },
       {

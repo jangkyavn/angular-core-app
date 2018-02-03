@@ -37,6 +37,11 @@ export const navigation = [
         icon: 'icon-puzzle'
       },
       {
+        name: 'User',
+        url: '/systems/user',
+        icon: 'icon-puzzle'
+      },
+      {
         name: 'Carousels',
         url: '/systems/carousels',
         icon: 'icon-puzzle'

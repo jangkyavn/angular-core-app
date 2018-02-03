@@ -13,6 +13,7 @@ import { LoggedInUser } from '../../models/logged-in-user.model';
 })
 export class AppHeaderComponent implements OnInit {
   public user: LoggedInUser;
+  baseUrl: string = SystemConstants.BASE_API;
 
   constructor(private utilityService: UtilityService, private authService: AuthService) { }
 

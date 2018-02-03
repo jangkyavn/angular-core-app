@@ -16,6 +16,7 @@ import { Product } from '../../../models/product.model';
 })
 export class ProductComponent implements OnInit {
   @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+
   modalTitle: string = '';
   baseApi: string = SystemConstants.BASE_API;
   imageUrl: string;
@@ -23,9 +24,9 @@ export class ProductComponent implements OnInit {
 
   entity: Product = {};
   tagItems: any[];
-
   products: any[];
   productCategoryHierachies: any[];
+
   pageIndex: number = 1;
   pageSize: number = 10;
   pageDisplay: number = 5;
@@ -34,9 +35,11 @@ export class ProductComponent implements OnInit {
   totalRow: number;
   firstRow: number;
   lastRow: number;
+
   filterKeyword: string = '';
-  filterCategoryId: any;
-  selectedAll: any;
+  filterGender: any;
+  selectedAll: boolean;
+  nothingSelected: boolean;
 
   constructor(
     private dataService: DataService,
@@ -50,7 +53,7 @@ export class ProductComponent implements OnInit {
   }
 
   loadData() {
-    const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&categoryId=${this.filterCategoryId}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
+    const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&gender=${this.filterGender}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
       const data: PagedResult = response;
@@ -63,6 +66,10 @@ export class ProductComponent implements OnInit {
       this.firstRow = data.FirstRowOnPage;
       this.lastRow = data.LastRowOnPage;
     });
+
+    this.nothingSelected = true;
+    this.selectedAll = false;
+    $('#customCheckAll').prop('indeterminate', false);
   }
 
   loadProductCategoryHierachies() {
@@ -89,6 +96,7 @@ export class ProductComponent implements OnInit {
   showModal(title: string, id?: number) {
     this.entity.SeoAlias = '';
     this.imageUrl = '';
+    this.entity.Content = '';
 
     if (id !== undefined) {
       this.dataService.get(`/api/Product/${id}`).subscribe((data: any) => {
@@ -157,35 +165,43 @@ export class ProductComponent implements OnInit {
     })
   }
 
+  public deleteMulti() {
+    let checkedItems = this.products.filter(x => x.Selected);
+    let checkedIds = [];
+
+    for (let i = 0; i < checkedItems.length; i++) {
+      checkedIds.push(checkedItems[i]['Id']);
+    }
+
+    this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_SELECTED_MSG, () => {
+      this.dataService.delete(`/api/Product/DeleteMulti?strIds=${JSON.stringify(checkedIds)}`).subscribe(() => {
+        this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+        this.loadData();
+      });
+    });
+  }
+
   makeSeoAlias(value: string) {
     this.entity.SeoAlias = this.utilityService.makeSeoAlias(value);
   }
 
   search(value: string) {
     this.filterKeyword = value;
-    this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
     this.loadData();
   }
 
-  searchDropDown(value: string) {
-    this.filterCategoryId = value;
-    this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
+  searchDropDown(value: any) {
+    this.filterGender = value;
     this.loadData();
   }
 
   changeLengthMenu(value: number) {
     this.pageSize = value;
-    this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
     this.loadData();
   }
 
   pageChanged(event: any) {
     this.pageIndex = event.page;
-    this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
     this.loadData();
   }
 
@@ -193,6 +209,8 @@ export class ProductComponent implements OnInit {
     for (var i = 0; i < this.products.length; i++) {
       this.products[i].Selected = this.selectedAll;
     }
+
+    this.nothingSelected = true;
   }
 
   checkIfAllSelected() {
@@ -200,11 +218,11 @@ export class ProductComponent implements OnInit {
       return item.Selected == true;
     });
 
-    let nothingSelected = this.products.every((item: any) => {
+    this.nothingSelected = this.products.every((item: any) => {
       return item.Selected == false;
     });
 
-    if (!this.selectedAll && !nothingSelected) {
+    if (!this.selectedAll && !this.nothingSelected) {
       $('#customCheckAll').prop('indeterminate', true);
     } else {
       $('#customCheckAll').prop('indeterminate', false);

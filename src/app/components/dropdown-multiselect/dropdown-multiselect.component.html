@@ -1,0 +1,16 @@
+<div class="btn-group" dropdown>
+    <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+        {{buttonName}}
+        <span class="caret"></span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu" role="menu" (click)="$event.stopPropagation();">
+        <li role="menuitem" *ngFor="let item of roles">
+            <label class="dropdown-item" href="javascript:;" for="customCheck{{item.Id}}">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" [checked]="item.Selected" class="custom-control-input" (click)="checkdRole(item)" id="customCheck{{item.Id}}">
+                    <label class="custom-control-label" for="customCheck{{item.Id}}">{{item.Name}}</label>
+                </div>
+            </label>
+        </li>
+    </ul>
+</div>

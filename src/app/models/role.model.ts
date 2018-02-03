@@ -1,5 +1,6 @@
 export interface Role {
-    id: string,
-    name: string,
-    description: string
+    Id?: string;
+    Name?: string;
+    Description?: string;
+    Selected?: boolean;
 }

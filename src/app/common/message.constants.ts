@@ -1,6 +1,7 @@
 export class MessageConstants {
     public static SYSTEM_ERROR_MSG = "Có lỗi kết nối đến máy chủ";
-    public static CONFIRM_DELETE_MSG = "Bạn có chắc muốn xóa bản ghi này?";
+    public static CONFIRM_DELETE_MSG = "Bạn có chắc muốn xóa mục này?";
+    public static CONFIRM_DELETE_SELECTED_MSG = "Bạn có chắc muốn xóa mục đã được chọn này?";
     public static LOGIN_AGAIN_MSG = "Bạn hết phiên đăng nhập. Mời đăng nhập lại."
     public static CREATED_OK_MSG = "Thêm mới thành công";
     public static UPDATED_OK_MSG = "Cập nhật thành công";

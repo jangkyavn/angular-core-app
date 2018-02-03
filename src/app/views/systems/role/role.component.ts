@@ -86,7 +86,7 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  onSubmitForm() {
+  saveChanges() {
     const data = this.roleForm.value;
 
     if (data.Id === null) {

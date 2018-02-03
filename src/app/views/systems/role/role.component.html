@@ -6,14 +6,15 @@
                 <i class="fa fa-align-justify"></i> Danh sách quyền
             </div>
             <div class="card-body">
-                <div class="row my-2">
+                <div class="row mb-2">
                     <div class="col-4">
                         <div class="input-group">
                             <span class="input-group-prepend">
                                 <button type="button" class="btn btn-primary">
-                                    <i class="fa fa-search"></i> Tìm kiếm</button>
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập từ khóa" (keyup)="search($event.target.value)">
+                            <input type="text" class="form-control" placeholder="Nhập từ khóa cần tìm" (keyup)="search($event.target.value)">
                         </div>
                     </div>
                     <div class="col-8">
@@ -81,7 +82,7 @@
 
 <div bsModal #modalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">{{modalTitle}}</h4>
@@ -89,13 +90,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="onSubmitForm()" novalidate autocomplete="off">
+            <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
                 <input type="hidden" formControlName="Id">
 
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label" for="txtName">Tên quyền:</label>
-                        <div class="col-md-10">
+                        <label class="col-md-3 col-form-label" for="txtName">Tên quyền:</label>
+                        <div class="col-md-9">
                             <input type="text" id="txtName" class="form-control" formControlName="Name" [ngClass]="{
                                 'is-valid': !roleForm.controls['Name'].errors,
                                 'is-invalid': roleForm.controls['Name'].errors && (roleForm.controls['Name'].dirty || roleForm.controls['Name'].touched)
@@ -112,8 +113,8 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
-                        <div class="col-md-10">
+                        <label class="col-md-3 col-form-label" for="txtDescription">Mô tả:</label>
+                        <div class="col-md-9">
                             <textarea id="txtDescription" class="form-control" formControlName="Description" [ngClass]="{
                                 'is-valid': !roleForm.controls['Description'].errors,
                                 'is-invalid': roleForm.controls['Description'].errors && (roleForm.controls['Description'].dirty || roleForm.controls['Description'].touched)

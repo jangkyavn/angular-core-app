@@ -65,6 +65,16 @@ export class UtilityService {
     return sDay + "/" + sMonth + "/" + year + " " + sHH + ":" + sMM + ":" + sSS;
   }
 
+  formatPhoneNumber(value: string) {
+    if (value.indexOf('-') > -1) {
+      let removeCode = value.substring(4, value.length);
+
+      return '0' + removeCode.split('-').join('').split('_').join('');
+    }
+
+    return value;
+  }
+
   formatNumber(value: number, precision: number) {
     if (!isFinite(value)) {
       return value + '';

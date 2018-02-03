@@ -4,8 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 import { RoleComponent } from './role/role.component';
+import { DropdownMultiselectComponent } from '../../components/dropdown-multiselect/dropdown-multiselect.component';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 // Forms Component
 import { FormsComponent } from './forms.component';
@@ -44,6 +46,7 @@ import { ProgressComponent } from './progress.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TooltipsComponent } from './tooltips.component';
 
+import { TextMaskModule } from 'angular2-text-mask';
 
 // Components Routing
 import { SystemsRoutingModule } from './systems-routing.module';
@@ -56,6 +59,7 @@ import { UserComponent } from './user/user.component';
     ReactiveFormsModule,
     SystemsRoutingModule,
     BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     TabsModule,
     CarouselModule.forRoot(),
     CollapseModule.forRoot(),
@@ -63,10 +67,12 @@ import { UserComponent } from './user/user.component';
     PopoverModule.forRoot(),
     ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    TextMaskModule
   ],
   declarations: [
     RoleComponent,
+    DropdownMultiselectComponent,
     FormsComponent,
     SwitchesComponent,
     TablesComponent,

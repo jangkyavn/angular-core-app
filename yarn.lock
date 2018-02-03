@@ -349,6 +349,12 @@ angular-tree-component@^7.0.1:
     mobx ">=3"
     mobx-angular ">=1"
 
+angular2-text-mask@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/angular2-text-mask/-/angular2-text-mask-8.0.4.tgz#07e485746cfb9f27e710b27b2785eac4cc4871fc"
+  dependencies:
+    text-mask-core "^5.0.0"
+
 ansi-html@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ansi-html/-/ansi-html-0.0.7.tgz#813584021962a9e9e6fd039f940d12f56ca7859e"
@@ -6876,6 +6882,10 @@ tar@^2.0.0, tar@^2.2.1:
     block-stream "*"
     fstream "^1.0.2"
     inherits "2"
+
+text-mask-core@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/text-mask-core/-/text-mask-core-5.0.1.tgz#86db742bdfe3b4c383bb51a3b4ca342c86110639"
 
 through2@^2.0.0:
   version "2.0.3"

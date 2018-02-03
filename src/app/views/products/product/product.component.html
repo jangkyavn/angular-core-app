@@ -6,21 +6,25 @@
                 <i class="fa fa-align-justify"></i> Danh sách sản phẩm
             </div>
             <div class="card-body">
-                <div class="row my-2">
+                <div class="row mb-2">
                     <div class="col-7">
                         <div class="input-group">
                             <span class="input-group-prepend">
-                                <button type="button" class="btn btn-primary">
-                                    <i class="fa fa-search"></i> Tìm kiếm</button>
+                                <button type="button" class="btn btn-primary" tooltip="Tìm kiếm">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm" (keyup)="search($event.target.value)">
-                            <select class="form-control" (change)="searchDropDown($event.target.value)">
+                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" (keyup)="search($event.target.value)">
+                            <select class="form-control" [(ngModel)]="filterGender" (change)="searchDropDown($event.target.value)">
                                 <option value="">--- Chọn thể loại cần tìm ---</option>
                                 <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-5">
+                        <button type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
+                            <i class="fa fa-trash"></i>
+                        </button>
                         <button type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
                         </button>
@@ -192,7 +196,7 @@
                                 <input id="txtImage" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" name="image" [(ngModel)]="entity.Image">
                                 <input type="file" id="fileInputImage" (change)="changeFileInputImage($event.target.files)">
                                 <span class="input-group-append">
-                                    <button class="btn btn-default" type="button" >Trình duyệt</button>
+                                    <button class="btn btn-default" type="button">Trình duyệt</button>
                                 </span>
                             </div>
                             <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
