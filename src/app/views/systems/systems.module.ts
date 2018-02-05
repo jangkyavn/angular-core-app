@@ -51,6 +51,8 @@ import { TextMaskModule } from 'angular2-text-mask';
 // Components Routing
 import { SystemsRoutingModule } from './systems-routing.module';
 import { UserComponent } from './user/user.component';
+import { RoleModalAddEditComponent } from './role/role-modal-add-edit/role-modal-add-edit.component';
+import { UserModalAddEditComponent } from './user/user-modal-add-edit/user-modal-add-edit.component';
 
 @NgModule({
   imports: [
@@ -83,7 +85,9 @@ import { UserComponent } from './user/user.component';
     PopoversComponent,
     ProgressComponent,
     TooltipsComponent,
-    UserComponent
+    UserComponent,
+    RoleModalAddEditComponent,
+    UserModalAddEditComponent
   ]
 })
 export class SystemsModule { }

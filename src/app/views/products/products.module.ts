@@ -14,6 +14,8 @@ import { CKEditorModule } from 'ng2-ckeditor';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
+import { ProductCategoryModalAddEditComponent } from './product-category/product-category-modal-add-edit/product-category-modal-add-edit.component';
+import { ProductModalAddEditComponent } from './product/product-modal-add-edit/product-modal-add-edit.component';
 
 @NgModule({
   imports: [
@@ -31,7 +33,9 @@ import { ProductCategoryComponent } from './product-category/product-category.co
   ],
   declarations: [
     ProductComponent,
-    ProductCategoryComponent
+    ProductCategoryComponent,
+    ProductCategoryModalAddEditComponent,
+    ProductModalAddEditComponent
   ]
 })
 export class ProductsModule { }

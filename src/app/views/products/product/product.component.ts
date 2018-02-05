@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -9,21 +9,19 @@ import { SystemConstants, MessageConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
 import { Product } from '../../../models/product.model';
 
+import { ProductModalAddEditComponent } from './product-modal-add-edit/product-modal-add-edit.component';
+
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
+  @ViewChild('productModalAddEdit') productModalAddEdit: ProductModalAddEditComponent;
 
-  modalTitle: string = '';
   baseApi: string = SystemConstants.BASE_API;
-  imageUrl: string;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
 
-  entity: Product = {};
-  tagItems: any[];
   products: any[];
   productCategoryHierachies: any[];
 
@@ -37,7 +35,7 @@ export class ProductComponent implements OnInit {
   lastRow: number;
 
   filterKeyword: string = '';
-  filterGender: any;
+  filterCategory: string = '';
   selectedAll: boolean;
   nothingSelected: boolean;
 
@@ -53,7 +51,7 @@ export class ProductComponent implements OnInit {
   }
 
   loadData() {
-    const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&gender=${this.filterGender}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
+    const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&categoryId=${this.filterCategory}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
       const data: PagedResult = response;
@@ -69,7 +67,7 @@ export class ProductComponent implements OnInit {
 
     this.nothingSelected = true;
     this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
+    $('#chkAll').prop('indeterminate', false)
   }
 
   loadProductCategoryHierachies() {
@@ -78,81 +76,19 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  setDefaultValue() {
-    let state = {};
-
-    this.entity = {
-      ...state,
-      Id: 0,
-      CategoryId: '',
-      DateCreated: null,
-      HotFlag: false,
-      Status: false
-    }
-
-    this.tagItems = [];
-  }
-
-  showModal(title: string, id?: number) {
-    this.entity.SeoAlias = '';
-    this.imageUrl = '';
-    this.entity.Content = '';
-
-    if (id !== undefined) {
-      this.dataService.get(`/api/Product/${id}`).subscribe((data: any) => {
-        this.entity = data;
-        this.imageUrl = this.entity.Image == null ? '' : this.baseApi + this.entity.Image;
-
-        if (this.entity.Tags !== null && this.entity.Tags !== '') {
-          const tagArr = this.entity.Tags.split(',');
-
-          this.tagItems = tagArr;
-        }
-        else {
-          this.tagItems = [];
-        }
-      });
-    } else {
-      this.setDefaultValue();
-    }
-
-    this.modalTitle = title;
-    this.modalAddEdit.show();
-  }
-
-  hideModal(form: NgForm) {
-    this.loadData();
-    this.modalAddEdit.hide();
-    $('#fileInputImage').val(null);
-    form.resetForm();
-  }
-
   showAddNew() {
-    this.showModal('Thêm mới thông tin sản phẩm');
+    this.productModalAddEdit.showModal('Thêm mới thông tin sản phẩm');
   }
 
   showEdit(id: number) {
-    this.showModal('Sửa thông tin sản phẩm', id);
+    this.productModalAddEdit.showModal('Sửa thông tin sản phẩm', id);
   }
 
-  saveChanges(form: NgForm) {
-    if (form.valid) {
-      const data = this.entity;
-      data.Tags = this.tagItems.toString();
-
-      console.log(data);
-
-      if (data.Id === 0) {
-        this.dataService.post('/api/Product', data).subscribe(() => {
-          this.hideModal(form);
-          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
-        });
-      } else {
-        this.dataService.put('/api/Product', data).subscribe(() => {
-          this.hideModal(form);
-          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-        });
-      }
+  saveChanges(result: boolean) {
+    if (result) {
+      this.loadData();
+      this.productModalAddEdit.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     }
   }
 
@@ -181,17 +117,13 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  makeSeoAlias(value: string) {
-    this.entity.SeoAlias = this.utilityService.makeSeoAlias(value);
-  }
-
   search(value: string) {
     this.filterKeyword = value;
     this.loadData();
   }
 
   searchDropDown(value: any) {
-    this.filterGender = value;
+    this.filterCategory = value;
     this.loadData();
   }
 
@@ -223,26 +155,9 @@ export class ProductComponent implements OnInit {
     });
 
     if (!this.selectedAll && !this.nothingSelected) {
-      $('#customCheckAll').prop('indeterminate', true);
+      $('#chkAll').prop('indeterminate', true)
     } else {
-      $('#customCheckAll').prop('indeterminate', false);
+      $('#chkAll').prop('indeterminate', false)
     }
-  }
-
-  btnSelectImage() {
-    $('#fileInputImage').click();
-  }
-
-  changeFileInputImage(files: any) {
-    this.uploadService.postWithFile('/api/Upload/UploadImage?type=products', null, files).then((imageUrl: string) => {
-      this.entity.Image = imageUrl;
-      this.imageUrl = imageUrl == '' ? '' : this.baseApi + imageUrl;
-    })
-  }
-
-  closeModal(form: NgForm) {
-    this.modalAddEdit.hide(); 
-    form.resetForm();
-    $('#fileInputImage').val(null);
   }
 }

@@ -1,27 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { ModalDirective } from 'ngx-bootstrap/modal';
-
-import { DataService, NotificationService, UtilityService, UploadService } from '../../../services';
+import { DataService, NotificationService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
 import { User } from '../../../models/user.model';
-import { Role } from '../../../models/role.model';
 
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-
-function passwordConfirming(c: AbstractControl): any {
-  if (!c.parent || !c) return;
-  const pwd = c.parent.get('Password');
-  const cpwd = c.parent.get('ConfirmPassword')
-
-  if (!pwd || !cpwd) return;
-  if (pwd.value !== cpwd.value) {
-    return { notsame: true };
-  }
-}
+import { UserModalAddEditComponent } from './user-modal-add-edit/user-modal-add-edit.component';
 
 @Component({
   selector: 'app-user',
@@ -29,23 +14,12 @@ function passwordConfirming(c: AbstractControl): any {
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  @ViewChild('modalAddEdit') public modalAddEdit: ModalDirective;
-  public mask = ['+', '8', '4', ' ', /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  modalTitle: string = '';
+  @ViewChild('userModalAddEdit') userModalAddEdit: UserModalAddEditComponent;
+  
   baseApi: string = SystemConstants.BASE_API;
-  imageUrl: string;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
-  bsValue: Date = new Date();
-  bsConfig: Partial<BsDatepickerConfig> = {
-    containerClass: 'theme-dark-blue',
-    dateInputFormat: 'DD/MM/YYYY'
-  };
-  isAddNew: boolean;
-  buttonName: string;
 
-  userForm: FormGroup;
   users: any[];
-  roles: Role[];
 
   pageIndex: number = 1;
   pageSize: number = 10;
@@ -57,53 +31,16 @@ export class UserComponent implements OnInit {
   lastRow: number;
 
   filterKeyword: string = '';
-  filterGender: any;
+  filterGender: any = '';
   selectedAll: boolean;
   nothingSelected: boolean;
 
   constructor(
-    private fb: FormBuilder,
     private dataService: DataService,
-    private notificationService: NotificationService,
-    private utilityService: UtilityService,
-    private uploadService: UploadService) { }
+    private notificationService: NotificationService) { }
 
   ngOnInit() {
-    this.loadRoles();
     this.loadData();
-    this.createForm();
-  }
-
-  createForm() {
-    this.userForm = this.fb.group({
-      Id: [''],
-      Email: ['', [
-        Validators.required,
-        Validators.email,
-        Validators.maxLength(50)
-      ]],
-      Password: ['', [
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(20)
-      ]],
-      ConfirmPassword: ['', [
-        Validators.required,
-        passwordConfirming
-      ]],
-      FullName: ['', [
-        Validators.required,
-        Validators.maxLength(50)
-      ]],
-      Gender: ['true', Validators.required],
-      BirthDay: [new Date(), Validators.required],
-      PhoneNumber: ['', Validators.required],
-      DateCreated: [''],
-      Avatar: [''],
-      Address: ['', Validators.maxLength(200)],
-      Roles: [[], Validators.required],
-      Status: [false, Validators.required]
-    });
   }
 
   loadData() {
@@ -123,106 +60,22 @@ export class UserComponent implements OnInit {
 
     this.nothingSelected = true;
     this.selectedAll = false;
-    $('#customCheckAll').prop('indeterminate', false);
-  }
-
-  loadRoles() {
-    this.dataService.get('/api/Role').subscribe((response: Role[]) => {
-      let data = [];
-
-      for (let item of response) {
-        data.push({
-          Id: item.Id,
-          Name: item.Name,
-          Selected: false
-        });
-      }
-
-      this.roles = data;
-    })
-  }
-
-  showModal(title: string, id?: number) {
-    this.imageUrl = '';
-    this.userForm.reset();
-
-    if (id !== undefined) {
-      this.isAddNew = false;
-
-      this.dataService.get(`/api/User/${id}`).subscribe((response: any) => {
-        let data: User = response;
-
-        let lengthRoles = this.roles.length;
-        let lengthRoleDetails = data.Roles.length;
-        for (let i = 0; i < lengthRoles; i++) {
-          for (let j = 0; j < lengthRoleDetails; j++) {
-            if (this.roles[i].Name === data.Roles[j]) {
-              this.roles[i].Selected = true;
-              break;
-            }
-          }
-        }
-
-        this.buttonName = data.Roles.join(', ');
-
-        this.userForm.patchValue({
-          ...data,
-          Password: '******',
-          ConfirmPassword: '******',
-          Gender: data.Gender ? 'true' : 'false',
-          BirthDay: new Date(data.BirthDay)
-        });
-
-        this.imageUrl = data.Avatar == null ? '' : this.baseApi + data.Avatar;
-      });
-    } else {
-      this.isAddNew = true;
-
-      this.userForm.patchValue({
-        Gender: 'true',
-        BirthDay: new Date(),
-        Status: false
-      });
-
-      this.buttonName = 'Chọn quyền';
-    }
-
-    this.modalTitle = title;
-    this.modalAddEdit.show();
-  }
-
-  hideModal() {
-    this.loadData();
-    this.modalAddEdit.hide();
-    $('#fileInputAvatar').val(null);
-    this.loadRoles();
+    $('#chkAll').prop('indeterminate', false)
   }
 
   showAddNew() {
-    this.showModal('Thêm mới thông tin người dùng');
+    this.userModalAddEdit.showModal('Thêm mới thông tin người dùng');
   }
 
-  showEdit(id: number) {
-    this.showModal('Sửa thông tin người dùng', id);
+  showEdit(id: string) {
+    this.userModalAddEdit.showModal('Sửa thông tin người dùng', id);
   }
 
-  saveChanges() {
-    let data: User = this.userForm.value;
-    data.Gender = !!(data.Gender === 'true');
-    data.PhoneNumber = this.utilityService.formatPhoneNumber(data.PhoneNumber);
-
-    console.log(data);
-
-    if (data.Id === null) {
-      this.dataService.post('/api/User', data).subscribe(() => {
-        this.hideModal();
-        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
-      });
-    } else {
-      this.dataService.put('/api/User', data).subscribe(() => {
-        this.hideModal();
-        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-      });
+  saveChanges(result: boolean) {
+    if (result) {
+      this.loadData();
+      this.userModalAddEdit.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     }
   }
 
@@ -289,35 +142,9 @@ export class UserComponent implements OnInit {
     });
 
     if (!this.selectedAll && !this.nothingSelected) {
-      $('#customCheckAll').prop('indeterminate', true);
+      $('#chkAll').prop('indeterminate', true)
     } else {
-      $('#customCheckAll').prop('indeterminate', false);
+      $('#chkAll').prop('indeterminate', false)
     }
-  }
-
-  btnSelectAvatar() {
-    $('#fileInputAvatar').click();
-  }
-
-  changeFileInputAvatar(files: any) {
-    this.uploadService.postWithFile('/api/Upload/UploadImage?type=users', null, files).then((imageUrl: string) => {
-      this.userForm.patchValue({
-        Avatar: imageUrl
-      })
-
-      this.imageUrl = imageUrl == '' ? '' : this.baseApi + imageUrl;
-    })
-  }
-
-  closeModal() {
-    this.modalAddEdit.hide();
-    $('#fileInputAvatar').val(null);
-    this.loadRoles();
-  }
-
-  getSelectedItem(event: string[]) {
-    this.userForm.patchValue({
-      Roles: event
-    });
   }
 }

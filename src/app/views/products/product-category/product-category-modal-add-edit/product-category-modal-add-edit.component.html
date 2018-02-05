@@ -1,0 +1,164 @@
+<div bsModal #productCategoryModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="productCategoryForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" formControlName="Id">
+        <input type="hidden" formControlName="SeoAlias">
+        <input type="hidden" formControlName="DateCreated">
+
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Đường dẫn SEO:</label>
+            <div class="col-md-10 d-flex align-items-center">
+              <a href="javascript:void(0)">
+                {{baseApi}}/{{seoAlias}}
+              </a>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtName">Tên thể loại:</label>
+            <div class="col-md-10">
+              <input type="text" id="txtName" class="form-control" formControlName="Name" (keyup)="makeSeoAlias($event.target.value)" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['Name'].errors,
+                'is-invalid': productCategoryForm.controls['Name'].errors && (productCategoryForm.controls['Name'].dirty || productCategoryForm.controls['Name'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('Name').hasError('required')">
+                  Vui lòng nhập tên thể loại.
+                </div>
+                <div *ngIf="productCategoryForm.get('Name').hasError('maxlength')">
+                  Vui lòng nhập tên thể loại không quá 100 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="ddlParent">Danh mục cha:</label>
+            <div class="col-md-10">
+              <select id="ddlParent" class="form-control is-valid" formControlName="ParentId">
+                <option value="">--- Chọn danh mục ---</option>
+                <option *ngFor="let item of parentProductCategories" [value]="item.Id">{{item.Name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
+            <div class="col-md-10">
+              <textarea id="txtDescription" rows="3" class="form-control" formControlName="Description" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['Description'].errors,
+                'is-invalid': productCategoryForm.controls['Description'].errors && (productCategoryForm.controls['Description'].dirty || productCategoryForm.controls['Description'].touched)
+              }"></textarea>
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('Description').hasError('maxlength')">
+                  Vui lòng nhập mô tả không quá 500 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtImage">Hình ảnh:</label>
+            <div class="col-md-10">
+              <div class="input-group" (click)="btnSelectImage()">
+                <input id="txtImage" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Image" [ngClass]="{
+                  'is-valid': !productCategoryForm.controls['Image'].errors,
+                  'is-invalid': productCategoryForm.controls['Image'].errors && (productCategoryForm.controls['Image'].dirty || productCategoryForm.controls['Image'].touched)
+                }">
+                <input type="file" id="fileInputImage" (change)="changeFileInputImage($event.target.files)">
+                <span class="input-group-append">
+                  <button class="btn btn-default" type="button">Trình duyệt</button>
+                </span>
+              </div>
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('Image').hasError('maxlength')">
+                  Vui lòng chọn đường dẫn ảnh không quá 250 ký tự.
+                </div>
+              </div>
+              <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtSortOrder">Thứ tự hiển thị:</label>
+            <div class="col-md-4">
+              <input type="number" class="form-control" id="txtSortOrder" min="0" formControlName="SortOrder" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['SortOrder'].errors,
+                'is-invalid': productCategoryForm.controls['SortOrder'].errors && (productCategoryForm.controls['SortOrder'].dirty || productCategoryForm.controls['SortOrder'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('SortOrder').hasError('required')">
+                  Vui lòng nhập thứ tự hiển thị.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtSeoPageTitle">Tiêu đề SEO:</label>
+            <div class="col-md-10">
+              <input type="text" id="txtSeoPageTitle" class="form-control" formControlName="SeoPageTitle" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['SeoPageTitle'].errors,
+                'is-invalid': productCategoryForm.controls['SeoPageTitle'].errors && (productCategoryForm.controls['SeoPageTitle'].dirty || productCategoryForm.controls['SeoPageTitle'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('SeoPageTitle').hasError('maxlength')">
+                  Vui lòng nhập tiêu đề seo không quá 100 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtSeoKeywords">Từ khóa SEO:</label>
+            <div class="col-md-10">
+              <input type="text" id="txtSeoKeywords" class="form-control" formControlName="SeoKeywords" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['SeoKeywords'].errors,
+                'is-invalid': productCategoryForm.controls['SeoKeywords'].errors && (productCategoryForm.controls['SeoKeywords'].dirty || productCategoryForm.controls['SeoKeywords'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('SeoKeywords').hasError('maxlength')">
+                  Vui lòng nhập từ khóa seo không quá 250 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtSeoDescription">Mô tả SEO:</label>
+            <div class="col-md-10">
+              <input type="text" id="txtSeoDescription" class="form-control" formControlName="SeoDescription" [ngClass]="{
+                'is-valid': !productCategoryForm.controls['SeoDescription'].errors,
+                'is-invalid': productCategoryForm.controls['SeoDescription'].errors && (productCategoryForm.controls['SeoDescription'].dirty || productCategoryForm.controls['SeoDescription'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="productCategoryForm.get('SeoDescription').hasError('maxlength')">
+                  Vui lòng nhập mô tả seo không quá 250 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Trạng thái:</label>
+            <div class="col-md-10 d-flex align-items-center">
+              <label class="switch switch-icon switch-success switch-lg">
+                <input type="checkbox" class="switch-input" formControlName="Status">
+                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf023;"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="productCategoryForm.invalid" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

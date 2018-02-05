@@ -16,7 +16,7 @@
                             </span>
                             <input type="text" class="form-control" placeholder="Nhập email, họ tên cần tìm" (keyup)="search($event.target.value)">
                             <select class="form-control" (change)="searchDropDown($event)">
-                                <option value="null">--- Chọn giới tính cần tìm ---</option>
+                                <option value="">--- Chọn giới tính cần tìm ---</option>
                                 <option value="true">Nam</option>
                                 <option value="false">Nữ</option>
                             </select>
@@ -36,8 +36,8 @@
                         <tr>
                             <th style="width: 5%; text-align: center;">
                                 <div class="custom-control custom-checkbox" *ngIf="!(totalRow === 0)">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckAll" [(ngModel)]="selectedAll" (change)="selectAll();">
-                                    <label class="custom-control-label" for="customCheckAll"></label>
+                                    <input type="checkbox" class="custom-control-input" id="chkAll" [(ngModel)]="selectedAll" (change)="selectAll();">
+                                    <label class="custom-control-label" for="chkAll"></label>
                                 </div>
                             </th>
                             <th style="width: 15%;">Ảnh đại diện</th>
@@ -57,8 +57,8 @@
                             <tr *ngFor="let item of users" [ngClass]="{'selected-row': item.Selected}">
                                 <td style="text-align: center;">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck{{item.Id}}" [(ngModel)]="item.Selected" (change)="checkIfAllSelected();">
-                                        <label class="custom-control-label" for="customCheck{{item.Id}}"></label>
+                                        <input type="checkbox" class="custom-control-input" id="chk{{item.Id}}" [(ngModel)]="item.Selected" (change)="checkIfAllSelected();">
+                                        <label class="custom-control-label" for="chk{{item.Id}}"></label>
                                     </div>
                                 </td>
                                 <td>
@@ -120,188 +120,4 @@
     <!--/.col-->
 </div>
 
-<div bsModal #modalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{{modalTitle}}</h4>
-                <button type="button" class="close" (click)="closeModal();" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form class="form-horizontal" [formGroup]="userForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
-                <input type="hidden" formControlName="Id">
-                <input type="hidden" formControlName="Password">
-                <input type="hidden" formControlName="ConfirmPassword">
-                <input type="hidden" formControlName="DateCreated">
-
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtEmail">Email:</label>
-                        <div class="col-md-9">
-                            <input type="email" [readonly]="!isAddNew" id="txtEmail" class="form-control" formControlName="Email" [ngClass]="{
-                                'is-valid': !userForm.controls['Email'].errors,
-                                'is-invalid': userForm.controls['Email'].errors && (userForm.controls['Email'].dirty || userForm.controls['Email'].touched)
-                            }">
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('Email').hasError('required')">
-                                    Vui lòng nhập email.
-                                </div>
-                                <div *ngIf="userForm.get('Email').hasError('email') && !userForm.get('Email').hasError('required')">
-                                    Vui lòng nhập email hợp lệ.
-                                </div>
-                                <div *ngIf="userForm.get('Email').hasError('maxlength')">
-                                    Vui lòng nhập email không quá 50 ký tự.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div [ngStyle]="{'display': isAddNew ? '' : 'none'}" class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtPassword">Mật khẩu:</label>
-                        <div class="col-md-9">
-                            <input type="password" id="txtPassword" class="form-control" formControlName="Password" [ngClass]="{
-                                    'is-valid': !userForm.controls['Password'].errors,
-                                    'is-invalid': userForm.controls['Password'].errors && (userForm.controls['Password'].dirty || userForm.controls['Password'].touched)
-                                }">
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('Password').hasError('required')">
-                                    Vui lòng nhập mật khẩu.
-                                </div>
-                                <div *ngIf="userForm.get('Password').hasError('minlength')">
-                                    Vui lòng nhập mật khẩu ít nhất 6 ký tự.
-                                </div>
-                                <div *ngIf="userForm.get('Password').hasError('maxlength')">
-                                    Vui lòng nhập mật khẩu không quá 20 ký tự.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div [ngStyle]="{'display': isAddNew ? '' : 'none'}" class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtConfirmPassword">Xác nhận mật khẩu:</label>
-                        <div class="col-md-9">
-                            <input type="password" id="txtConfirmPassword" class="form-control" formControlName="ConfirmPassword" [ngClass]="{
-                                        'is-valid': !userForm.controls['ConfirmPassword'].errors,
-                                        'is-invalid': userForm.controls['ConfirmPassword'].errors && (userForm.controls['ConfirmPassword'].dirty || userForm.controls['ConfirmPassword'].touched)
-                                    }">
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('ConfirmPassword').hasError('required')">
-                                    Vui lòng nhập xác nhận mật khẩu.
-                                </div>
-                                <div *ngIf="userForm.get('ConfirmPassword').hasError('notsame') && !userForm.get('ConfirmPassword').hasError('required')">
-                                    Mật khẩu và xác nhận mật khẩu chưa trùng khớp.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtFullName">Họ tên:</label>
-                        <div class="col-md-9">
-                            <input type="text" id="txtFullName" class="form-control" formControlName="FullName" [ngClass]="{
-                                'is-valid': !userForm.controls['FullName'].errors,
-                                'is-invalid': userForm.controls['FullName'].errors && (userForm.controls['FullName'].dirty || userForm.controls['FullName'].touched)
-                            }">
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('FullName').hasError('required')">
-                                    Vui lòng nhập họ tên.
-                                </div>
-                                <div *ngIf="userForm.get('FullName').hasError('maxlength')">
-                                    Vui lòng nhập họ tên không quá 50 ký tự.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtDescription">Giới tính:</label>
-                        <div class="col-md-9 d-flex align-items-center">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" id="rdoMale" name="Gender" class="custom-control-input" formControlName="Gender" value="true">
-                                <label class="custom-control-label" for="rdoMale">Nam</label>
-                            </div>
-                            <div class="custom-control custom-radio ml-4">
-                                <input type="radio" id="rdoFemale" name="Gender" class="custom-control-input" formControlName="Gender" value="false">
-                                <label class="custom-control-label" for="rdoFemale">Nữ</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtBirthDay">Ngày sinh:</label>
-                        <div class="col-md-9">
-                            <input type="text" readonly class="form-control" id="txtBirthDay" #dp="bsDatepicker" bsDatepicker formControlName="BirthDay"
-                                [(bsValue)]="bsValue" [bsConfig]="bsConfig">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtPhoneNumber">Số điện thoại:</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" id="txtPhoneNumber" [textMask]="{mask: mask}" formControlName="PhoneNumber" [ngClass]="{
-                                'is-valid': !userForm.controls['PhoneNumber'].errors,
-                                'is-invalid': userForm.controls['PhoneNumber'].errors && (userForm.controls['PhoneNumber'].dirty || userForm.controls['PhoneNumber'].touched)
-                            }">
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('PhoneNumber').hasError('required')">
-                                    Vui lòng nhập số điện thoại.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtImage">Ảnh đại diện:</label>
-                        <div class="col-md-9">
-                            <div class="input-group" (click)="btnSelectAvatar()">
-                                <input id="txtAvatar" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Avatar">
-                                <input type="file" id="fileInputAvatar" (change)="changeFileInputAvatar($event.target.files)">
-                                <span class="input-group-append">
-                                    <button class="btn btn-default" type="button">Trình duyệt</button>
-                                </span>
-                            </div>
-                            <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtAddress">Địa chỉ:</label>
-                        <div class="col-md-9">
-                            <textarea rows="3" class="form-control" id="txtAddress" formControlName="Address" [ngClass]="{
-                                'is-valid': !userForm.controls['Address'].errors,
-                                'is-invalid': userForm.controls['Address'].errors && (userForm.controls['Address'].dirty || userForm.controls['Address'].touched)
-                            }"></textarea>
-                            <div class="invalid-feedback">
-                                <div *ngIf="userForm.get('Address').hasError('maxlength')">
-                                    Vui lòng nhập địa chỉ không quá 200.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">Quyền:</label>
-                        <div class="col-md-9">
-                            <dropdown-multiselect [dmData]="roles" [dmButtonName]="buttonName" (selectedItem)="getSelectedItem($event)"></dropdown-multiselect>
-                            <input type="hidden" formControlName="Roles">
-                            <div *ngIf="userForm.get('Roles').hasError('required')" class="error-dropdown">
-                                Vui lòng chọn quyền.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">Trạng thái:</label>
-                        <div class="col-md-9 d-flex align-items-center">
-                            <label class="switch switch-icon switch-success switch-lg">
-                                <input type="checkbox" class="switch-input" formControlName="Status">
-                                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf023;"></span>
-                                <span class="switch-handle"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="closeModal();">
-                        <i class="fa fa-times"></i> Hủy
-                    </button>
-                    <button type="submit" [disabled]="userForm.invalid" class="btn btn-success">
-                        <i class="fa fa-floppy-o"></i> Lưu
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<user-modal-add-edit #userModalAddEdit (saveChangesResult)="saveChanges($event)"></user-modal-add-edit>

@@ -1,0 +1,61 @@
+<div bsModal #roleModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" (click)="roleModalAddEdit.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="roleForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" formControlName="Id">
+
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="txtName">Tên quyền:</label>
+            <div class="col-md-9">
+              <input type="text" id="txtName" class="form-control" formControlName="Name" [ngClass]="{
+                'is-valid': !roleForm.controls['Name'].errors,
+                'is-invalid': roleForm.controls['Name'].errors && (roleForm.controls['Name'].dirty || roleForm.controls['Name'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="roleForm.get('Name').hasError('required')">
+                  Vui lòng nhập tên quyền.
+                </div>
+                <div *ngIf="roleForm.get('Name').hasError('maxlength')">
+                  Vui lòng nhập tên quyền không quá 50 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="txtDescription">Mô tả:</label>
+            <div class="col-md-9">
+              <textarea id="txtDescription" class="form-control" formControlName="Description" [ngClass]="{
+                'is-valid': !roleForm.controls['Description'].errors,
+                'is-invalid': roleForm.controls['Description'].errors && (roleForm.controls['Description'].dirty || roleForm.controls['Description'].touched)
+              }"></textarea>
+              <div class="invalid-feedback">
+                <div *ngIf="roleForm.get('Description').hasError('required')">
+                  Vui lòng nhập mô tả.
+                </div>
+                <div *ngIf="roleForm.get('Description').hasError('maxlength')">
+                  Vui lòng nhập mô tả không quá 100 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="roleModalAddEdit.hide()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="roleForm.invalid" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
