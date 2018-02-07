@@ -53,6 +53,7 @@ import { SystemsRoutingModule } from './systems-routing.module';
 import { UserComponent } from './user/user.component';
 import { RoleModalAddEditComponent } from './role/role-modal-add-edit/role-modal-add-edit.component';
 import { UserModalAddEditComponent } from './user/user-modal-add-edit/user-modal-add-edit.component';
+import { RoleModalPermissionComponent } from './role/role-modal-permission/role-modal-permission.component';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { UserModalAddEditComponent } from './user/user-modal-add-edit/user-modal
     TooltipsComponent,
     UserComponent,
     RoleModalAddEditComponent,
-    UserModalAddEditComponent
+    UserModalAddEditComponent,
+    RoleModalPermissionComponent
   ]
 })
 export class SystemsModule { }

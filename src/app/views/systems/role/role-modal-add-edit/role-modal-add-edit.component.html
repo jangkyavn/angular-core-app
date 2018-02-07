@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{modalTitle}}</h4>
-        <button type="button" class="close" (click)="roleModalAddEdit.hide()" aria-label="Close">
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" (click)="roleModalAddEdit.hide()">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
             <i class="fa fa-times"></i> Hủy
           </button>
           <button type="submit" [disabled]="roleForm.invalid" class="btn btn-success">

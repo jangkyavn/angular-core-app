@@ -19,7 +19,7 @@ export class UserComponent implements OnInit {
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
 
-  users: any[];
+  users: User[];
 
   pageIndex: number = 1;
   pageSize: number = 10;
@@ -47,7 +47,7 @@ export class UserComponent implements OnInit {
     const url = `/api/User/GetAllPaging?keyword=${this.filterKeyword}&gender=${this.filterGender}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
-      const data: PagedResult = response;
+      const data: PagedResult<User> = response;
 
       this.users = data.Results;
       this.pageIndex = data.CurrentPage;
@@ -104,8 +104,8 @@ export class UserComponent implements OnInit {
     });
   }
 
-  search(value: string) {
-    this.filterKeyword = value;
+  search(event: any) {
+    this.filterKeyword = event.target.value;
     this.loadData();
   }
 
@@ -114,8 +114,8 @@ export class UserComponent implements OnInit {
     this.loadData();
   }
 
-  changeLengthMenu(value: number) {
-    this.pageSize = value;
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
     this.loadData();
   }
 
@@ -133,11 +133,11 @@ export class UserComponent implements OnInit {
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.users.every((item: any) => {
+    this.selectedAll = this.users.every((item: User) => {
       return item.Selected == true;
     });
 
-    this.nothingSelected = this.users.every((item: any) => {
+    this.nothingSelected = this.users.every((item: User) => {
       return item.Selected == false;
     });
 

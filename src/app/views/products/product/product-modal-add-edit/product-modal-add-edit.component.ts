@@ -2,6 +2,7 @@ import { Component, OnInit, Output, ViewChild, EventEmitter, ElementRef } from '
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
 import { DataService, UtilityService, UploadService } from '../../../../services';
 import { Product } from '../../../../models/product.model';
@@ -16,6 +17,10 @@ export class ProductModalAddEditComponent implements OnInit {
   @Output() saveChangesResult = new EventEmitter<boolean>(false);
   @ViewChild('productModalAddEdit') public productModalAddEdit: ModalDirective;
 
+  numberMask = createNumberMask({
+    prefix: '',
+    suffix: ' VNĐ'
+  });
   productForm: FormGroup;
   productCategoryHierachies: any[];
 
@@ -75,6 +80,9 @@ export class ProductModalAddEditComponent implements OnInit {
   saveChanges() {
     let data: Product = this.productForm.value;
     data.Tags = this.tagItems.length > 0 ? this.tagItems.toString() : null;
+    data.Price = this.utilityService.formatPrice(data.Price);
+    data.OriginalPrice = this.utilityService.formatPrice(data.OriginalPrice);
+    data.PromotionPrice = this.utilityService.formatPrice(data.PromotionPrice);
 
     if (data.Id === 0) {
       this.dataService.post('/api/Product', data).subscribe(() => {

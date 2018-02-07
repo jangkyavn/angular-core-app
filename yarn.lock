@@ -6883,6 +6883,10 @@ tar@^2.0.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+text-mask-addons@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/text-mask-addons/-/text-mask-addons-3.7.1.tgz#8304f5c952533ab76533053e4f90cb4fdaa3995b"
+
 text-mask-core@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/text-mask-core/-/text-mask-core-5.0.1.tgz#86db742bdfe3b4c383bb51a3b4ca342c86110639"

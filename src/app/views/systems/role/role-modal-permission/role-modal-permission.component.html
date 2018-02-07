@@ -1,0 +1,83 @@
+<div bsModal #roleModalPermission="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Phân quyền</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover tree" id="tblFunction">
+          <thead>
+            <tr>
+              <th>Tên chức năng</th>
+              <th>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="chkAllRead" [(ngModel)]="selectedAllRead" (change)="selecteAll('READ')">
+                  <label class="custom-control-label" for="chkAllRead">Xem</label>
+                </div>
+              </th>
+              <th>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="chkAllCreate" [(ngModel)]="selectedAllCreate" (change)="selecteAll('CREATE')">
+                  <label class="custom-control-label" for="chkAllCreate">Thêm</label>
+                </div>
+              </th>
+              <th>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="chkAllUpdate" [(ngModel)]="selectedAllUpdate" (change)="selecteAll('UPDATE')">
+                  <label class="custom-control-label" for="chkAllUpdate">Sửa</label>
+                </div>
+              </th>
+              <th>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="chkAllDelete" [(ngModel)]="selectedAllDelete" (change)="selecteAll('DELETE')">
+                  <label class="custom-control-label" for="chkAllDelete">Xóa</label>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of functionHierarchies" class="treegrid-{{item.Id}}" [ngClass]="{'table-active': item.ParentId == null}">
+              <td><i class="fa fa-{{item.ParentId == null ? 'chevron-down' : 'minus'}}"></i> {{item.Name}}</td>
+              <td>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" [(ngModel)]="item.SelectedRead" id="chkRead{{item.Id}}" (change)="checkIfAllSelected('READ', item.Id)">
+                  <label class="custom-control-label" for="chkRead{{item.Id}}">Cho phép</label>
+                </div>
+              </td>
+              <td>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" [(ngModel)]="item.SelectedCreate" id="chkCreate{{item.Id}}" (change)="checkIfAllSelected('CREATE', item.Id)">
+                  <label class="custom-control-label" for="chkCreate{{item.Id}}">Cho phép</label>
+                </div>
+              </td>
+              <td>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" [(ngModel)]="item.SelectedUpdate" id="chkUpdate{{item.Id}}" (change)="checkIfAllSelected('UPDATE', item.Id)">
+                  <label class="custom-control-label" for="chkUpdate{{item.Id}}">Cho phép</label>
+                </div>
+              </td>
+              <td>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" [(ngModel)]="item.SelectedDelete" id="chkDelete{{item.Id}}" (change)="checkIfAllSelected('DELETE', item.Id)">
+                  <label class="custom-control-label" for="chkDelete{{item.Id}}">Cho phép</label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="hideModal()">
+          <i class="fa fa-times"></i> Hủy
+        </button>
+        <button type="submit" class="btn btn-success">
+          <i class="fa fa-floppy-o"></i> Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

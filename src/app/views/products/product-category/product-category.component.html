@@ -31,10 +31,10 @@
                     <tree-root #tree [nodes]="productCategoryHierarchies" [options]="options">
                         <ng-template #treeNodeTemplate let-node let-index="index">
                             <span>{{ node.data.Name }}</span>
-                            <button class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)" tooltip="Sửa" placement="bottom">
+                            <button class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)" tooltip="Sửa" placement="right">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" (click)="delete(node.data.Id)" tooltip="Xóa" placement="bottom">
+                            <button class="btn btn-sm btn-danger" (click)="delete(node.data.Id)" tooltip="Xóa" placement="right">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
                             <span [class]="node.data.Status == 0 ? 'badge badge-danger': 'badge badge-success'">

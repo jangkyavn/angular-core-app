@@ -1,5 +1,5 @@
-<div bsModal #userModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
+<div bsModal #userModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,14 +105,26 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="txtBirthDay">Ngày sinh:</label>
                         <div class="col-md-9">
-                            <input type="text" readonly class="form-control" id="txtBirthDay" #dp="bsDatepicker" bsDatepicker formControlName="BirthDay"
-                                [(bsValue)]="bsValue" [bsConfig]="bsConfig">
+                            <input type="text" class="form-control" id="txtBirthDay" #dp="bsDatepicker" bsDatepicker formControlName="BirthDay" [(bsValue)]="bsValue"
+                                [bsConfig]="bsConfig" [ngClass]="{
+                                    'is-valid': !userForm.controls['BirthDay'].errors,
+                                    'is-invalid': userForm.controls['BirthDay'].errors && (userForm.controls['BirthDay'].dirty || userForm.controls['BirthDay'].touched)
+                            }">
+                            <div class="invalid-feedback">
+                                <div *ngIf="userForm.get('BirthDay').hasError('required')">
+                                    Vui lòng nhập ngày sinh.
+                                </div>
+                                <div *ngIf="userForm.get('BirthDay').hasError('bsDate')">
+                                    Vui lòng nhập ngày sinh hợp lệ.
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="txtPhoneNumber">Số điện thoại:</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" id="txtPhoneNumber" [textMask]="{mask: mask}" formControlName="PhoneNumber" [ngClass]="{
+                            <input type="text" class="form-control" id="txtPhoneNumber" [textMask]="{mask: maskPhone}" formControlName="PhoneNumber"
+                                [ngClass]="{
                                 'is-valid': !userForm.controls['PhoneNumber'].errors,
                                 'is-invalid': userForm.controls['PhoneNumber'].errors && (userForm.controls['PhoneNumber'].dirty || userForm.controls['PhoneNumber'].touched)
                             }">
@@ -127,11 +139,19 @@
                         <label class="col-md-3 col-form-label" for="txtImage">Ảnh đại diện:</label>
                         <div class="col-md-9">
                             <div class="input-group" (click)="btnSelectAvatar()">
-                                <input id="txtAvatar" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Avatar">
+                                <input id="txtAvatar" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Avatar" [ngClass]="{
+                                    'is-valid': !userForm.controls['Avatar'].errors,
+                                    'is-invalid': userForm.controls['Avatar'].errors && (userForm.controls['Avatar'].dirty || userForm.controls['Avatar'].touched)
+                                }">
                                 <input type="file" id="fileInputAvatar" (change)="changeFileInputAvatar($event.target.files)">
                                 <span class="input-group-append">
                                     <button class="btn btn-default" type="button">Trình duyệt</button>
                                 </span>
+                            </div>
+                            <div class="invalid-feedback">
+                                <div *ngIf="userForm.get('Avatar').hasError('required')">
+                                    Vui lòng chọn đường dẫn ảnh không quá 200 ký tự.
+                                </div>
                             </div>
                             <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
                         </div>

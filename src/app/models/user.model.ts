@@ -11,5 +11,6 @@ export interface User {
     DateCreated?: any,
     DateModified?: any,
     Roles: any[],
+    Selected: boolean;
     Status?: boolean;
 }

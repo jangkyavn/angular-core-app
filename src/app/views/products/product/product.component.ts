@@ -8,6 +8,7 @@ import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
 import { Product } from '../../../models/product.model';
+import { ProductCategory } from '../../../models/product-category.model';
 
 import { ProductModalAddEditComponent } from './product-modal-add-edit/product-modal-add-edit.component';
 
@@ -22,8 +23,8 @@ export class ProductComponent implements OnInit {
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
 
-  products: any[];
-  productCategoryHierachies: any[];
+  products: Product[];
+  productCategoryHierachies: ProductCategory[];
 
   pageIndex: number = 1;
   pageSize: number = 10;
@@ -54,7 +55,7 @@ export class ProductComponent implements OnInit {
     const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&categoryId=${this.filterCategory}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
-      const data: PagedResult = response;
+      const data: PagedResult<Product> = response;
 
       this.products = data.Results;
       this.pageIndex = data.CurrentPage;
@@ -117,18 +118,18 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  search(value: string) {
-    this.filterKeyword = value;
+  search(event: any) {
+    this.filterKeyword = event.target.value;
     this.loadData();
   }
 
-  searchDropDown(value: any) {
-    this.filterCategory = value;
+  searchDropDown(event: any) {
+    this.filterCategory = event.target.value;
     this.loadData();
   }
 
-  changeLengthMenu(value: number) {
-    this.pageSize = value;
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
     this.loadData();
   }
 
@@ -146,11 +147,11 @@ export class ProductComponent implements OnInit {
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.products.every((item: any) => {
+    this.selectedAll = this.products.every((item: Product) => {
       return item.Selected == true;
     });
 
-    this.nothingSelected = this.products.every((item: any) => {
+    this.nothingSelected = this.products.every((item: Product) => {
       return item.Selected == false;
     });
 

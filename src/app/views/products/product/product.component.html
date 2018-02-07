@@ -14,8 +14,8 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" (keyup)="search($event.target.value)">
-                            <select class="form-control" [(ngModel)]="filterCategory" (change)="searchDropDown($event.target.value)">
+                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" (keyup)="search($event)">
+                            <select class="form-control" [(ngModel)]="filterCategory" (change)="searchDropDown($event)">
                                 <option value="">--- Chọn thể loại cần tìm ---</option>
                                 <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
                             </select>
@@ -30,7 +30,7 @@
                         </button>
                     </div>
                 </div>
-                <table class="table table-striped table-bordered table-hover">
+                <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th style="width: 5%; text-align: center;">
@@ -53,29 +53,29 @@
                             <td colspan="8" class="text-center text-danger">Không tìm thấy dữ liệu.</td>
                         </tr>
                         <ng-template #hasData>
-                            <tr *ngFor="let item of products" [ngClass]="{'selected-row': item.Selected}">
-                                <td style="text-align: center;">
+                            <tr *ngFor="let item of products" [ngClass]="{'table-active': item.Selected}">
+                                <td class="cell-center">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="chk{{item.Id}}" [(ngModel)]="item.Selected" (change)="checkIfAllSelected();">
                                         <label class="custom-control-label" for="chk{{item.Id}}"></label>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="cell-center">
                                     <img [src]="item.Image == null ? noImage : (baseApi + item.Image)" width="100" height="100" />
                                 </td>
                                 <td>{{item.Name}}</td>
                                 <td>{{item.ProductCategory.Name}}</td>
                                 <td>{{item.Price | number:'.0'}} VNĐ</td>
                                 <td>{{item.DateCreated | date:'dd/MM/yyyy'}}</td>
-                                <td>
-                                    <a href="#" (click)="changeStatus(item.Id); $event.preventDefault()">
+                                <td class="cell-center">
+                                    <a href="javascript:void(0)">
                                         <span [class]="item.Status == 0 ? 'badge badge-danger': 'badge badge-success'">
                                             <i [class]="item.Status == 0 ? 'fa fa-lock' : 'fa fa-check'"></i>
                                             {{item.Status == 0 ? 'Khóa' : 'Kích hoạt'}}
                                         </span>
                                     </a>
                                 </td>
-                                <td>
+                                <td class="cell-center">
                                     <button type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
@@ -98,7 +98,7 @@
                 <div class="row" *ngIf="!(totalRow === 0)">
                     <div class="col-6 d-flex flex-row justify-content-start align-items-center">
                         <div>Hiển thị:</div>
-                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event.target.value)">
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>

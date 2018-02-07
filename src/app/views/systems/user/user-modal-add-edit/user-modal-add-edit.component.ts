@@ -32,7 +32,7 @@ export class UserModalAddEditComponent implements OnInit {
   userForm: FormGroup;
   roles: Role[];
 
-  mask = ['+', '8', '4', ' ', /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  maskPhone = ['+', '8', '4', ' ', /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   baseApi: string = SystemConstants.BASE_API;
   bsValue: Date = new Date();
   bsConfig: Partial<BsDatepickerConfig> = {
@@ -95,10 +95,12 @@ export class UserModalAddEditComponent implements OnInit {
         Validators.maxLength(50)
       ]],
       Gender: ['true', Validators.required],
-      BirthDay: [new Date(), Validators.required],
+      BirthDay: [new Date(), [
+        Validators.required
+      ]],
       PhoneNumber: ['', Validators.required],
       DateCreated: [''],
-      Avatar: [''],
+      Avatar: ['', Validators.maxLength(200)],
       Address: ['', Validators.maxLength(200)],
       Roles: [[], Validators.required],
       Status: [false, Validators.required]

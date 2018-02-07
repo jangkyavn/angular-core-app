@@ -11,6 +11,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TagInputModule } from 'ngx-chips';
 import { CKEditorModule } from 'ng2-ckeditor';
+import { TextMaskModule } from 'angular2-text-mask';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
@@ -29,7 +30,8 @@ import { ProductModalAddEditComponent } from './product/product-modal-add-edit/p
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
     TagInputModule,
-    CKEditorModule
+    CKEditorModule,
+    TextMaskModule
   ],
   declarations: [
     ProductComponent,

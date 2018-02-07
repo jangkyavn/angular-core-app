@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { tap, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
 
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
@@ -11,8 +7,6 @@ import { UtilityService } from '../../services/utility.service';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 import { SystemConstants } from 'app/common/system.constants';
-import { MessageConstants } from 'app/common/message.constants';
-import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'login.component.html'
@@ -21,7 +15,6 @@ export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
 
   constructor(
-    private http: HttpClient,
     private fb: FormBuilder,
     private authService: AuthService,
     private notificationService: NotificationService,

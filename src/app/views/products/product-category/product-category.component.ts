@@ -17,8 +17,8 @@ export class ProductCategoryComponent implements OnInit {
   @ViewChild('tree') reportsTree: TreeComponent;
   @ViewChild('productCategoryModalAddEdit') productCategoryModalAddEdit: ProductCategoryModalAddEditComponent;
 
+  productCategories: ProductCategory[];
   productCategorySearchResult: any[];
-  productCategories: any[];
   productCategoryHierarchies: any[];
   options = {};
 

@@ -66,13 +66,31 @@ export class UtilityService {
   }
 
   formatPhoneNumber(value: string) {
-    if (value.indexOf('-') > -1) {
-      let removeCode = value.substring(4, value.length);
-
-      return '0' + removeCode.split('-').join('').split('_').join('');
+    if (value !== null && value !== undefined) {
+      if (value.toString().indexOf('-') > -1) {
+        let removeCode = value.toString().substring(4, value.toString().length);
+  
+        return '0' + removeCode.split('-').join('').split('_').join('');
+      }
+  
+      return value;
     }
 
-    return value;
+    return null;
+  }
+
+  formatPrice(value: number) {
+    if (value !== null && value !== undefined) {
+      if (value.toString().indexOf(',') > -1) {
+        let removeSurffix = value.toString().substr(0, value.toString().indexOf(' '));
+  
+        return parseFloat(removeSurffix.split(',').join(''));
+      }
+  
+      return value;
+    }
+
+    return null;
   }
 
   formatNumber(value: number, precision: number) {

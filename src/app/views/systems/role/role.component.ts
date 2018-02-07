@@ -3,7 +3,10 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { DataService, NotificationService } from '../../../services';
 import { MessageConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
+import { Role } from '../../../models/role.model';
+
 import { RoleModalAddEditComponent } from './role-modal-add-edit/role-modal-add-edit.component';
+import { RoleModalPermissionComponent } from './role-modal-permission/role-modal-permission.component';
 
 @Component({
   templateUrl: 'role.component.html',
@@ -11,8 +14,10 @@ import { RoleModalAddEditComponent } from './role-modal-add-edit/role-modal-add-
 })
 export class RoleComponent implements OnInit {
   @ViewChild('roleModalAddEdit') roleModalAddEdit: RoleModalAddEditComponent;
+  @ViewChild('roleModalPermission') roleModalPermission: RoleModalPermissionComponent;
 
-  roles: any[];
+  roles: Role[];
+  
   pageIndex: number = 1;
   pageSize: number = 10;
   pageDisplay: number = 5;
@@ -35,7 +40,7 @@ export class RoleComponent implements OnInit {
     const url = `/api/Role/GetAllPaging?keyword=${this.keyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
-      const data: PagedResult = response;
+      const data: PagedResult<Role> = response;
 
       this.roles = data.Results;
       this.pageIndex = data.CurrentPage;
@@ -49,6 +54,10 @@ export class RoleComponent implements OnInit {
 
   showAddNew() {
     this.roleModalAddEdit.showModal('Thêm mới thông tin quyền');
+  }
+
+  showPermission(id: string) {
+    this.roleModalPermission.showModal();
   }
 
   showEdit(id: string) {
@@ -72,13 +81,13 @@ export class RoleComponent implements OnInit {
     })
   }
 
-  search(value: string) {
-    this.keyword = value;
+  search(event: any) {
+    this.keyword = event.target.value;
     this.loadData();
   }
 
-  changeLengthMenu(value: number) {
-    this.pageSize = value;
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
     this.loadData();
   }
 

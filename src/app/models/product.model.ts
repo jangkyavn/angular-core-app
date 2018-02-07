@@ -18,5 +18,6 @@ export interface Product {
     SeoKeywords?: string;
     SeoDescription?: string;
     HotFlag?: boolean;
+    Selected?: boolean;
     Status?: boolean;
 }

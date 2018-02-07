@@ -103,7 +103,7 @@
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtPrice">Giá bán:</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="txtPrice" name="price" formControlName="Price" [ngClass]="{
+              <input type="text" class="form-control" id="txtPrice" [textMask]="{mask: numberMask}" formControlName="Price" [ngClass]="{
                 'is-valid': !productForm.controls['Price'].errors,
                 'is-invalid': productForm.controls['Price'].errors && (productForm.controls['Price'].dirty || productForm.controls['Price'].touched)
               }">
@@ -115,7 +115,7 @@
             </div>
             <label class="col-md-2 col-form-label" for="txtOriginalPrice">Giá gốc:</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="txtOriginalPrice" formControlName="OriginalPrice" [ngClass]="{
+              <input type="text" class="form-control" id="txtOriginalPrice" [textMask]="{mask: numberMask}" formControlName="OriginalPrice" [ngClass]="{
                 'is-valid': !productForm.controls['OriginalPrice'].errors,
                 'is-invalid': productForm.controls['OriginalPrice'].errors && (productForm.controls['OriginalPrice'].dirty || productForm.controls['OriginalPrice'].touched)
               }">
@@ -129,7 +129,7 @@
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtPromotionPrice">Giá khuyến mãi:</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="txtPromotionPrice" formControlName="PromotionPrice" [ngClass]="{
+              <input type="text" class="form-control" id="txtPromotionPrice" [textMask]="{mask: numberMask}" formControlName="PromotionPrice" [ngClass]="{
                 'is-valid': !productForm.controls['PromotionPrice'].errors,
                 'is-invalid': productForm.controls['PromotionPrice'].errors && (productForm.controls['PromotionPrice'].dirty || productForm.controls['PromotionPrice'].touched)
               }">
