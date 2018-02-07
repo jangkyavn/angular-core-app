@@ -57,7 +57,7 @@ export class RoleComponent implements OnInit {
   }
 
   showPermission(id: string) {
-    this.roleModalPermission.showModal();
+    this.roleModalPermission.showModal(id);
   }
 
   showEdit(id: string) {
@@ -69,6 +69,13 @@ export class RoleComponent implements OnInit {
       this.loadData();
       this.roleModalAddEdit.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+    }
+  }
+
+  saveChangesPermission(result: boolean) {
+    if (result) {
+      this.roleModalPermission.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
     }
   }
 

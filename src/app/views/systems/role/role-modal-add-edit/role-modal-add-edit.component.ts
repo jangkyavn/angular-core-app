@@ -43,11 +43,11 @@ export class RoleModalAddEditComponent implements OnInit {
     const data = this.roleForm.value;
 
     if (data.Id === null) {
-      this.dataService.post('/api/Role', data).subscribe(() => {
+      this.dataService.post('/api/Role', JSON.stringify(data)).subscribe(() => {
         this.saveChangesResult.emit(true);
       });
     } else {
-      this.dataService.put('/api/Role', data).subscribe(() => {
+      this.dataService.put('/api/Role', JSON.stringify(data)).subscribe(() => {
         this.saveChangesResult.emit(true);
       });
     }
