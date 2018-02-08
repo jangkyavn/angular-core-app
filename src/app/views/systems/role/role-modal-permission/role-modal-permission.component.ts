@@ -1,8 +1,8 @@
-import { Component, OnInit, OnChanges, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, NotificationService } from '../../../../services';
+import { DataService } from '../../../../services';
 
 import { Function } from '../../../../models/function.model';
 import { Permission } from '../../../../models/permission.model';
@@ -12,7 +12,7 @@ import { Permission } from '../../../../models/permission.model';
   templateUrl: './role-modal-permission.component.html',
   styleUrls: ['./role-modal-permission.component.scss']
 })
-export class RoleModalPermissionComponent implements OnInit, OnChanges {
+export class RoleModalPermissionComponent implements OnInit {
   @ViewChild('roleModalPermission') roleModalPermission: ModalDirective;
   @Output() saveChangesPermissionResult = new EventEmitter<boolean>(false);
 
@@ -34,10 +34,6 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    
-  }
-
-  ngOnChanges() {
 
   }
 
@@ -72,7 +68,7 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
       const permissionsLength = data.length;
       const functions = this.functionHierarchies;
 
-      for(let i  = 0; i < functionsLength; i++) {
+      for (let i = 0; i < functionsLength; i++) {
         for (let j = 0; j < permissionsLength; j++) {
           if (functions[i].Id === data[j].FunctionId) {
             this.functionHierarchies[i].SelectedRead = data[j].CanRead;
@@ -83,7 +79,7 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
         }
       }
 
-      for(let i = 0; i < functionsLength; i++) {
+      for (let i = 0; i < functionsLength; i++) {
         if (functions[i].ParentId === null) {
           const functionsByParent = functions.filter((item: Function) => {
             return item.ParentId === functions[i].Id;
@@ -216,7 +212,7 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
   saveChanges() {
     let listPermmission: Permission[] = [];
 
-    for(let item of this.functionHierarchies) {
+    for (let item of this.functionHierarchies) {
       listPermmission.push({
         RoleId: this.roleId,
         FunctionId: item.Id,
@@ -277,21 +273,13 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
     const functionById = functions.find(x => x.Id == id);
 
     if (type === 'READ') {
-      if (functionById.ParentId == null && functionById.SelectedRead) {
+      if (functionById.ParentId === null) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedRead = true;
+            this.functionHierarchies[i].SelectedRead = functionById.SelectedRead;
           }
         }
       } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedRead = false;
-          }
-        }
-      }
-
-      if (functionById.ParentId !== null && functionById.SelectedRead) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].Id === functionById.ParentId) {
             const functionsByParent = functions.filter((item: Function) => {
@@ -302,33 +290,19 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
               return item.SelectedRead;
             });
 
-            if (selectedAllChildRead) {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
-            } else {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', true);
-            }
-
-            this.functionHierarchies[i].SelectedRead = true;
-
-            break;
-          }
-        }
-      } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].Id === functionById.ParentId) {
-            const functionsByParent = functions.filter((item: Function) => {
-              return item.ParentId === functions[i].Id;
-            });
-
             const nothingSelectedChildRead = functionsByParent.every((item: Function) => {
               return !item.SelectedRead;
             });
 
-            if (nothingSelectedChildRead) {
+            if (!selectedAllChildRead && !nothingSelectedChildRead) {
+              $(`#chkRead${functions[i].Id}`).prop('indeterminate', true);
+              this.functionHierarchies[i].SelectedRead = true;
+            } else if (selectedAllChildRead && !nothingSelectedChildRead) {
+              $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
+              this.functionHierarchies[i].SelectedRead = true;
+            } else if (!selectedAllChildRead && nothingSelectedChildRead) {
               $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
               this.functionHierarchies[i].SelectedRead = false;
-            } else {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', true);
             }
 
             break;
@@ -350,21 +324,13 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
         $('#chkAllRead').prop('indeterminate', false);
       }
     } else if (type === 'CREATE') {
-      if (functionById.ParentId == null && functionById.SelectedCreate) {
+      if (functionById.ParentId === null) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedCreate = true;
+            this.functionHierarchies[i].SelectedCreate = functionById.SelectedCreate;
           }
         }
       } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedCreate = false;
-          }
-        }
-      }
-
-      if (functionById.ParentId !== null && functionById.SelectedCreate) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].Id === functionById.ParentId) {
             const functionsByParent = functions.filter((item: Function) => {
@@ -375,33 +341,19 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
               return item.SelectedCreate;
             });
 
-            if (selectedAllChildCreate) {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
-            } else {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', true);
-            }
-
-            this.functionHierarchies[i].SelectedCreate = true;
-
-            break;
-          }
-        }
-      } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].Id === functionById.ParentId) {
-            const functionsByParent = functions.filter((item: Function) => {
-              return item.ParentId === functions[i].Id;
-            });
-
             const nothingSelectedChildCreate = functionsByParent.every((item: Function) => {
               return !item.SelectedCreate;
             });
 
-            if (nothingSelectedChildCreate) {
+            if (!selectedAllChildCreate && !nothingSelectedChildCreate) {
+              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', true);
+              this.functionHierarchies[i].SelectedCreate = true;
+            } else if (selectedAllChildCreate && !nothingSelectedChildCreate) {
+              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
+              this.functionHierarchies[i].SelectedCreate = true;
+            } else if (!selectedAllChildCreate && nothingSelectedChildCreate) {
               $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
               this.functionHierarchies[i].SelectedCreate = false;
-            } else {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', true);
             }
 
             break;
@@ -423,21 +375,13 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
         $('#chkAllCreate').prop('indeterminate', false);
       }
     } else if (type === 'UPDATE') {
-      if (functionById.ParentId == null && functionById.SelectedUpdate) {
+      if (functionById.ParentId === null) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedUpdate = true;
+            this.functionHierarchies[i].SelectedUpdate = functionById.SelectedUpdate;
           }
         }
       } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedUpdate = false;
-          }
-        }
-      }
-
-      if (functionById.ParentId !== null && functionById.SelectedUpdate) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].Id === functionById.ParentId) {
             const functionsByParent = functions.filter((item: Function) => {
@@ -448,33 +392,19 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
               return item.SelectedUpdate;
             });
 
-            if (selectedAllChildUpdate) {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
-            } else {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', true);
-            }
-
-            this.functionHierarchies[i].SelectedUpdate = true;
-
-            break;
-          }
-        }
-      } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].Id === functionById.ParentId) {
-            const functionsByParent = functions.filter((item: Function) => {
-              return item.ParentId === functions[i].Id;
-            });
-
             const nothingSelectedChildUpdate = functionsByParent.every((item: Function) => {
               return !item.SelectedUpdate;
             });
 
-            if (nothingSelectedChildUpdate) {
+            if (!selectedAllChildUpdate && !nothingSelectedChildUpdate) {
+              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', true);
+              this.functionHierarchies[i].SelectedUpdate = true;
+            } else if (selectedAllChildUpdate && !nothingSelectedChildUpdate) {
+              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
+              this.functionHierarchies[i].SelectedUpdate = true;
+            } else if (!selectedAllChildUpdate && nothingSelectedChildUpdate) {
               $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
               this.functionHierarchies[i].SelectedUpdate = false;
-            } else {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', true);
             }
 
             break;
@@ -495,22 +425,14 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
       } else {
         $('#chkAllUpdate').prop('indeterminate', false);
       }
-    } else {
-      if (functionById.ParentId == null && functionById.SelectedDelete) {
+    } else if (type === 'DELETE') {
+      if (functionById.ParentId === null) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedDelete = true;
+            this.functionHierarchies[i].SelectedDelete = functionById.SelectedDelete;
           }
         }
       } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].ParentId !== null && functions[i].ParentId === functionById.Id) {
-            this.functionHierarchies[i].SelectedDelete = false;
-          }
-        }
-      }
-
-      if (functionById.ParentId !== null && functionById.SelectedDelete) {
         for (let i = 0; i < functionsLength; i++) {
           if (functions[i].Id === functionById.ParentId) {
             const functionsByParent = functions.filter((item: Function) => {
@@ -521,33 +443,19 @@ export class RoleModalPermissionComponent implements OnInit, OnChanges {
               return item.SelectedDelete;
             });
 
-            if (selectedAllChildDelete) {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
-            } else {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', true);
-            }
-
-            this.functionHierarchies[i].SelectedDelete = true;
-
-            break;
-          }
-        }
-      } else {
-        for (let i = 0; i < functionsLength; i++) {
-          if (functions[i].Id === functionById.ParentId) {
-            const functionsByParent = functions.filter((item: Function) => {
-              return item.ParentId === functions[i].Id;
-            });
-
             const nothingSelectedChildDelete = functionsByParent.every((item: Function) => {
               return !item.SelectedDelete;
             });
 
-            if (nothingSelectedChildDelete) {
+            if (!selectedAllChildDelete && !nothingSelectedChildDelete) {
+              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', true);
+              this.functionHierarchies[i].SelectedDelete = true;
+            } else if (selectedAllChildDelete && !nothingSelectedChildDelete) {
+              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
+              this.functionHierarchies[i].SelectedDelete = true;
+            } else if (!selectedAllChildDelete && nothingSelectedChildDelete) {
               $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
               this.functionHierarchies[i].SelectedDelete = false;
-            } else {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', true);
             }
 
             break;
