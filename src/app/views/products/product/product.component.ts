@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, NotificationService, UtilityService, UploadService } from '../../../services';
+import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
@@ -41,14 +41,19 @@ export class ProductComponent implements OnInit {
   nothingSelected: boolean;
 
   constructor(
+    public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService) { }
 
   ngOnInit() {
-    this.loadData();
-    this.loadProductCategoryHierachies();
+    if (this.authService.checkAccess('PRODUCT_LIST')) {
+      this.loadData();
+      this.loadProductCategoryHierachies();
+    } else {
+      this.utilityService.navigateToLogin();
+    }
   }
 
   loadData() {

@@ -113,13 +113,25 @@ export class UserModalAddEditComponent implements OnInit {
     data.PhoneNumber = this.utilityService.formatPhoneNumber(data.PhoneNumber);
 
     if (data.Id === null) {
-      this.dataService.post('/api/User', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
+      this.dataService.post('/api/User', data).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.saveChangesResult.emit(true);
+        }
+        else {
+          this.saveChangesResult.emit(false);
+        }
+
         this.loadRoles();
       });
     } else {
-      this.dataService.put('/api/User', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
+      this.dataService.put('/api/User', data).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.saveChangesResult.emit(true);
+        }
+        else {
+          this.saveChangesResult.emit(false);
+        }
+        
         this.loadRoles();
       });
     }

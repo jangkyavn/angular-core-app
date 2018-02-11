@@ -15,7 +15,10 @@ export class AppHeaderComponent implements OnInit {
   public user: LoggedInUser;
   baseUrl: string = SystemConstants.BASE_API;
 
-  constructor(private utilityService: UtilityService, private authService: AuthService) { }
+  constructor(
+    private utilityService: UtilityService, 
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.user = this.authService.getLoggedInUser();
@@ -24,8 +27,6 @@ export class AppHeaderComponent implements OnInit {
   logout(event: any) {
     event.preventDefault();
 
-    localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
-
-    this.utilityService.navigateToLogin();
+    this.authService.logout();
   }
 }

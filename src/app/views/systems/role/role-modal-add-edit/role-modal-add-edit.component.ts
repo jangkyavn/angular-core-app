@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { DataService } from '../../../../services';
 
+import { Role } from '../../../../models/role.model';
+
 @Component({
   selector: 'role-modal-add-edit',
   templateUrl: './role-modal-add-edit.component.html',
@@ -43,12 +45,20 @@ export class RoleModalAddEditComponent implements OnInit {
     const data = this.roleForm.value;
 
     if (data.Id === null) {
-      this.dataService.post('/api/Role', JSON.stringify(data)).subscribe(() => {
-        this.saveChangesResult.emit(true);
+      this.dataService.post('/api/Role', JSON.stringify(data)).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.saveChangesResult.emit(true);
+        } else {
+          this.saveChangesResult.emit(false);
+        }
       });
     } else {
-      this.dataService.put('/api/Role', JSON.stringify(data)).subscribe(() => {
-        this.saveChangesResult.emit(true);
+      this.dataService.put('/api/Role', JSON.stringify(data)).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.saveChangesResult.emit(true);
+        } else {
+          this.saveChangesResult.emit(false);
+        }
       });
     }
   }

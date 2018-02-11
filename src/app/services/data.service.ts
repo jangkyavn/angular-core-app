@@ -7,7 +7,10 @@ import { catchError } from 'rxjs/operators';
 
 import { MessageService } from './message.service';
 import { AuthService } from './auth.service';
+import { NotificationService } from './notification.service';
+
 import { SystemConstants } from '../common/system.constants';
+import { MessageConstants } from '../common';
 
 @Injectable()
 export class DataService {
@@ -16,14 +19,14 @@ export class DataService {
   constructor(
     private http: HttpClient,
     private messageService: MessageService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) { }
 
   private httpOptions(): HttpHeaders {
     let token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
 
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    headers.delete('Authorization');
-    headers.append('Authorization', 'Bearer ' + token);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', `Bearer ${token}`);
 
     return headers;
   }
@@ -31,9 +34,7 @@ export class DataService {
   private httpFileOptions(): HttpHeaders {
     let token = localStorage.getItem(SystemConstants.ACCESS_TOKEN);
 
-    let headers = new HttpHeaders();
-    headers.delete('Authorization');
-    headers.append('Authorization', 'Bearer ' + token);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return headers;
   }
@@ -78,6 +79,13 @@ export class DataService {
 
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
+
+      if (error.status === 401) {
+        this.notificationService.printErrorMessage(MessageConstants.LOGIN_AGAIN_MSG);
+        this.authService.logout();
+      } else if (error.status === 403) {
+        this.notificationService.printErrorMessage(MessageConstants.FORBIDDEN);
+      }
 
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);

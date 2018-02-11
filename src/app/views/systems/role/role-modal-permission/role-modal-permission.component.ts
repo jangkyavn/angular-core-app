@@ -228,8 +228,12 @@ export class RoleModalPermissionComponent implements OnInit {
       roleId: this.roleId
     };
 
-    this.dataService.post('/api/Role/SavePermission', data).subscribe(() => {
-      this.saveChangesPermissionResult.emit(true);
+    this.dataService.post('/api/Role/SavePermission', data).subscribe((response: any) => {
+      if (response !== null && response !== undefined) {
+        this.saveChangesPermissionResult.emit(true);
+      } else {
+        this.saveChangesPermissionResult.emit(false);
+      }
     });
   }
 
@@ -251,18 +255,22 @@ export class RoleModalPermissionComponent implements OnInit {
     if (type === 'READ') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedRead = this.selectedAllRead;
+        $(`#chkRead${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
       }
     } else if (type === 'CREATE') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedCreate = this.selectedAllCreate;
+        $(`#chkCreate${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
       }
     } else if (type === 'UPDATE') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedUpdate = this.selectedAllUpdate;
+        $(`#chkUpdate${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
       }
     } else {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedDelete = this.selectedAllDelete;
+        $(`#chkDelete${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
       }
     }
   }

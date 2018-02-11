@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { DataService, NotificationService } from '../../../services';
+import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
@@ -15,7 +15,7 @@ import { UserModalAddEditComponent } from './user-modal-add-edit/user-modal-add-
 })
 export class UserComponent implements OnInit {
   @ViewChild('userModalAddEdit') userModalAddEdit: UserModalAddEditComponent;
-  
+
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
 
@@ -36,11 +36,18 @@ export class UserComponent implements OnInit {
   nothingSelected: boolean;
 
   constructor(
+    public authService: AuthService,
     private dataService: DataService,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private utilityService: UtilityService
+  ) { }
 
   ngOnInit() {
-    this.loadData();
+    if (this.authService.checkAccess('USER')) {
+      this.loadData();
+    } else {
+      this.utilityService.navigateToLogin();
+    }
   }
 
   loadData() {
@@ -76,14 +83,18 @@ export class UserComponent implements OnInit {
       this.loadData();
       this.userModalAddEdit.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+    } else {
+      this.userModalAddEdit.hideModal();
     }
   }
 
   delete(id: number) {
     this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_MSG, () => {
-      this.dataService.delete(`/api/User/${id}`).subscribe(() => {
-        this.loadData();
-        this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+      this.dataService.delete(`/api/User/${id}`).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.loadData();
+          this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+        }
       })
     })
   }

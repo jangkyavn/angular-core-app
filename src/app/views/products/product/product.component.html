@@ -22,10 +22,10 @@
                         </div>
                     </div>
                     <div class="col-5">
-                        <button type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
+                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
                             <i class="fa fa-trash"></i>
                         </button>
-                        <button type="button" (click)="showAddNew()" class="btn btn-success float-right">
+                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
                         </button>
                     </div>
@@ -76,13 +76,13 @@
                                     </a>
                                 </td>
                                 <td class="cell-center">
-                                    <button type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
+                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <button type="button" (click)="showView(item.Id)" class="btn btn-info btn-sm" tooltip="Xem">
                                         <i class="fa fa-info"></i>
                                     </button>
-                                    <button type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>

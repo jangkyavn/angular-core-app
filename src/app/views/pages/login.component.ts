@@ -49,6 +49,9 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
       localStorage.setItem(SystemConstants.ACCESS_TOKEN, data.token);
 
+      localStorage.removeItem(SystemConstants.PERMISSONS);
+      localStorage.setItem(SystemConstants.PERMISSONS, data.permission);
+
       this.spinnerService.hide();
       this.utilityService.navigate('/');
     }, err => {

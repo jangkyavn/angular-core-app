@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { TreeModel, TreeNode, TreeComponent } from 'angular-tree-component';
 
-import { DataService, NotificationService, UtilityService, UploadService } from '../../../services';
+import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
 import { ProductCategory } from '../../../models/product-category.model';
 import { ProductCategoryModalAddEditComponent } from './product-category-modal-add-edit/product-category-modal-add-edit.component';
@@ -23,13 +23,18 @@ export class ProductCategoryComponent implements OnInit {
   options = {};
 
   constructor(
+    public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService) { }
 
   ngOnInit() {
-    this.loadData();
+    if (this.authService.checkAccess('PRODUCT_CATEGORY')) {
+      this.loadData();
+    } else {
+      this.utilityService.navigateToLogin();
+    }
   }
 
   loadData() {

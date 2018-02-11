@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 
-import { DataService, NotificationService } from '../../../services';
+import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { MessageConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
 import { Role } from '../../../models/role.model';
@@ -17,7 +17,7 @@ export class RoleComponent implements OnInit {
   @ViewChild('roleModalPermission') roleModalPermission: RoleModalPermissionComponent;
 
   roles: Role[];
-  
+
   pageIndex: number = 1;
   pageSize: number = 10;
   pageDisplay: number = 5;
@@ -29,11 +29,18 @@ export class RoleComponent implements OnInit {
   keyword: string = '';
 
   constructor(
+    public authService: AuthService,
     private dataService: DataService,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private utilityService: UtilityService
+  ) { }
 
   ngOnInit() {
-    this.loadData();
+    if (!this.authService.checkAccess('ROLE')) {
+      this.utilityService.navigateToLogin();
+    } else {
+      this.loadData();
+    }
   }
 
   loadData() {
@@ -69,6 +76,8 @@ export class RoleComponent implements OnInit {
       this.loadData();
       this.roleModalAddEdit.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+    } else {
+      this.roleModalAddEdit.hideModal();
     }
   }
 
@@ -76,14 +85,18 @@ export class RoleComponent implements OnInit {
     if (result) {
       this.roleModalPermission.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+    } else {
+      this.roleModalPermission.hideModal();
     }
   }
 
   delete(id: string) {
     this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_MSG, () => {
-      this.dataService.delete(`/api/Role/${id}`).subscribe(() => {
-        this.loadData();
-        this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+      this.dataService.delete(`/api/Role/${id}`).subscribe((response: any) => {
+        if (response !== null && response !== undefined) {
+          this.loadData();
+          this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+        }
       })
     })
   }
