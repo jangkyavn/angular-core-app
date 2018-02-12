@@ -12,11 +12,13 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TagInputModule } from 'ngx-chips';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { TextMaskModule } from 'angular2-text-mask';
+import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductCategoryModalAddEditComponent } from './product-category/product-category-modal-add-edit/product-category-modal-add-edit.component';
 import { ProductModalAddEditComponent } from './product/product-modal-add-edit/product-modal-add-edit.component';
+import { ProductModalImportExcelComponent } from './product/product-modal-import-excel/product-modal-import-excel.component';
 
 @NgModule({
   imports: [
@@ -31,13 +33,15 @@ import { ProductModalAddEditComponent } from './product/product-modal-add-edit/p
     PaginationModule.forRoot(),
     TagInputModule,
     CKEditorModule,
-    TextMaskModule
+    TextMaskModule,
+    Ng4LoadingSpinnerModule
   ],
   declarations: [
     ProductComponent,
     ProductCategoryComponent,
     ProductCategoryModalAddEditComponent,
-    ProductModalAddEditComponent
+    ProductModalAddEditComponent,
+    ProductModalImportExcelComponent
   ]
 })
 export class ProductsModule { }

@@ -122,6 +122,35 @@ export class UtilityService {
     return roots;
   }
 
+  unflatten2(arr: any[]): any[] {
+    let map = {};
+    let roots: any[] = [];
+
+    for (let i = 0; i < arr.length; i++) {
+      let node = arr[i];
+      node.children = [];
+      map[node.id] = i; // use map to look-up the parents
+
+      if (node.parentId !== null) {
+        arr[map[node.parentId]].children.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+
+    for (let i = 0; i < roots.length; i++) {
+      if (roots[i].children.length > 0) {
+        let childs = roots[i].children;
+
+        for (let j = 0; j < childs.length; j++) {
+          delete childs[j]['children'];
+        }
+      }
+    }
+
+    return roots;
+  }
+
   fuzzySearch (needle: string, haystack: string) {
     const haystackLC = haystack.toLowerCase();
     const needleLC = needle.toLowerCase();

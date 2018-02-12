@@ -1,0 +1,60 @@
+<div bsModal #productModalImportExcel="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Nhập tập tin excel</h4>
+                <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" [formGroup]="importExcelForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="txtFile">Tập tin:</label>
+                        <div class="col-md-10">
+                            <div class="input-group" (click)="btnSelectFile()">
+                                <input id="txtFile" readonly class="form-control" type="text" placeholder="Chọn tập tin excel" formControlName="files" [ngClass]="{
+                                    'is-valid': !importExcelForm.controls['files'].errors,
+                                    'is-invalid': importExcelForm.controls['files'].errors
+                                }">
+                                <input type="file" id="fileInput" (change)="changeFileInput($event)">
+                                <span class="input-group-append">
+                                    <button class="btn btn-default" type="button">Trình duyệt</button>
+                                </span>
+                            </div>
+                            <div class="invalid-file" *ngIf="importExcelForm.get('files').hasError('required')">
+                                Vui lòng chọn tập tin excel.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="ddlCategory">Thể loại:</label>
+                        <div class="col-md-10">
+                            <select id="ddlCategory" class="form-control" formControlName="categoryId" [ngClass]="{
+                                'is-valid': !importExcelForm.controls['categoryId'].errors,
+                                'is-invalid': importExcelForm.controls['categoryId'].errors
+                            }">
+                                <option value="">--- Chọn thể loại ---</option>
+                                <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                <div *ngIf="importExcelForm.get('categoryId').hasError('required')">
+                                    Vui lòng chọn thể loại sản phẩm.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="hideModal()">
+                        <i class="fa fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" [disabled]="importExcelForm.invalid" class="btn btn-success">
+                        <i class="fa fa-floppy-o"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,8 @@ import { NgForm } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+
 import { SystemConstants, MessageConstants } from '../../../common';
 
 import { PagedResult } from '../../../models/paged-result.model';
@@ -11,6 +13,7 @@ import { Product } from '../../../models/product.model';
 import { ProductCategory } from '../../../models/product-category.model';
 
 import { ProductModalAddEditComponent } from './product-modal-add-edit/product-modal-add-edit.component';
+import { ProductModalImportExcelComponent } from './product-modal-import-excel/product-modal-import-excel.component';
 
 @Component({
   selector: 'app-product',
@@ -19,6 +22,7 @@ import { ProductModalAddEditComponent } from './product-modal-add-edit/product-m
 })
 export class ProductComponent implements OnInit {
   @ViewChild('productModalAddEdit') productModalAddEdit: ProductModalAddEditComponent;
+  @ViewChild('productModalImportExcel') productModalImportExcel: ProductModalImportExcelComponent;
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
@@ -45,9 +49,13 @@ export class ProductComponent implements OnInit {
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
-    private uploadService: UploadService) { }
+    private uploadService: UploadService,
+    private spinnerService: Ng4LoadingSpinnerService
+  ) { }
 
   ngOnInit() {
+    this.spinnerService.show();
+
     if (this.authService.checkAccess('PRODUCT_LIST')) {
       this.loadData();
       this.loadProductCategoryHierachies();
@@ -86,6 +94,14 @@ export class ProductComponent implements OnInit {
     this.productModalAddEdit.showModal('Thêm mới thông tin sản phẩm');
   }
 
+  importExcel() {
+    this.productModalImportExcel.showModal();
+  }
+
+  downloadTemplate() {
+    window.location.href = this.baseApi + '/templates/ProductImportTemplate.xlsx';
+  }
+
   showEdit(id: number) {
     this.productModalAddEdit.showModal('Sửa thông tin sản phẩm', id);
   }
@@ -95,6 +111,14 @@ export class ProductComponent implements OnInit {
       this.loadData();
       this.productModalAddEdit.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+    }
+  }
+
+  saveChangesImportExcel(result: boolean) {
+    if (result) {
+      this.loadData();
+      this.productModalImportExcel.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.IMPORT_OK_MSG);
     }
   }
 

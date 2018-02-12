@@ -1,5 +1,9 @@
 import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 
+import { DataService, UtilityService } from '../../services';
+
+import { Function } from '../../models/function.model';
+
 // Import navigation elements
 import { navigation } from './../../_nav';
 
@@ -20,9 +24,31 @@ import { navigation } from './../../_nav';
       </ul>
     </nav>`
 })
-export class AppSidebarNavComponent {
-
+export class AppSidebarNavComponent implements OnInit {
   public navigation = navigation;
+  
+  constructor(
+    private dataService: DataService,
+    private utilityService: UtilityService
+  ) { }
+
+  ngOnInit() {
+    this.dataService.get('/api/Function/GetAllWithPermission').subscribe((data: Function[]) => {
+      let permissions = [];
+
+      for (let item of data) {
+        permissions.push({
+          id: item.Id,
+          name: item.Name,
+          parentId: item.ParentId,
+          url: item.URL,
+          icon: item.IconCss
+        });
+      }
+
+      //this.navigation = this.utilityService.unflatten2(permissions);
+    });
+  }
 
   public isDivider(item) {
     return item.divider ? true : false
@@ -31,8 +57,6 @@ export class AppSidebarNavComponent {
   public isTitle(item) {
     return item.title ? true : false
   }
-
-  constructor() { }
 }
 
 import { Router } from '@angular/router';
@@ -57,22 +81,22 @@ export class AppSidebarNavItemComponent {
   @Input() item: any;
 
   public hasClass() {
-    return this.item.class ? true : false
+    return this.item.class ? true : false;
   }
 
   public isDropdown() {
-    return this.item.children ? true : false
+    return this.item.children ? true : false;
   }
 
   public thisUrl() {
-    return this.item.url
+    return this.item.url;
   }
 
   public isActive() {
-    return this.router.isActive(this.thisUrl(), false)
+    return this.router.isActive(this.thisUrl(), false);
   }
 
-  constructor( private router: Router )  { }
+  constructor(private router: Router) { }
 
 }
 
@@ -170,12 +194,12 @@ export class AppSidebarNavTitleComponent implements OnInit {
 
     this.renderer.addClass(li, 'nav-title');
 
-    if ( this.title.class ) {
+    if (this.title.class) {
       const classes = this.title.class;
       this.renderer.addClass(li, classes);
     }
 
-    if ( this.title.wrapper ) {
+    if (this.title.wrapper) {
       const wrapper = this.renderer.createElement(this.title.wrapper.element);
 
       this.renderer.appendChild(wrapper, name);

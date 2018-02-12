@@ -22,9 +22,19 @@
                         </div>
                     </div>
                     <div class="col-5">
-                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
+                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1"
+                            tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
                             <i class="fa fa-trash"></i>
                         </button>
+                        <button type="button" (click)="exportExcel()" class="btn btn-info float-right ml-1" tooltip="Xuất file excel">
+                            <i class="fa fa-level-up"></i>
+                        </button>
+                        <button type="button" (click)="importExcel()" class="btn btn-warning float-right ml-1" tooltip="Nhập file excel">
+                            <i class="fa fa-level-down"></i>
+                        </button>
+                        <button type="button" (click)="downloadTemplate()" class="btn btn-primary float-right ml-1" tooltip="Tải mẫu excel">
+                                <i class="fa fa-download"></i>
+                            </button>
                         <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
                         </button>
@@ -76,13 +86,15 @@
                                     </a>
                                 </td>
                                 <td class="cell-center">
-                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
+                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
+                                        tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <button type="button" (click)="showView(item.Id)" class="btn btn-info btn-sm" tooltip="Xem">
                                         <i class="fa fa-info"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                                    <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm"
+                                        tooltip="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -120,3 +132,4 @@
 </div>
 
 <product-modal-add-edit #productModalAddEdit (saveChangesResult)="saveChanges($event)"></product-modal-add-edit>
+<product-modal-import-excel #productModalImportExcel (saveChangesResult)="saveChangesImportExcel($event)"></product-modal-import-excel>
