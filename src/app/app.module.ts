@@ -74,7 +74,6 @@ import { AppRoutingModule } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
-import { GetCurrencyPipe } from './pipes/get-currency.pipe';
 
 @NgModule({
   imports: [
@@ -90,8 +89,7 @@ import { GetCurrencyPipe } from './pipes/get-currency.pipe';
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES,
-    GetCurrencyPipe
+    ...APP_DIRECTIVES
   ],
   providers: [{
     provide: LocationStrategy,

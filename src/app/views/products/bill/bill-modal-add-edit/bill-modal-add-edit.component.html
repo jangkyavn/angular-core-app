@@ -1,0 +1,209 @@
+<div bsModal #billModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="billForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" formControlName="Id">
+        <input type="hidden" formControlName="DateCreated">
+
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtCustomerName">Tên khách hàng:</label>
+            <div class="col-md-4">
+              <input type="text" id="txtCustomerName" class="form-control" formControlName="CustomerName" [ngClass]="{
+                'is-valid': !billForm.controls['CustomerName'].errors,
+                'is-invalid': billForm.controls['CustomerName'].errors && (billForm.controls['CustomerName'].dirty || billForm.controls['CustomerName'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('CustomerName').hasError('required')">
+                  Vui lòng nhập tên khách hàng.
+                </div>
+                <div *ngIf="billForm.get('CustomerName').hasError('maxlength')">
+                  Vui lòng nhập tên khách hàng không quá 50 ký tự.
+                </div>
+              </div>
+            </div>
+            <label class="col-md-2 col-form-label" for="txtCustomerMobile">Số điện thoại:</label>
+            <div class="col-md-4">
+              <input type="text" class="form-control" id="txtCustomerMobile" [textMask]="{mask: maskPhone}" formControlName="CustomerMobile"
+                [ngClass]="{
+                'is-valid': !billForm.controls['CustomerMobile'].errors,
+                'is-invalid': billForm.controls['CustomerMobile'].errors && (billForm.controls['CustomerMobile'].dirty || billForm.controls['CustomerMobile'].touched)
+              }">
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('CustomerMobile').hasError('required')">
+                  Vui lòng nhập số điện thoại khách hàng.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtCustomerAddress">Địa chỉ:</label>
+            <div class="col-md-10">
+              <textarea id="txtCustomerAddress" class="form-control" formControlName="CustomerAddress" [ngClass]="{
+                'is-valid': !billForm.controls['CustomerAddress'].errors,
+                'is-invalid': billForm.controls['CustomerAddress'].errors && (billForm.controls['CustomerAddress'].dirty || billForm.controls['CustomerAddress'].touched)
+              }"></textarea>
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('CustomerAddress').hasError('required')">
+                  Vui lòng nhập địa chỉ khách hàng.
+                </div>
+                <div *ngIf="billForm.get('CustomerAddress').hasError('maxlength')">
+                  Vui lòng nhập địa chỉ khách hàng không quá 200 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtCustomerMessage">Tin nhắn:</label>
+            <div class="col-md-10">
+              <textarea id="txtCustomerMessage" class="form-control" formControlName="CustomerMessage" [ngClass]="{
+                'is-valid': !billForm.controls['CustomerMessage'].errors,
+                'is-invalid': billForm.controls['CustomerMessage'].errors && (billForm.controls['CustomerMessage'].dirty || billForm.controls['CustomerMessage'].touched)
+              }"></textarea>
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('CustomerMessage').hasError('maxlength')">
+                  Vui lòng nhập tin nhắn khách hàng không quá 500 ký tự.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="ddlPaymentMethod">Phương thức thanh toán:</label>
+            <div class="col-md-4">
+              <select id="ddlPaymentMethod" class="form-control" formControlName="PaymentMethod" [ngClass]="{
+                'is-valid': !billForm.controls['PaymentMethod'].errors,
+                'is-invalid': billForm.controls['PaymentMethod'].errors && (billForm.controls['PaymentMethod'].dirty || billForm.controls['PaymentMethod'].touched)
+              }">
+                <option value="">Chọn phương thức thanh toán</option>
+                <option *ngFor="let item of paymentMethods" [value]="item.Value">{{item.Name}}</option>
+              </select>
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('PaymentMethod').hasError('required')">
+                  Vui lòng chọn phương thức thanh toán.
+                </div>
+              </div>
+            </div>
+            <label class="col-md-2 col-form-label" for="ddlBillStatus">Trạng thái hóa đơn:</label>
+            <div class="col-md-4">
+              <select id="ddlBillStatus" class="form-control" formControlName="BillStatus" [ngClass]="{
+                'is-valid': !billForm.controls['BillStatus'].errors,
+                'is-invalid': billForm.controls['BillStatus'].errors && (billForm.controls['BillStatus'].dirty || billForm.controls['BillStatus'].touched)
+              }">
+                <option value="">Chọn trạng thái hóa đơn</option>
+                <option *ngFor="let item of billStatuses" [value]="item.Value">{{item.Name}}</option>
+              </select>
+              <div class="invalid-feedback">
+                <div *ngIf="billForm.get('BillStatus').hasError('required')">
+                  Vui lòng chọn trạng thái hóa đơn.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="txtSeoDescription">Hóa đơn chi tiết:</label>
+            <div class="col-md-10">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th style="width: 5%">STT</th>
+                    <th style="width: 25%">Sản phẩm</th>
+                    <th style="width: 25%">Màu sắc</th>
+                    <th style="width: 25%">Kích cỡ</th>
+                    <th style="width: 15%">Số lượng</th>
+                    <th style="width: 5%">
+                      <button type="button" (click)="setDefaultBillDetails()" class="btn btn-default btn-sm" tooltip="Đặt lại">
+                        <i class="fa fa-undo"></i>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="BillDetails">
+                  <tr *ngFor="let billDetail of billForm.controls.BillDetails.controls as billDetails; index as i;" [formGroupName]="i">
+                    <input type="hidden" formControlName="BillId">
+
+                    <td>{{i + 1}}</td>
+                    <td>
+                      <select class="form-control" formControlName="ProductId" [ngClass]="{
+                        'is-valid': !billDetail.controls['ProductId'].errors,
+                        'is-invalid': billDetail.controls['ProductId'].errors && (billDetail.controls['ProductId'].dirty || billDetail.controls['ProductId'].touched)
+                      }">
+                        <option value="">--- Chọn sản phẩm ---</option>
+                        <option *ngFor="let product of products" [value]="product.Id">{{product.Name}}</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        <div *ngIf="billDetail.get('ProductId').hasError('required')">
+                          Vui lòng chọn sản phẩm.
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <select class="form-control" formControlName="ColorId" [ngClass]="{
+                        'is-valid': !billDetail.controls['ColorId'].errors,
+                        'is-invalid': billDetail.controls['ColorId'].errors && (billDetail.controls['ColorId'].dirty || billDetail.controls['ColorId'].touched)
+                      }">
+                        <option value="">--- Chọn màu sắc ---</option>
+                        <option *ngFor="let color of colors" [value]="color.Id">{{color.Name}}</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        <div *ngIf="billDetail.get('ColorId').hasError('required')">
+                          Vui lòng chọn màu sắc.
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <select class="form-control" formControlName="SizeId" [ngClass]="{
+                        'is-valid': !billDetail.controls['SizeId'].errors,
+                        'is-invalid': billDetail.controls['SizeId'].errors && (billDetail.controls['SizeId'].dirty || billDetail.controls['SizeId'].touched)
+                      }">
+                        <option value="">--- Chọn kích cỡ ---</option>
+                        <option *ngFor="let size of sizes" [value]="size.Id">{{size.Name}}</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        <div *ngIf="billDetail.get('SizeId').hasError('required')">
+                          Vui lòng chọn kích cỡ.
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control" formControlName="Quantity" (input)="validateQuantity(i, $event)" />
+                    </td>
+                    <td>
+                      <button [disabled]="!!(billDetails.length === 1)" type="button" (click)="deleteBillDetail(i)" class="btn btn-danger btn-sm"
+                        tooltip="Xóa">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="6">
+                      <button type="button" class="btn btn-success btn-sm" (click)="addNewLineBillDetail()" tooltip="Thêm dòng mới">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="billForm.invalid" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -98,6 +98,14 @@ export class ProductComponent implements OnInit {
     this.productModalImportExcel.showModal();
   }
 
+  exportExcel() {
+    this.dataService.post('/api/Product/ExportExcel').subscribe((response: string) => {
+      if (response !== '' && response !== undefined && response !== null) {
+        window.location.href = response;
+      }
+    });
+  }
+
   downloadTemplate() {
     window.location.href = this.baseApi + '/templates/ProductImportTemplate.xlsx';
   }

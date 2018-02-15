@@ -4584,9 +4584,9 @@ ng4-loading-spinner@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ng4-loading-spinner/-/ng4-loading-spinner-1.1.1.tgz#f8a6244bfce72925788169db53f0389f6338e312"
 
-ngx-bootstrap@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.0.tgz#aadfb6aa0f2591c91a787e74fea4d153a1791b4c"
+ngx-bootstrap@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
 
 ngx-chips@^1.6.3:
   version "1.6.3"

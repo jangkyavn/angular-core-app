@@ -16,7 +16,7 @@ export class UtilityService {
     this.router.navigate([UrlConstants.LOGIN]);
   }
 
-  dateFormatJson(datetime: any) {
+  dateFormatJson(datetime: string) {
     if (datetime === null || datetime === '') {
       return '';
     }
@@ -29,10 +29,40 @@ export class UtilityService {
     let day = newDate.getDate();
     let year = newDate.getFullYear();
 
-    if (month < 10)
+    if (month < 10) {
       sMonth = "0" + month;
-    if (day < 10)
+    } else {
+      sMonth = month.toString();
+    }
+      
+    if (day < 10) {
       sDay = "0" + day;
+    } else {
+      sDay = day.toString();
+    }
+
+    return sDay + "/" + sMonth + "/" + year;
+  }
+
+  dateFormatJson2(datetime: Date) {
+    let sMonth = '', sDay = '';
+
+    let month = datetime.getMonth() + 1;
+    let day = datetime.getDate();
+    let year = datetime.getFullYear();
+
+    if (month < 10) {
+      sMonth = "0" + month;
+    }
+    else {
+      sMonth = month.toString();
+    }
+
+    if (day < 10) {
+      sDay = "0" + day;
+    } else {
+      sDay = day.toString();
+    }
 
     return sDay + "/" + sMonth + "/" + year;
   }
@@ -69,10 +99,10 @@ export class UtilityService {
     if (value !== null && value !== undefined) {
       if (value.toString().indexOf('-') > -1) {
         let removeCode = value.toString().substring(4, value.toString().length);
-  
+
         return '0' + removeCode.split('-').join('').split('_').join('');
       }
-  
+
       return value;
     }
 
@@ -83,10 +113,10 @@ export class UtilityService {
     if (value !== null && value !== undefined) {
       if (value.toString().indexOf(',') > -1) {
         let removeSurffix = value.toString().substr(0, value.toString().indexOf(' '));
-  
+
         return parseFloat(removeSurffix.split(',').join(''));
       }
-  
+
       return value;
     }
 
@@ -151,14 +181,14 @@ export class UtilityService {
     return roots;
   }
 
-  fuzzySearch (needle: string, haystack: string) {
+  fuzzySearch(needle: string, haystack: string) {
     const haystackLC = haystack.toLowerCase();
     const needleLC = needle.toLowerCase();
-  
+
     const hlen = haystack.length;
     const nlen = needleLC.length;
-  
-    if(needleLC.charAt(0) === needleLC.charAt(1) && haystackLC.indexOf(needleLC) === -1) {
+
+    if (needleLC.charAt(0) === needleLC.charAt(1) && haystackLC.indexOf(needleLC) === -1) {
       return false;
     }
     if (nlen > hlen) {
@@ -169,7 +199,7 @@ export class UtilityService {
     }
     outer: for (let i = 0, j = 0; i < nlen; i++) {
       const nch = needleLC.charCodeAt(i);
-  
+
       while (j < hlen) {
         if (haystackLC.charCodeAt(j++) === nch) {
           continue outer;

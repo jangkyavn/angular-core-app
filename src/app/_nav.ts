@@ -107,6 +107,11 @@ export const navigation = [
         name: 'product-category',
         url: '/products/product-category',
         icon: 'icon-puzzle'
+      },
+      {
+        name: 'bill',
+        url: '/products/bill',
+        icon: 'icon-puzzle'
       }
     ]
   },
