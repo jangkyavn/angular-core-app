@@ -4580,10 +4580,6 @@ ng2-material-dropdown@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.2.tgz#2acd3f781030ef92bf31f05543d91148e68528ef"
 
-ng4-loading-spinner@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ng4-loading-spinner/-/ng4-loading-spinner-1.1.1.tgz#f8a6244bfce72925788169db53f0389f6338e312"
-
 ngx-bootstrap@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
@@ -4593,6 +4589,10 @@ ngx-chips@^1.6.3:
   resolved "https://registry.yarnpkg.com/ngx-chips/-/ngx-chips-1.6.3.tgz#9f89c5f3c09523ff4a0b2e81e827c93d42a81cdb"
   dependencies:
     ng2-material-dropdown "~0.8.2"
+
+ngx-spinner@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-1.0.6.tgz#75c255897b5c815d497e43a48c92f57f7be4e6a9"
 
 no-case@^2.2.0:
   version "2.3.2"

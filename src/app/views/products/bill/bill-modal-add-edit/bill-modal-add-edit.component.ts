@@ -5,6 +5,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { DataService, UtilityService, UploadService } from '../../../../services';
 import { Bill } from '../../../../models/bill.model';
+import { BillDetail } from '../../../../models/bill-detail.model';
 
 @Component({
   selector: 'bill-modal-add-edit',
@@ -69,7 +70,7 @@ export class BillModalAddEditComponent implements OnInit {
       ColorId: ['', Validators.required],
       SizeId: ['', Validators.required],
       Quantity: [1, Validators.required],
-      Price: [0]
+      Price: [0, Validators.required]
     });
   }
 
@@ -130,13 +131,13 @@ export class BillModalAddEditComponent implements OnInit {
   }
 
   loadColors() {
-    this.dataService.get('/api/Bill/GetColors').subscribe(data => {
+    this.dataService.get('/api/Color').subscribe(data => {
       this.colors = data;
     });
   }
 
   loadSizes() {
-    this.dataService.get('/api/Bill/GetSizes').subscribe(data => {
+    this.dataService.get('/api/Size').subscribe(data => {
       this.sizes = data;
     });
   }
@@ -157,6 +158,22 @@ export class BillModalAddEditComponent implements OnInit {
         let data: Bill = response;
 
         this.billForm.patchValue(data);
+
+        const control = <FormArray>this.billForm.controls['BillDetails'];
+        control.removeAt(0);
+
+        data.BillDetails.forEach((item: BillDetail) => {
+          let newGroup = this.fb.group({
+            BillId: [item.BillId],
+            ProductId: [item.ProductId, Validators.required],
+            ColorId: [item.ColorId, Validators.required],
+            SizeId: [item.SizeId, Validators.required],
+            Quantity: [item.Quantity, Validators.required],
+            Price: [item.Price, Validators.required]
+          });
+
+          control.push(newGroup);
+        });
       });
     } else {
       this.billForm.patchValue({

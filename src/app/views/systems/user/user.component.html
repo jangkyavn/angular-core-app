@@ -14,8 +14,8 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập email, họ tên cần tìm" (keyup)="search($event)">
-                            <select class="form-control" (change)="searchDropDown($event)">
+                            <input type="text" class="form-control" placeholder="Nhập email, họ tên cần tìm" [(ngModel)]="filterKeyword" (keyup)="loadData()">
+                            <select class="form-control" [(ngModel)]="filterGender" (change)="loadData()">
                                 <option value="">--- Chọn giới tính cần tìm ---</option>
                                 <option value="true">Nam</option>
                                 <option value="false">Nữ</option>
@@ -99,7 +99,7 @@
                 <div class="row" *ngIf="!(totalRow === 0)">
                     <div class="col-6 d-flex flex-row justify-content-start align-items-center">
                         <div>Hiển thị:</div>
-                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
@@ -120,4 +120,5 @@
     <!--/.col-->
 </div>
 
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <user-modal-add-edit #userModalAddEdit (saveChangesResult)="saveChanges($event)"></user-modal-add-edit>

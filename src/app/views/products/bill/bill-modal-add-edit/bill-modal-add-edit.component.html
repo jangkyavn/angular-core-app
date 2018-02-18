@@ -172,7 +172,15 @@
                       </div>
                     </td>
                     <td>
-                      <input type="number" class="form-control" formControlName="Quantity" (input)="validateQuantity(i, $event)" />
+                      <input type="number" class="form-control" formControlName="Quantity" (input)="validateQuantity(i, $event)" min="1" [ngClass]="{
+                        'is-valid': !billDetail.controls['Quantity'].errors,
+                        'is-invalid': billDetail.controls['Quantity'].errors && (billDetail.controls['Quantity'].dirty || billDetail.controls['Quantity'].touched)
+                      }" />
+                      <div class="invalid-feedback">
+                        <div *ngIf="billDetail.get('Quantity').hasError('required')">
+                          Vui lòng nhập số lượng.
+                        </div>
+                      </div>
                     </td>
                     <td>
                       <button [disabled]="!!(billDetails.length === 1)" type="button" (click)="deleteBillDetail(i)" class="btn btn-danger btn-sm"

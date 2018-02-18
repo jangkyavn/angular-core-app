@@ -45,6 +45,10 @@ export class UtilityService {
   }
 
   dateFormatJson2(datetime: Date) {
+    if (datetime === null || datetime === undefined) {
+      return '';
+    }
+
     let sMonth = '', sDay = '';
 
     let month = datetime.getMonth() + 1;

@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
+
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 
 import { BillModalAddEditComponent } from './bill-modal-add-edit/bill-modal-add-edit.component';
 
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
@@ -19,16 +22,21 @@ import { Enum } from '../../../models/enum.model';
 export class BillComponent implements OnInit {
   @ViewChild('billModalAddEdit') billModalAddEdit: BillModalAddEditComponent;
 
-  startDate?: Date = new Date(new Date().getUTCFullYear() - 1, new Date().getUTCMonth(), new Date().getUTCDate());
-  endDate?: Date = new Date(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate());
-  bsRangeValue: any = [this.startDate, this.endDate];
+  billStatusValue: any = '';
+  paymentMethodValue: any = '';
+  filterKeyword: string = '';
+  startDate: Date;
+  endDate: Date;
   maxDate = this.endDate;
+  bsRangeValue: '';
   bsConfig: Partial<BsDaterangepickerConfig> = {
     containerClass: 'theme-dark-blue',
     rangeInputFormat: 'DD/MM/YYYY'
   };
 
-  bills: Bill[];
+  bills: Bill[] = [];
+  paymentMethods$: Observable<Enum[]>;
+  billStatuses$: Observable<Enum[]>;
 
   pageIndex: number = 1;
   pageSize: number = 10;
@@ -39,7 +47,6 @@ export class BillComponent implements OnInit {
   firstRow: number;
   lastRow: number;
 
-  filterKeyword?: string;
   selectedAll: boolean;
   nothingSelected: boolean;
 
@@ -47,22 +54,29 @@ export class BillComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.paymentMethods$ = this.dataService.get('/api/Bill/GetPaymentMethod');
+    this.billStatuses$ = this.dataService.get('/api/Bill/GetBillStatus');
+
     this.loadData();
   }
 
   loadData() {
-    this.filterKeyword = '';
+    this.spinner.show();
+
     const startDate = this.utilityService.dateFormatJson2(this.startDate);
     const endDate = this.utilityService.dateFormatJson2(this.endDate);
-    const url = `/api/Bill/GetAllPaging?startDate=${startDate}&endDate=${endDate}&keyword=${this.filterKeyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
+    const url = `/api/Bill/GetAllPaging?keyword=${this.filterKeyword}&startDate=${startDate}&endDate=${endDate}&paymentMethod=${this.paymentMethodValue}&billStatus=${this.billStatusValue}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
+      this.spinner.hide();
+
       const data: PagedResult<Bill> = response;
-      this.bills = this.bills || [];
+      this.bills = [];
 
       for (let item of data.Results) {
         this.bills.push({
@@ -99,9 +113,24 @@ export class BillComponent implements OnInit {
     this.billModalAddEdit.showModal('Thêm mới thông tin hóa đơn');
   }
 
+  showEdit(id: number) {
+    this.billModalAddEdit.showModal('Sửa thông tin hóa đơn', id);
+  }
+
+  delete(id: number) {
+    this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_MSG, () => {
+      this.dataService.delete(`/api/Bill/${id}`).subscribe((response: any) => {
+        if (response !== undefined && response !== null) {
+          this.loadData();
+          this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+        }
+      })
+    })
+  }
+
   getBillStatusName(value: number): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.dataService.get('/api/Bill/GetBillStatus').subscribe((data: Enum[]) => {
+      this.billStatuses$.subscribe((data: Enum[]) => {
         const name = data.find(x => x.Value === value).Name;
 
         resolve(name);
@@ -111,7 +140,7 @@ export class BillComponent implements OnInit {
 
   getPaymentMethodName(value: number): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.dataService.get('/api/Bill/GetPaymentMethod').subscribe((data: Enum[]) => {
+      this.paymentMethods$.subscribe((data: Enum[]) => {
         const name = data.find(x => x.Value === value).Name;
 
         resolve(name);
@@ -119,21 +148,10 @@ export class BillComponent implements OnInit {
     });
   }
 
-  loadPaymentMethod() {
-    this.dataService.get('/api/Bill/GetPaymentMethod').subscribe((data: Enum[]) => {
-      //this.paymentMethods = data;
-    });
-  }
-
   searchDateRange(dateValue: any) {
     this.startDate = dateValue[0];
     this.endDate = dateValue[1];
 
-    this.loadData();
-  }
-
-  changeLengthMenu(event: any) {
-    this.pageSize = event.target.value;
     this.loadData();
   }
 
@@ -164,5 +182,14 @@ export class BillComponent implements OnInit {
     } else {
       $('#chkAll').prop('indeterminate', false)
     }
+  }
+
+  resetFormSearch() {
+    this.filterKeyword = '';
+    this.startDate = null;
+    this.endDate = null;
+    this.bsRangeValue = '';
+
+    this.loadData();
   }
 }

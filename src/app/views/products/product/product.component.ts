@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { SystemConstants, MessageConstants } from '../../../common';
 
@@ -50,12 +50,10 @@ export class ProductComponent implements OnInit {
     private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService,
-    private spinnerService: Ng4LoadingSpinnerService
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
-    this.spinnerService.show();
-
     if (this.authService.checkAccess('PRODUCT_LIST')) {
       this.loadData();
       this.loadProductCategoryHierachies();
@@ -65,9 +63,13 @@ export class ProductComponent implements OnInit {
   }
 
   loadData() {
+    this.spinner.show();
+
     const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&categoryId=${this.filterCategory}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
+      this.spinner.hide();
+
       const data: PagedResult<Product> = response;
 
       this.products = data.Results;
@@ -153,21 +155,6 @@ export class ProductComponent implements OnInit {
         this.loadData();
       });
     });
-  }
-
-  search(event: any) {
-    this.filterKeyword = event.target.value;
-    this.loadData();
-  }
-
-  searchDropDown(event: any) {
-    this.filterCategory = event.target.value;
-    this.loadData();
-  }
-
-  changeLengthMenu(event: any) {
-    this.pageSize = event.target.value;
-    this.loadData();
   }
 
   pageChanged(event: any) {

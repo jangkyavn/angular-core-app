@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { MessageConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
@@ -32,7 +33,8 @@ export class RoleComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
@@ -44,9 +46,13 @@ export class RoleComponent implements OnInit {
   }
 
   loadData() {
+    this.spinner.show();
+
     const url = `/api/Role/GetAllPaging?keyword=${this.keyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
+      this.spinner.hide();
+
       const data: PagedResult<Role> = response;
 
       this.roles = data.Results;
@@ -99,16 +105,6 @@ export class RoleComponent implements OnInit {
         }
       })
     })
-  }
-
-  search(event: any) {
-    this.keyword = event.target.value;
-    this.loadData();
-  }
-
-  changeLengthMenu(event: any) {
-    this.pageSize = event.target.value;
-    this.loadData();
   }
 
   pageChanged(event: any) {

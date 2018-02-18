@@ -13,7 +13,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TagInputModule } from 'ngx-chips';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { TextMaskModule } from 'angular2-text-mask';
-import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { ProductComponent } from './product/product.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
@@ -39,7 +39,7 @@ import { BillModalAddEditComponent } from './bill/bill-modal-add-edit/bill-modal
     TagInputModule,
     CKEditorModule,
     TextMaskModule,
-    Ng4LoadingSpinnerModule
+    NgxSpinnerModule
   ],
   declarations: [
     ProductComponent,

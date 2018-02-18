@@ -14,8 +14,8 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" (keyup)="search($event)">
-                            <select class="form-control" [(ngModel)]="filterCategory" (change)="searchDropDown($event)">
+                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" [(ngModel)]="filterKeyword" (keyup)="loadData()">
+                            <select class="form-control" [(ngModel)]="filterCategory" (change)="loadData()">
                                 <option value="">--- Chọn thể loại cần tìm ---</option>
                                 <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
                             </select>
@@ -110,7 +110,7 @@
                 <div class="row" *ngIf="!(totalRow === 0)">
                     <div class="col-6 d-flex flex-row justify-content-start align-items-center">
                         <div>Hiển thị:</div>
-                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
@@ -131,5 +131,6 @@
     <!--/.col-->
 </div>
 
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <product-modal-add-edit #productModalAddEdit (saveChangesResult)="saveChanges($event)"></product-modal-add-edit>
 <product-modal-import-excel #productModalImportExcel (saveChangesResult)="saveChangesImportExcel($event)"></product-modal-import-excel>

@@ -6,20 +6,34 @@
         <i class="fa fa-align-justify"></i> Danh sách hóa đơn
       </div>
       <div class="card-body">
-        <div class="row mb-2">
-          <div class="col-6">
+        <div class="row">
+          <div class="col-12">
             <div class="input-group">
               <span class="input-group-prepend">
                 <button type="button" class="btn btn-primary" tooltip="Tìm kiếm">
                   <i class="fa fa-search"></i>
                 </button>
               </span>
-              <input type="text" class="form-control" placeholder="Nhập tên sản phẩm cần tìm" (keyup)="search($event)">
-              <input readonly id="txtSearchDateRange" class="form-control" #drp="bsDaterangepicker" bsDaterangepicker [(ngModel)]="bsRangeValue"
-                [bsConfig]="bsConfig" [maxDate]="maxDate" (ngModelChange)="searchDateRange($event)"> `
+              <input type="text" class="form-control" placeholder="Nhập tên khách hàng cần tìm" [(ngModel)]="filterKeyword" (keyup)="loadData()">
+              <input readonly id="txtSearchDateRange" placeholder="Chọn thời gian cần tìm" class="form-control" #drp="bsDaterangepicker"
+                bsDaterangepicker [bsConfig]="bsConfig" [maxDate]="maxDate" [(ngModel)]="bsRangeValue" (ngModelChange)="searchDateRange($event)">
+              <select class="form-control" [(ngModel)]="paymentMethodValue" (change)="loadData()">
+                <option value="">Chọn phương thức cần tìm</option>
+                <option *ngFor="let item of paymentMethods$ | async" [value]="item.Value">{{item.Name}}</option>
+              </select>
+              <select class="form-control" [(ngModel)]="billStatusValue" (change)="loadData()">
+                <option value="">Chọn trạng thái cần tìm</option>
+                <option *ngFor="let item of billStatuses$ | async" [value]="item.Value">{{item.Name}}</option>
+              </select>
+              <button class="btn btn-default" (click)="resetFormSearch()" tooltip="Đặt lại" placement="left">
+                <i class="fa fa-undo"></i>
+              </button>
             </div>
           </div>
-          <div class="col-6">
+        </div>
+        <hr>
+        <div class="row mb-2">
+          <div class="col-12">
             <button type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
               <i class="fa fa-trash"></i>
             </button>
@@ -83,7 +97,7 @@
         <div class="row" *ngIf="!(totalRow === 0)">
           <div class="col-6 d-flex flex-row justify-content-start align-items-center">
             <div>Hiển thị:</div>
-            <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
+            <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
               <option value="10" selected>10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -104,4 +118,5 @@
   <!--/.col-->
 </div>
 
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <bill-modal-add-edit #billModalAddEdit (saveChangesResult)="saveChanges($event)"></bill-modal-add-edit>

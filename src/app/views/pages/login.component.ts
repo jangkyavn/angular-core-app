@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { UtilityService } from '../../services/utility.service';
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { SystemConstants } from 'app/common/system.constants';
 
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
-    private spinnerService: Ng4LoadingSpinnerService) { }
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.createForm();
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
   onSubmitForm() {
     const data = this.loginForm.value;
 
-    this.spinnerService.show();
+    this.spinner.show();
 
     this.authService.login(data).subscribe(data => {
       localStorage.removeItem(SystemConstants.ACCESS_TOKEN);
@@ -52,12 +52,12 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem(SystemConstants.PERMISSONS);
       localStorage.setItem(SystemConstants.PERMISSONS, data.permission);
 
-      this.spinnerService.hide();
+      this.spinner.hide();
       this.utilityService.navigate('/');
     }, err => {
       console.log(err);
       this.notificationService.printErrorMessage(err.error);
-      this.spinnerService.hide();
+      this.spinner.hide();
     })
   }
 }

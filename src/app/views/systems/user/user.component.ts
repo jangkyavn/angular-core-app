@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
@@ -39,7 +40,8 @@ export class UserComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
@@ -51,9 +53,13 @@ export class UserComponent implements OnInit {
   }
 
   loadData() {
+    this.spinner.show();
+
     const url = `/api/User/GetAllPaging?keyword=${this.filterKeyword}&gender=${this.filterGender}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
+      this.spinner.hide();
+
       const data: PagedResult<User> = response;
 
       this.users = data.Results;
@@ -113,21 +119,6 @@ export class UserComponent implements OnInit {
         this.loadData();
       });
     });
-  }
-
-  search(event: any) {
-    this.filterKeyword = event.target.value;
-    this.loadData();
-  }
-
-  searchDropDown(event: any) {
-    this.filterGender = event.target.value;
-    this.loadData();
-  }
-
-  changeLengthMenu(event: any) {
-    this.pageSize = event.target.value;
-    this.loadData();
   }
 
   pageChanged(event: any) {

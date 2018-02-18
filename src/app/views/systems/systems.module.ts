@@ -8,6 +8,7 @@ import { DropdownMultiselectComponent } from '../../components/dropdown-multisel
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // Forms Component
 import { FormsComponent } from './forms.component';
@@ -71,7 +72,8 @@ import { RoleModalPermissionComponent } from './role/role-modal-permission/role-
     ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    TextMaskModule
+    TextMaskModule,
+    NgxSpinnerModule
   ],
   declarations: [
     RoleComponent,

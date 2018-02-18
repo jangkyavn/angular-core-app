@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PagesRoutingModule } from './pages-routing.module';
-import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { P404Component } from './404.component';
 import { P500Component } from './500.component';
@@ -16,7 +16,7 @@ import { LoginComponent } from './login.component';
     FormsModule,
     ReactiveFormsModule,
     PagesRoutingModule,
-    Ng4LoadingSpinnerModule.forRoot()
+    NgxSpinnerModule
   ],
   declarations: [
     P404Component,
