@@ -24,17 +24,19 @@
                     </div>
                 </div>
                 <hr />
-                <div>
+                <div [ngStyle]="{'display': isLoading ? 'none': 'block'}">
                     <alert type="danger" class="text-center" *ngIf="!(productCategorySearchResult?.length)">
                         Không tìm thấy dữ liệu.
                     </alert>
                     <tree-root #tree [nodes]="productCategoryHierarchies" [options]="options">
                         <ng-template #treeNodeTemplate let-node let-index="index">
                             <span>{{ node.data.Name }}</span>
-                            <button *ngIf="authService.hasPermission('PRODUCT_CATEGORY', 'update')" class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)" tooltip="Sửa" placement="right">
+                            <button *ngIf="authService.hasPermission('PRODUCT_CATEGORY', 'update')" class="btn btn-sm btn-primary" (click)="showEdit(node.data.Id)"
+                                tooltip="Sửa" placement="right">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                             </button>
-                            <button *ngIf="authService.hasPermission('PRODUCT_CATEGORY', 'delete')" class="btn btn-sm btn-danger" (click)="delete(node.data.Id)" tooltip="Xóa" placement="right">
+                            <button *ngIf="authService.hasPermission('PRODUCT_CATEGORY', 'delete')" class="btn btn-sm btn-danger" (click)="delete(node.data.Id)"
+                                tooltip="Xóa" placement="right">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
                             <span [class]="node.data.Status == 0 ? 'badge badge-danger': 'badge badge-success'">
@@ -44,11 +46,11 @@
                         </ng-template>
                     </tree-root>
                 </div>
+                <loading-spinner [ngStyle]="{'display': isLoading ? 'block': 'none'}"></loading-spinner>
             </div>
         </div>
     </div>
     <!--/.col-->
 </div>
 
-<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <product-category-modal-add-edit #productCategoryModalAddEdit (saveChangesResult)="saveChanges($event)"></product-category-modal-add-edit>

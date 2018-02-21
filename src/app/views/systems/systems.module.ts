@@ -8,7 +8,6 @@ import { DropdownMultiselectComponent } from '../../components/dropdown-multisel
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { NgxSpinnerModule } from 'ngx-spinner';
 
 // Forms Component
 import { FormsComponent } from './forms.component';
@@ -49,6 +48,8 @@ import { TooltipsComponent } from './tooltips.component';
 
 import { TextMaskModule } from 'angular2-text-mask';
 
+import { LoadingSpinnerModule } from '../../components/loading-spinner/loading-spinner.module';
+
 // Components Routing
 import { SystemsRoutingModule } from './systems-routing.module';
 import { UserComponent } from './user/user.component';
@@ -73,7 +74,7 @@ import { RoleModalPermissionComponent } from './role/role-modal-permission/role-
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     TextMaskModule,
-    NgxSpinnerModule
+    LoadingSpinnerModule.forRoot()
   ],
   declarations: [
     RoleComponent,

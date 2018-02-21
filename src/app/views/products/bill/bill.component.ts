@@ -7,7 +7,6 @@ import { BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
 
 import { BillModalAddEditComponent } from './bill-modal-add-edit/bill-modal-add-edit.component';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
@@ -33,6 +32,7 @@ export class BillComponent implements OnInit {
     containerClass: 'theme-dark-blue',
     rangeInputFormat: 'DD/MM/YYYY'
   };
+  isLoading: boolean = false;
 
   bills: Bill[] = [];
   paymentMethods$: Observable<Enum[]>;
@@ -54,8 +54,7 @@ export class BillComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService,
-    private spinner: NgxSpinnerService
+    private utilityService: UtilityService
   ) { }
 
   ngOnInit() {
@@ -66,14 +65,13 @@ export class BillComponent implements OnInit {
   }
 
   loadData() {
-    this.spinner.show();
-
+    this.isLoading = true;
     const startDate = this.utilityService.dateFormatJson2(this.startDate);
     const endDate = this.utilityService.dateFormatJson2(this.endDate);
     const url = `/api/Bill/GetAllPaging?keyword=${this.filterKeyword}&startDate=${startDate}&endDate=${endDate}&paymentMethod=${this.paymentMethodValue}&billStatus=${this.billStatusValue}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
-      this.spinner.hide();
+      this.isLoading = false;
 
       const data: PagedResult<Bill> = response;
       this.bills = [];
@@ -151,6 +149,12 @@ export class BillComponent implements OnInit {
   searchDateRange(dateValue: any) {
     this.startDate = dateValue[0];
     this.endDate = dateValue[1];
+
+    this.loadData();
+  }
+
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
 
     this.loadData();
   }

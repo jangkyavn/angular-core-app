@@ -14,7 +14,7 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập từ khóa cần tìm" [(ngModel)]="keyword" (keyup)="loadData()">
+                            <input type="text" class="form-control" placeholder="Nhập từ khóa và nhấn enter để tìm" [(ngModel)]="keyword" (keyup.enter)="loadData()">
                         </div>
                     </div>
                     <div class="col-8">
@@ -31,7 +31,7 @@
                             <th style="width: 15%">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="!isLoading; else loading">
                         <tr *ngIf="!(totalRow); else hasData">
                             <td colspan="3" class="text-center text-danger">Không tìm thấy dữ liệu.</td>
                         </tr>
@@ -40,19 +40,31 @@
                                 <td>{{item.Name}}</td>
                                 <td>{{item.Description}}</td>
                                 <td class="cell-center">
-                                    <button *ngIf="authService.hasPermission('ROLE', 'create')" type="button" (click)="showPermission(item.Id)" class="btn btn-warning btn-sm" tooltip="Phân quyền">
+                                    <button *ngIf="authService.hasPermission('ROLE', 'create')" type="button" (click)="showPermission(item.Id)" class="btn btn-warning btn-sm"
+                                        tooltip="Phân quyền">
                                         <i class="fa fa-eye-slash"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('ROLE', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
+                                    <button *ngIf="authService.hasPermission('ROLE', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
+                                        tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('ROLE', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                                    <button *ngIf="authService.hasPermission('ROLE', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm"
+                                        tooltip="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
                         </ng-template>
                     </tbody>
+                    <ng-template #loading>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <loading-spinner></loading-spinner>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </ng-template>
                     <tfoot *ngIf="!(totalRow === 0)">
                         <tr>
                             <td colspan="3">Đang xem {{firstRow}} đến {{lastRow}} trong tổng số {{totalRow}} mục</td>
@@ -62,7 +74,7 @@
                 <div class="row" *ngIf="!(totalRow === 0)">
                     <div class="col-6 d-flex flex-row justify-content-start align-items-center">
                         <div>Hiển thị:</div>
-                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
@@ -83,6 +95,5 @@
     <!--/.col-->
 </div>
 
-<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <role-modal-add-edit #roleModalAddEdit (saveChangesResult)="saveChanges($event)"></role-modal-add-edit>
 <role-modal-permission #roleModalPermission (saveChangesPermissionResult)="saveChangesPermission($event)"></role-modal-permission>

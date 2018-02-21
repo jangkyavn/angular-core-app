@@ -228,6 +228,8 @@ export class RoleModalPermissionComponent implements OnInit {
       roleId: this.roleId
     };
 
+    console.log(data);
+
     this.dataService.post('/api/Role/SavePermission', data).subscribe((response: any) => {
       if (response !== null && response !== undefined) {
         this.saveChangesPermissionResult.emit(true);

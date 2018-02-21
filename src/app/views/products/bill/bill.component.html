@@ -14,18 +14,18 @@
                   <i class="fa fa-search"></i>
                 </button>
               </span>
-              <input type="text" class="form-control" placeholder="Nhập tên khách hàng cần tìm" [(ngModel)]="filterKeyword" (keyup)="loadData()">
+              <input type="text" id="txtSearchKeyword" class="form-control" placeholder="Nhập tên khách hàng và nhấn enter để tìm" [(ngModel)]="filterKeyword" (keyup.enter)="loadData()">
               <input readonly id="txtSearchDateRange" placeholder="Chọn thời gian cần tìm" class="form-control" #drp="bsDaterangepicker"
                 bsDaterangepicker [bsConfig]="bsConfig" [maxDate]="maxDate" [(ngModel)]="bsRangeValue" (ngModelChange)="searchDateRange($event)">
-              <select class="form-control" [(ngModel)]="paymentMethodValue" (change)="loadData()">
+              <select class="form-control" [(ngModel)]="paymentMethodValue" (ngModelChange)="loadData()">
                 <option value="">Chọn phương thức cần tìm</option>
                 <option *ngFor="let item of paymentMethods$ | async" [value]="item.Value">{{item.Name}}</option>
               </select>
-              <select class="form-control" [(ngModel)]="billStatusValue" (change)="loadData()">
+              <select class="form-control" [(ngModel)]="billStatusValue" (ngModelChange)="loadData()">
                 <option value="">Chọn trạng thái cần tìm</option>
                 <option *ngFor="let item of billStatuses$ | async" [value]="item.Value">{{item.Name}}</option>
               </select>
-              <button class="btn btn-default" (click)="resetFormSearch()" tooltip="Đặt lại" placement="left">
+              <button class="btn btn-default" (click)="resetFormSearch()" tooltip="Đặt lại" placement="right">
                 <i class="fa fa-undo"></i>
               </button>
             </div>
@@ -58,7 +58,7 @@
               <th style="width: 15%;">Hành động</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="!isLoading; else loading">
             <tr *ngIf="!(totalRow); else hasData">
               <td colspan="6" class="text-center text-danger">Không tìm thấy dữ liệu.</td>
             </tr>
@@ -88,6 +88,15 @@
               </tr>
             </ng-template>
           </tbody>
+          <ng-template #loading>
+            <tbody>
+              <tr>
+                <td colspan="6">
+                  <loading-spinner></loading-spinner>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
           <tfoot *ngIf="!(totalRow === 0)">
             <tr>
               <td colspan="6">Đang xem {{firstRow}} đến {{lastRow}} trong tổng số {{totalRow}} mục</td>
@@ -97,7 +106,7 @@
         <div class="row" *ngIf="!(totalRow === 0)">
           <div class="col-6 d-flex flex-row justify-content-start align-items-center">
             <div>Hiển thị:</div>
-            <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
+            <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
               <option value="10" selected>10</option>
               <option value="20">20</option>
               <option value="50">50</option>
@@ -118,5 +127,4 @@
   <!--/.col-->
 </div>
 
-<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <bill-modal-add-edit #billModalAddEdit (saveChangesResult)="saveChanges($event)"></bill-modal-add-edit>

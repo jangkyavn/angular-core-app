@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { MessageConstants } from '../../../common';
 import { PagedResult } from '../../../models/paged-result.model';
@@ -18,6 +17,7 @@ export class RoleComponent implements OnInit {
   @ViewChild('roleModalPermission') roleModalPermission: RoleModalPermissionComponent;
 
   roles: Role[];
+  isLoading: boolean = false;
 
   pageIndex: number = 1;
   pageSize: number = 10;
@@ -33,8 +33,7 @@ export class RoleComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService,
-    private spinner: NgxSpinnerService
+    private utilityService: UtilityService
   ) { }
 
   ngOnInit() {
@@ -46,12 +45,11 @@ export class RoleComponent implements OnInit {
   }
 
   loadData() {
-    this.spinner.show();
+    this.isLoading = true;
 
     const url = `/api/Role/GetAllPaging?keyword=${this.keyword}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
-
     this.dataService.get(url).subscribe((response: any) => {
-      this.spinner.hide();
+      this.isLoading = false;
 
       const data: PagedResult<Role> = response;
 
@@ -105,6 +103,12 @@ export class RoleComponent implements OnInit {
         }
       })
     })
+  }
+
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
+
+    this.loadData();
   }
 
   pageChanged(event: any) {

@@ -8,4 +8,5 @@ export class MessageConstants {
     public static DELETED_OK_MSG = "Xóa thành công.";
     public static FORBIDDEN = "Bạn bị chặn truy cập.";
     public static IMPORT_OK_MSG = "Nhập tập tin thành công.";
+    public static EXISTED_IMAGE = "Hình ảnh đã tồn tại.";
 }

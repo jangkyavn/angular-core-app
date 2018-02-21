@@ -14,16 +14,17 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" class="form-control" placeholder="Nhập email, họ tên cần tìm" [(ngModel)]="filterKeyword" (keyup)="loadData()">
+                            <input type="text" id="txtSearchKeyword" class="form-control" placeholder="Nhập email, họ tên và nhấn enter để tìm" [(ngModel)]="filterKeyword" (keyup.enter)="loadData()">
                             <select class="form-control" [(ngModel)]="filterGender" (change)="loadData()">
-                                <option value="">--- Chọn giới tính cần tìm ---</option>
+                                <option value="">Chọn giới tính cần tìm</option>
                                 <option value="true">Nam</option>
                                 <option value="false">Nữ</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-6">
-                        <button *ngIf="authService.hasPermission('USER', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1" tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
+                        <button *ngIf="authService.hasPermission('USER', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1"
+                            tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
                             <i class="fa fa-trash"></i>
                         </button>
                         <button *ngIf="authService.hasPermission('USER', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
@@ -49,7 +50,7 @@
                             <th style="width: 14%;">Hành động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="!isLoading; else loading">
                         <tr *ngIf="!(totalRow); else hasData">
                             <td colspan="8" class="text-center text-danger">Không tìm thấy dữ liệu.</td>
                         </tr>
@@ -77,19 +78,30 @@
                                     </a>
                                 </td>
                                 <td class="cell-center">
-                                    <button *ngIf="authService.hasPermission('USER', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm" tooltip="Sửa">
+                                    <button *ngIf="authService.hasPermission('USER', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
+                                        tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <button type="button" (click)="showView(item.Id)" class="btn btn-info btn-sm" tooltip="Xem">
                                         <i class="fa fa-info"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('USER', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                                    <button *ngIf="authService.hasPermission('USER', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm"
+                                        tooltip="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
                             </tr>
                         </ng-template>
                     </tbody>
+                    <ng-template #loading>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">
+                                    <loading-spinner></loading-spinner>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </ng-template>
                     <tfoot *ngIf="!(totalRow === 0)">
                         <tr>
                             <td colspan="8">Đang xem {{firstRow}} đến {{lastRow}} trong tổng số {{totalRow}} mục</td>
@@ -99,7 +111,7 @@
                 <div class="row" *ngIf="!(totalRow === 0)">
                     <div class="col-6 d-flex flex-row justify-content-start align-items-center">
                         <div>Hiển thị:</div>
-                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="loadData()">
+                        <select class="form-control mx-1" style="width: 6rem;" [(ngModel)]="lengthMenu" (change)="changeLengthMenu($event)">
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
@@ -120,5 +132,4 @@
     <!--/.col-->
 </div>
 
-<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>
 <user-modal-add-edit #userModalAddEdit (saveChangesResult)="saveChanges($event)"></user-modal-add-edit>

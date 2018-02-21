@@ -1,0 +1,67 @@
+<div bsModal #productModalImageManagement="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Quản lý hình ảnh cho sản phẩm: {{modalTitle}}</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" #imageManagementForm="ngForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" [(ngModel)]="imageManagement.productId" name="productId">
+
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="width: 5%">STT</th>
+                <th style="width: 20%">Hình ảnh</th>
+                <th style="width: 70%">Tên ảnh</th>
+                <th style="width: 5%">
+                  <button type="button" (click)="deleteAll()" class="btn btn-danger btn-sm" tooltip="Xóa tất cả">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of imageManagement.images as images; index as i;">
+                <td>{{i + 1}}</td>
+                <td>
+                  <img [src]="baseUrl + item.Path" alt="item.Caption" width="100" />
+                </td>
+                <td>
+                  <a href="javascript:void(0);">{{item.Caption}}</a>
+                </td>
+                <td>
+                  <button type="button" (click)="delete(i)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <input type="file" #file multiple (change)="changeImageFiles($event)" style="display: none;">
+                  <button type="button" class="btn btn-success btn-sm" (click)="file.value='';file.click();" tooltip="Thêm mới hình ảnh">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="!!(imageManagement.images?.length === 0)" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

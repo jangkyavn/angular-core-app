@@ -65,6 +65,7 @@ export class BillModalAddEditComponent implements OnInit {
 
   initObjectBillDetail() {
     return this.fb.group({
+      Id: [0],
       BillId: [0],
       ProductId: ['', Validators.required],
       ColorId: ['', Validators.required],
@@ -77,8 +78,6 @@ export class BillModalAddEditComponent implements OnInit {
   saveChanges() {
     let data: Bill = this.billForm.value;
     data.CustomerMobile = this.utilityService.formatPhoneNumber(data.CustomerMobile);
-
-    console.log(data);
 
     if (data.Id === 0) {
       this.dataService.post('/api/Bill', JSON.stringify(data)).subscribe((response: any) => {
@@ -164,6 +163,7 @@ export class BillModalAddEditComponent implements OnInit {
 
         data.BillDetails.forEach((item: BillDetail) => {
           let newGroup = this.fb.group({
+            Id: [item.Id],
             BillId: [item.BillId],
             ProductId: [item.ProductId, Validators.required],
             ColorId: [item.ColorId, Validators.required],
@@ -182,6 +182,7 @@ export class BillModalAddEditComponent implements OnInit {
         BillStatus: '',
         BillDetails: [
           {
+            Id: 0,
             BillId: 0,
             ProductId: '',
             ColorId: '',

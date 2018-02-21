@@ -4,7 +4,6 @@ import { NgForm } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 import { SystemConstants, MessageConstants } from '../../../common';
 
@@ -14,6 +13,8 @@ import { ProductCategory } from '../../../models/product-category.model';
 
 import { ProductModalAddEditComponent } from './product-modal-add-edit/product-modal-add-edit.component';
 import { ProductModalImportExcelComponent } from './product-modal-import-excel/product-modal-import-excel.component';
+import { ProductModalImageManagementComponent } from './product-modal-image-management/product-modal-image-management.component';
+import { ProductModalQuantityManagementComponent } from './product-modal-quantity-management/product-modal-quantity-management.component';
 
 @Component({
   selector: 'app-product',
@@ -23,9 +24,12 @@ import { ProductModalImportExcelComponent } from './product-modal-import-excel/p
 export class ProductComponent implements OnInit {
   @ViewChild('productModalAddEdit') productModalAddEdit: ProductModalAddEditComponent;
   @ViewChild('productModalImportExcel') productModalImportExcel: ProductModalImportExcelComponent;
+  @ViewChild('productModalQuantityManagement') productModalQuantityManagement: ProductModalQuantityManagementComponent;
+  @ViewChild('productModalImageManagement') productModalImageManagement: ProductModalImageManagementComponent;
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
+  isLoading: boolean = false;
 
   products: Product[];
   productCategoryHierachies: ProductCategory[];
@@ -49,8 +53,7 @@ export class ProductComponent implements OnInit {
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
-    private uploadService: UploadService,
-    private spinner: NgxSpinnerService
+    private uploadService: UploadService
   ) { }
 
   ngOnInit() {
@@ -63,13 +66,12 @@ export class ProductComponent implements OnInit {
   }
 
   loadData() {
-    this.spinner.show();
+    this.isLoading = true;
 
     const url = `/api/Product/GetAllPaging?keyword=${this.filterKeyword}&categoryId=${this.filterCategory}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
 
     this.dataService.get(url).subscribe((response: any) => {
-      this.spinner.hide();
-
+      this.isLoading = false;
       const data: PagedResult<Product> = response;
 
       this.products = data.Results;
@@ -116,6 +118,14 @@ export class ProductComponent implements OnInit {
     this.productModalAddEdit.showModal('Sửa thông tin sản phẩm', id);
   }
 
+  showQuantityManagement(id: number, name: string) {
+    this.productModalQuantityManagement.showModal(id, name);
+  }
+
+  showImageManagement(id: number, name: string) {
+    this.productModalImageManagement.showModal(id, name);
+  }
+
   saveChanges(result: boolean) {
     if (result) {
       this.loadData();
@@ -129,6 +139,20 @@ export class ProductComponent implements OnInit {
       this.loadData();
       this.productModalImportExcel.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.IMPORT_OK_MSG);
+    }
+  }
+
+  saveChangesQuantities(result: boolean) {
+    if (result) {
+      this.productModalQuantityManagement.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+    }
+  }
+
+  saveChangesImages(result: boolean) {
+    if (result) {
+      this.productModalImageManagement.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
     }
   }
 
@@ -155,6 +179,12 @@ export class ProductComponent implements OnInit {
         this.loadData();
       });
     });
+  }
+
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
+
+    this.loadData();
   }
 
   pageChanged(event: any) {

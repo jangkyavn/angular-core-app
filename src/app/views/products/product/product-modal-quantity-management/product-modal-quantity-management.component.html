@@ -1,0 +1,101 @@
+<div bsModal #productModalQuantityManagement="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Quản lý số lượng cho sản phẩm: {{modalTitle}}</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="quantityManagementForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" formControlName="productId">
+
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="width: 5%">STT</th>
+                <th style="width: 35%">Màu sắc</th>
+                <th style="width: 35%">Kích cỡ</th>
+                <th style="width: 20%">Số lượng</th>
+                <th style="width: 5%">
+                  <button type="button" (click)="setDefaultQuantities()" class="btn btn-default btn-sm" tooltip="Đặt lại">
+                    <i class="fa fa-undo"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody formArrayName="quantities">
+              <tr *ngFor="let item of quantityManagementForm.controls.quantities.controls as quantities; index as i;" [formGroupName]="i">
+
+                <td>{{i + 1}}</td>
+                <td>
+                  <select class="form-control" formControlName="ColorId" [ngClass]="{
+                    'is-valid': !item.controls['ColorId'].errors,
+                    'is-invalid': item.controls['ColorId'].errors && (item.controls['ColorId'].dirty || item.controls['ColorId'].touched)
+                  }">
+                    <option value="">--- Chọn màu sắc ---</option>
+                    <option *ngFor="let color of colors" [value]="color.Id">{{color.Name}}</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('ColorId').hasError('required')">
+                      Vui lòng chọn màu sắc.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <select class="form-control" formControlName="SizeId" [ngClass]="{
+                    'is-valid': !item.controls['SizeId'].errors,
+                    'is-invalid': item.controls['SizeId'].errors && (item.controls['SizeId'].dirty || item.controls['SizeId'].touched)
+                  }">
+                    <option value="">--- Chọn kích cỡ ---</option>
+                    <option *ngFor="let size of sizes" [value]="size.Id">{{size.Name}}</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('SizeId').hasError('required')">
+                      Vui lòng chọn kích cỡ.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input type="number" class="form-control" formControlName="Quantity" (input)="validateQuantity(i, $event)" min="1" [ngClass]="{
+                    'is-valid': !item.controls['Quantity'].errors,
+                    'is-invalid': item.controls['Quantity'].errors && (item.controls['Quantity'].dirty || item.controls['Quantity'].touched)
+                  }" />
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('Quantity').hasError('required')">
+                      Vui lòng nhập số lượng.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <button [disabled]="!!(quantities.length === 1)" type="button" (click)="delete(i)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">
+                  <button type="button" class="btn btn-success btn-sm" (click)="addNewLine()" tooltip="Thêm dòng mới">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="quantityManagementForm.invalid" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

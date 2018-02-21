@@ -3,7 +3,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { TreeModel, TreeNode, TreeComponent } from 'angular-tree-component';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService, UploadService } from '../../../services';
 import { MessageConstants, SystemConstants } from '../../../common';
 import { ProductCategory } from '../../../models/product-category.model';
@@ -22,14 +21,14 @@ export class ProductCategoryComponent implements OnInit {
   productCategorySearchResult: any[];
   productCategoryHierarchies: any[];
   options = {};
+  isLoading: boolean = false;
 
   constructor(
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
-    private uploadService: UploadService,
-    private spinner: NgxSpinnerService
+    private uploadService: UploadService
   ) { }
 
   ngOnInit() {
@@ -41,11 +40,10 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   loadData() {
-    this.spinner.show();
-
+    this.isLoading = true;
     this.dataService.get('/api/ProductCategory').subscribe((data: any) => {
-      this.spinner.hide();
-
+      this.isLoading = false;
+      
       this.productCategories = data;
       this.productCategorySearchResult = data;
       this.productCategoryHierarchies = this.utilityService.unflatten(data);

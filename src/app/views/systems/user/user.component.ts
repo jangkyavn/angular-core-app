@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
 
@@ -19,6 +18,7 @@ export class UserComponent implements OnInit {
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
+  isLoading: boolean;
 
   users: User[];
 
@@ -40,8 +40,7 @@ export class UserComponent implements OnInit {
     public authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private utilityService: UtilityService,
-    private spinner: NgxSpinnerService
+    private utilityService: UtilityService
   ) { }
 
   ngOnInit() {
@@ -53,12 +52,11 @@ export class UserComponent implements OnInit {
   }
 
   loadData() {
-    this.spinner.show();
+    this.isLoading = true;
 
     const url = `/api/User/GetAllPaging?keyword=${this.filterKeyword}&gender=${this.filterGender}&page=${this.pageIndex}&pageSize=${this.pageSize}`;
-
     this.dataService.get(url).subscribe((response: any) => {
-      this.spinner.hide();
+      this.isLoading = false;
 
       const data: PagedResult<User> = response;
 
@@ -119,6 +117,12 @@ export class UserComponent implements OnInit {
         this.loadData();
       });
     });
+  }
+
+  changeLengthMenu(event: any) {
+    this.pageSize = event.target.value;
+
+    this.loadData();
   }
 
   pageChanged(event: any) {

@@ -16,6 +16,10 @@ export class UtilityService {
     this.router.navigate([UrlConstants.LOGIN]);
   }
 
+  getCaptionFromPath(path: string) {
+    return path.substr(path.lastIndexOf('/') + 1, (path.length - 1) - path.lastIndexOf('/'));
+  }
+
   dateFormatJson(datetime: string) {
     if (datetime === null || datetime === '') {
       return '';
@@ -138,6 +142,10 @@ export class UtilityService {
   }
 
   unflatten(arr: any[]): any[] {
+    if (arr.length == 0) {
+      return [];
+    }
+
     let map = {};
     let roots: any[] = [];
 
