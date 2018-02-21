@@ -21,6 +21,7 @@ import { ProductModalAddEditComponent } from './product/product-modal-add-edit/p
 import { ProductModalImportExcelComponent } from './product/product-modal-import-excel/product-modal-import-excel.component';
 import { ProductModalQuantityManagementComponent } from './product/product-modal-quantity-management/product-modal-quantity-management.component';
 import { ProductModalImageManagementComponent } from './product/product-modal-image-management/product-modal-image-management.component';
+import { ProductModalWholePriceManagementComponent } from './product/product-modal-whole-price-management/product-modal-whole-price-management.component';
 
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductCategoryModalAddEditComponent } from './product-category/product-category-modal-add-edit/product-category-modal-add-edit.component';
@@ -51,6 +52,7 @@ import { BillModalAddEditComponent } from './bill/bill-modal-add-edit/bill-modal
     ProductModalImportExcelComponent,
     ProductModalQuantityManagementComponent,
     ProductModalImageManagementComponent,
+    ProductModalWholePriceManagementComponent,    
     ProductCategoryComponent,
     ProductCategoryModalAddEditComponent,
     BillComponent,

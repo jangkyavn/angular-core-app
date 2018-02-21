@@ -15,6 +15,7 @@ import { ProductModalAddEditComponent } from './product-modal-add-edit/product-m
 import { ProductModalImportExcelComponent } from './product-modal-import-excel/product-modal-import-excel.component';
 import { ProductModalImageManagementComponent } from './product-modal-image-management/product-modal-image-management.component';
 import { ProductModalQuantityManagementComponent } from './product-modal-quantity-management/product-modal-quantity-management.component';
+import { ProductModalWholePriceManagementComponent } from './product-modal-whole-price-management/product-modal-whole-price-management.component';
 
 @Component({
   selector: 'app-product',
@@ -26,6 +27,7 @@ export class ProductComponent implements OnInit {
   @ViewChild('productModalImportExcel') productModalImportExcel: ProductModalImportExcelComponent;
   @ViewChild('productModalQuantityManagement') productModalQuantityManagement: ProductModalQuantityManagementComponent;
   @ViewChild('productModalImageManagement') productModalImageManagement: ProductModalImageManagementComponent;
+  @ViewChild('productModalWholePriceManagement') productModalWholePriceManagement: ProductModalWholePriceManagementComponent;
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
@@ -126,17 +128,19 @@ export class ProductComponent implements OnInit {
     this.productModalImageManagement.showModal(id, name);
   }
 
+  showWholePriceManagement(id: number, name: string) {
+    this.productModalWholePriceManagement.showModal(id, name);
+  }
+
   saveChanges(result: boolean) {
     if (result) {
       this.loadData();
       this.productModalAddEdit.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     }
   }
 
   saveChangesImportExcel(result: boolean) {
     if (result) {
-      this.loadData();
       this.productModalImportExcel.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.IMPORT_OK_MSG);
     }
@@ -152,6 +156,13 @@ export class ProductComponent implements OnInit {
   saveChangesImages(result: boolean) {
     if (result) {
       this.productModalImageManagement.hideModal();
+      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+    }
+  }
+
+  saveChangesWholePrices(result: boolean) {
+    if (result) {
+      this.productModalWholePriceManagement.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
     }
   }

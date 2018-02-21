@@ -17,7 +17,7 @@ export class ProductModalQuantityManagementComponent implements OnInit {
 
   modalTitle: string;
 
-  quantityManagementForm: FormGroup;
+  productQuantityForm: FormGroup;
   colors: any[];
   sizes: any[];
   products: any[];
@@ -36,7 +36,7 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   }
 
   createForm() {
-    this.quantityManagementForm = this.fb.group({
+    this.productQuantityForm = this.fb.group({
       productId: [0, Validators.required],
       quantities: this.fb.array([this.initObjectQuantity()])
     });
@@ -51,9 +51,8 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   }
 
   saveChanges() {
-    const data = this.quantityManagementForm.value;
+    const data = this.productQuantityForm.value;
 
-    console.log(data);
     this.dataService.post('/api/Product/SaveQuantities', data).subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.saveChangesResult.emit(true);
@@ -66,7 +65,7 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   loadQuantities(productId: number) {
     this.dataService.get(`/api/Product/GetQuantities?productId=${productId}`).subscribe((data: ProductQuantity[]) => {
       if (data.length > 0) {
-        const control = <FormArray>this.quantityManagementForm.controls['quantities'];
+        const control = <FormArray>this.productQuantityForm.controls['quantities'];
         control.removeAt(0);
 
         data.forEach(item => {
@@ -86,8 +85,8 @@ export class ProductModalQuantityManagementComponent implements OnInit {
 
   showModal(productId: number, productName: string) {
     this.modalTitle = productName;
-    this.quantityManagementForm.reset();
-    this.quantityManagementForm.patchValue({
+    this.productQuantityForm.reset();
+    this.productQuantityForm.patchValue({
       productId
     });
     this.setDefaultQuantities();
@@ -111,17 +110,17 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   }
 
   addNewLine() {
-    const control = <FormArray>this.quantityManagementForm.controls['quantities'];
+    const control = <FormArray>this.productQuantityForm.controls['quantities'];
     control.push(this.initObjectQuantity());
   }
 
   delete(id: number) {
-    const control = <FormArray>this.quantityManagementForm.controls['quantities'];
+    const control = <FormArray>this.productQuantityForm.controls['quantities'];
     control.removeAt(id);
   }
 
   setDefaultQuantities() {
-    const control = <FormArray>this.quantityManagementForm.controls['quantities'];
+    const control = <FormArray>this.productQuantityForm.controls['quantities'];
     for (let i = control.length - 1; i >= 0; i--) {
       control.removeAt(i);
     }
@@ -130,7 +129,7 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   }
 
   validateQuantity(index: number, event: any) {
-    const control = <FormArray>this.quantityManagementForm.controls['quantities'];
+    const control = <FormArray>this.productQuantityForm.controls['quantities'];
     let value = event.target.value;
 
     if (value === '' || isNaN(value) || value.indexOf('.') > -1) {

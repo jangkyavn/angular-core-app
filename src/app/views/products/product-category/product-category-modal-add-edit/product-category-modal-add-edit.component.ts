@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, UtilityService, UploadService } from '../../../../services';
+import { DataService, NotificationService, UtilityService, UploadService } from '../../../../services';
 import { ProductCategory } from '../../../../models/product-category.model';
 import { SystemConstants } from '../../../../common/system.constants';
+import { MessageConstants } from '../../../../common';
 
 @Component({
   selector: 'product-category-modal-add-edit',
@@ -27,6 +28,7 @@ export class ProductCategoryModalAddEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService
   ) { }
@@ -64,10 +66,12 @@ export class ProductCategoryModalAddEditComponent implements OnInit {
     if (data.Id === 0) {
       this.dataService.post('/api/ProductCategory', data).subscribe(() => {
         this.saveChangesResult.emit(true);
+        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
       });
     } else {
       this.dataService.put('/api/ProductCategory', data).subscribe(() => {
         this.saveChangesResult.emit(true);
+        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
       });
     }
   }

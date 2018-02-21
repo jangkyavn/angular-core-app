@@ -1,0 +1,94 @@
+<div bsModal #productModalWholePriceManagement="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Quản lý bán sỉ cho sản phẩm: {{modalTitle}}</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="form-horizontal" [formGroup]="wholePriceForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+        <input type="hidden" formControlName="productId">
+
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="width: 5%">STT</th>
+                <th style="width: 25%">Số lượng từ</th>
+                <th style="width: 25%">Số lượng đến</th>
+                <th style="width: 40%">Giá</th>
+                <th style="width: 5%">
+                  <button type="button" (click)="setDefaultWholePrices()" class="btn btn-default btn-sm" tooltip="Đặt lại">
+                    <i class="fa fa-undo"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody formArrayName="wholePrices">
+              <tr *ngFor="let item of wholePriceForm.controls.wholePrices.controls as wholePrices; index as i;" [formGroupName]="i">
+                <td>{{i + 1}}</td>
+                <td>
+                  <input type="number" class="form-control" formControlName="FromQuantity" min="1" (input)="validateFromQuantity(i, $event)" [ngClass]="{
+                    'is-valid': !item.controls['FromQuantity'].errors,
+                    'is-invalid': item.controls['FromQuantity'].errors && (item.controls['FromQuantity'].dirty || item.controls['FromQuantity'].touched)
+                  }" />
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('FromQuantity').hasError('required')">
+                      Vui lòng nhập số lượng từ bao nhiêu.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input type="number" class="form-control" formControlName="ToQuantity" min="1" (input)="validateToQuantity(i, $event)" [ngClass]="{
+                    'is-valid': !item.controls['ToQuantity'].errors,
+                    'is-invalid': item.controls['ToQuantity'].errors && (item.controls['ToQuantity'].dirty || item.controls['ToQuantity'].touched)
+                  }" />
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('ToQuantity').hasError('required')">
+                      Vui lòng nhập số lượng đến bao nhiêu.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" class="form-control" formControlName="Price" [textMask]="{mask: numberMask}" [ngClass]="{
+                    'is-valid': !item.controls['Price'].errors,
+                    'is-invalid': item.controls['Price'].errors && (item.controls['Price'].dirty || item.controls['Price'].touched)
+                  }" />
+                  <div class="invalid-feedback">
+                    <div *ngIf="item.get('Price').hasError('required')">
+                      Vui lòng nhập giá bán sỉ.
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <button [disabled]="!!(wholePrices.length === 1)" type="button" (click)="delete(i)" class="btn btn-danger btn-sm" tooltip="Xóa">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <button type="button" class="btn btn-success btn-sm" (click)="addNewLine()" tooltip="Thêm dòng mới">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)="hideModal()">
+            <i class="fa fa-times"></i> Hủy
+          </button>
+          <button type="submit" [disabled]="wholePriceForm.invalid" class="btn btn-success">
+            <i class="fa fa-floppy-o"></i> Lưu
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

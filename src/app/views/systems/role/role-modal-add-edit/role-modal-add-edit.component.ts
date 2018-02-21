@@ -2,8 +2,9 @@ import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { DataService } from '../../../../services';
 
+import { DataService, NotificationService } from '../../../../services';
+import { MessageConstants } from '../../../../common';
 import { Role } from '../../../../models/role.model';
 
 @Component({
@@ -20,7 +21,8 @@ export class RoleModalAddEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dataService: DataService
+    private dataService: DataService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -48,6 +50,7 @@ export class RoleModalAddEditComponent implements OnInit {
       this.dataService.post('/api/Role', JSON.stringify(data)).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
         } else {
           this.saveChangesResult.emit(false);
         }
@@ -56,6 +59,7 @@ export class RoleModalAddEditComponent implements OnInit {
       this.dataService.put('/api/Role', JSON.stringify(data)).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
         } else {
           this.saveChangesResult.emit(false);
         }

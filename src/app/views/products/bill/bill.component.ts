@@ -101,7 +101,6 @@ export class BillComponent implements OnInit {
     if (result) {
       this.loadData();
       this.billModalAddEdit.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
     } else {
       this.billModalAddEdit.hideModal();
     }

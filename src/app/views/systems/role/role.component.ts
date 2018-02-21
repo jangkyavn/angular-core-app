@@ -79,7 +79,6 @@ export class RoleComponent implements OnInit {
     if (result) {
       this.loadData();
       this.roleModalAddEdit.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     } else {
       this.roleModalAddEdit.hideModal();
     }

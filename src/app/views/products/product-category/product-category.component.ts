@@ -62,7 +62,6 @@ export class ProductCategoryComponent implements OnInit {
     if (result) {
       this.loadData();
       this.productCategoryModalAddEdit.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     }
   }
 

@@ -8,7 +8,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form class="form-horizontal" [formGroup]="quantityManagementForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+      <form class="form-horizontal" [formGroup]="productQuantityForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
         <input type="hidden" formControlName="productId">
 
         <div class="modal-body">
@@ -27,7 +27,7 @@
               </tr>
             </thead>
             <tbody formArrayName="quantities">
-              <tr *ngFor="let item of quantityManagementForm.controls.quantities.controls as quantities; index as i;" [formGroupName]="i">
+              <tr *ngFor="let item of productQuantityForm.controls.quantities.controls as quantities; index as i;" [formGroupName]="i">
 
                 <td>{{i + 1}}</td>
                 <td>
@@ -78,7 +78,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="6">
+                <td colspan="5">
                   <button type="button" class="btn btn-success btn-sm" (click)="addNewLine()" tooltip="Thêm dòng mới">
                     <i class="fa fa-plus"></i>
                   </button>
@@ -91,7 +91,7 @@
           <button type="button" class="btn btn-danger" (click)="hideModal()">
             <i class="fa fa-times"></i> Hủy
           </button>
-          <button type="submit" [disabled]="quantityManagementForm.invalid" class="btn btn-success">
+          <button type="submit" [disabled]="productQuantityForm.invalid" class="btn btn-success">
             <i class="fa fa-floppy-o"></i> Lưu
           </button>
         </div>

@@ -86,7 +86,6 @@ export class UserComponent implements OnInit {
     if (result) {
       this.loadData();
       this.userModalAddEdit.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
     } else {
       this.userModalAddEdit.hideModal();
     }

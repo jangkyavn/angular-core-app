@@ -8,7 +8,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form class="form-horizontal" #imageManagementForm="ngForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
+      <form class="form-horizontal" #productImageForm="ngForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
         <input type="hidden" [(ngModel)]="imageManagement.productId" name="productId">
 
         <div class="modal-body">
@@ -43,7 +43,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="6">
+                <td colspan="4">
                   <input type="file" #file multiple (change)="changeImageFiles($event)" style="display: none;">
                   <button type="button" class="btn btn-success btn-sm" (click)="file.value='';file.click();" tooltip="Thêm mới hình ảnh">
                     <i class="fa fa-plus"></i>

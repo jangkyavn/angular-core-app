@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { DataService, UtilityService, UploadService } from '../../../../services';
+
+import { DataService, NotificationService, UtilityService, UploadService } from '../../../../services';
 import { SystemConstants } from '../../../../common/system.constants';
+import { MessageConstants } from '../../../../common';
 
 import { User } from '../../../../models/user.model';
 import { Role } from '../../../../models/role.model';
@@ -48,6 +50,7 @@ export class UserModalAddEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService
   ) { }
@@ -116,6 +119,7 @@ export class UserModalAddEditComponent implements OnInit {
       this.dataService.post('/api/User', data).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
         }
         else {
           this.saveChangesResult.emit(false);
@@ -127,11 +131,12 @@ export class UserModalAddEditComponent implements OnInit {
       this.dataService.put('/api/User', data).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
         }
         else {
           this.saveChangesResult.emit(false);
         }
-        
+
         this.loadRoles();
       });
     }

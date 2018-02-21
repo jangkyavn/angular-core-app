@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, UtilityService, UploadService } from '../../../../services';
+import { DataService, NotificationService, UtilityService } from '../../../../services';
 import { Bill } from '../../../../models/bill.model';
 import { BillDetail } from '../../../../models/bill-detail.model';
+import { MessageConstants } from '../../../../common';
 
 @Component({
   selector: 'bill-modal-add-edit',
@@ -30,6 +31,7 @@ export class BillModalAddEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService
   ) { }
 
@@ -80,9 +82,10 @@ export class BillModalAddEditComponent implements OnInit {
     data.CustomerMobile = this.utilityService.formatPhoneNumber(data.CustomerMobile);
 
     if (data.Id === 0) {
-      this.dataService.post('/api/Bill', JSON.stringify(data)).subscribe((response: any) => {
+      this.dataService.post('/api/Bill', data).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
         } else {
           this.saveChangesResult.emit(false);
         }
@@ -91,6 +94,7 @@ export class BillModalAddEditComponent implements OnInit {
       this.dataService.put('/api/Bill', data).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
           this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
         } else {
           this.saveChangesResult.emit(false);
         }

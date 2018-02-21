@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
-import { DataService, UtilityService, UploadService } from '../../../../services';
+import { DataService, NotificationService, UtilityService, UploadService } from '../../../../services';
 import { Product } from '../../../../models/product.model';
 import { SystemConstants } from '../../../../common/system.constants';
+import { MessageConstants } from '../../../../common';
 
 @Component({
   selector: 'product-modal-add-edit',
@@ -33,6 +34,7 @@ export class ProductModalAddEditComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService,
     private uploadService: UploadService
   ) { }
@@ -87,10 +89,12 @@ export class ProductModalAddEditComponent implements OnInit {
     if (data.Id === 0) {
       this.dataService.post('/api/Product', data).subscribe(() => {
         this.saveChangesResult.emit(true);
+        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
       });
     } else {
       this.dataService.put('/api/Product', data).subscribe(() => {
         this.saveChangesResult.emit(true);
+        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
       });
     }
   }
