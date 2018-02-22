@@ -136,4 +136,8 @@ export class ProductModalQuantityManagementComponent implements OnInit {
       control.controls[index].get('Quantity').setValue('1');
     }
   }
+
+  getControls(frmGrp: FormGroup, key: string) {
+    return (<FormArray>frmGrp.controls[key]).controls;
+  }
 }

@@ -138,4 +138,8 @@ export class ProductModalWholePriceManagementComponent implements OnInit {
       control.controls[index].get('ToQuantity').setValue('1');
     }
   }
+  
+  getControls(frmGrp: FormGroup, key: string) {
+    return (<FormArray>frmGrp.controls[key]).controls;
+  }
 }

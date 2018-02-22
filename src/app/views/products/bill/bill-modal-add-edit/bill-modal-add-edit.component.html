@@ -125,7 +125,7 @@
                   </tr>
                 </thead>
                 <tbody formArrayName="BillDetails">
-                  <tr *ngFor="let billDetail of billForm.controls.BillDetails.controls as billDetails; index as i;" [formGroupName]="i">
+                  <tr *ngFor="let billDetail of getControls(billForm, 'BillDetails') as billDetails; index as i;" [formGroupName]="i">
                     <input type="hidden" formControlName="BillId">
                     <input type="hidden" formControlName="Id">
 
