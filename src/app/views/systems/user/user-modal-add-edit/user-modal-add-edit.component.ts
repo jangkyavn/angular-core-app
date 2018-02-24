@@ -146,7 +146,6 @@ export class UserModalAddEditComponent implements OnInit {
     this.userForm.reset();
     this.modalTitle = title;
     this.imageUrl = '';
-    $('#fileInputAvatar').val(null);
 
     if (id !== undefined) {
       this.isAddNew = false;
@@ -195,11 +194,7 @@ export class UserModalAddEditComponent implements OnInit {
     this.loadRoles();
   }
 
-  btnSelectAvatar() {
-    $('#fileInputAvatar').click();
-  }
-
-  changeFileInputAvatar(files: any) {
+  changeFileImage(files: any) {
     this.uploadService.postWithFile('/api/Upload/UploadImage?type=users', null, files).then((imageUrl: string) => {
       this.userForm.patchValue({
         Avatar: imageUrl

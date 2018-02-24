@@ -65,12 +65,12 @@
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtImage">Hình ảnh:</label>
             <div class="col-md-10">
-              <div class="input-group" (click)="btnSelectImage()">
-                <input id="txtImage" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Image" [ngClass]="{
+              <div class="input-group" (click)="fileImage.value='';fileImage.click()">
+                <input id="txtImage" #txtImage class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Image" [ngClass]="{
                   'is-valid': !productCategoryForm.controls['Image'].errors,
                   'is-invalid': productCategoryForm.controls['Image'].errors && (productCategoryForm.controls['Image'].dirty || productCategoryForm.controls['Image'].touched)
                 }">
-                <input type="file" id="fileInputImage" (change)="changeFileInputImage($event.target.files)">
+                <input type="file" #fileImage (change)="changeFileImage($event.target.files)" style="display: none;">
                 <span class="input-group-append">
                   <button class="btn btn-default" type="button">Trình duyệt</button>
                 </span>
@@ -80,7 +80,12 @@
                   Vui lòng chọn đường dẫn ảnh không quá 250 ký tự.
                 </div>
               </div>
-              <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
+              <div *ngIf="!!(imageUrl)">
+                <img [src]="imageUrl" alt="Xem trước" width="250" height="250" class="img-thumbnail mt-2">
+                <button type="button" id="btnRemoveImage" (click)="fileImage.value='';txtImage.value='';imageUrl=''" class="btn btn-light" tooltip="Xóa ảnh">
+                  <i class="fa fa-times"></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class="form-group row">

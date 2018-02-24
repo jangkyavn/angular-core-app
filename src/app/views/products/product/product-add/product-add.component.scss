@@ -2,12 +2,15 @@
     background-color: #FFF !important;
 }
 
-#fileInputImage {
-    display: none;
-}
-
 #txtTags {
     border: 1px solid #4dbd74;
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
+}
+
+#btnRemoveImage {
+    position: relative;
+    left: -48px;
+    top: -66px;
+    border-radius: 20px !important;
 }

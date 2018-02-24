@@ -1,20 +1,12 @@
-<div bsModal #productModalAddEdit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
-  aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{modalTitle}}</h4>
-        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-edit"></i> Sửa thông tin sản phẩm
       </div>
-      <form class="form-horizontal" [formGroup]="productForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
-        <input type="hidden" formControlName="Id">
-        <input type="hidden" formControlName="SeoAlias">
-        <input type="hidden" formControlName="DateCreated">
-        <input type="hidden" formControlName="Tags">
-
-        <div class="modal-body">
+      <div class="card-body">
+        <form class="form-horizontal" [formGroup]="productEditForm" (ngSubmit)="saveChanges()" novalidate autocomplete="off">
           <div class="form-group row">
             <label class="col-md-2 col-form-label">Đường dẫn SEO:</label>
             <div class="col-md-10 d-flex align-items-center">
@@ -27,14 +19,14 @@
             <label class="col-md-2 col-form-label" for="txtName">Tên sản phẩm:</label>
             <div class="col-md-10">
               <input type="text" id="txtName" class="form-control" formControlName="Name" (keyup)="makeSeoAlias($event.target.value)" [ngClass]="{
-                'is-valid': !productForm.controls['Name'].errors,
-                'is-invalid': productForm.controls['Name'].errors && (productForm.controls['Name'].dirty || productForm.controls['Name'].touched)
+                'is-valid': !productEditForm.controls['Name'].errors,
+                'is-invalid': productEditForm.controls['Name'].errors && (productEditForm.controls['Name'].dirty || productEditForm.controls['Name'].touched)
               }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('Name').hasError('required')">
+                <div *ngIf="productEditForm.get('Name').hasError('required')">
                   Vui lòng nhập tên sản phẩm.
                 </div>
-                <div *ngIf="productForm.get('Name').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('Name').hasError('maxlength')">
                   Vui lòng nhập tên sản phẩm không quá 200 ký tự.
                 </div>
               </div>
@@ -44,14 +36,14 @@
             <label class="col-md-2 col-form-label" for="ddlCategory">Thể loại:</label>
             <div class="col-md-10">
               <select id="ddlCategory" class="form-control" formControlName="CategoryId" [ngClass]="{
-                'is-valid': !productForm.controls['CategoryId'].errors,
-                'is-invalid': productForm.controls['CategoryId'].errors && (productForm.controls['CategoryId'].dirty || productForm.controls['CategoryId'].touched)
+                'is-valid': !productEditForm.controls['CategoryId'].errors,
+                'is-invalid': productEditForm.controls['CategoryId'].errors && (productEditForm.controls['CategoryId'].dirty || productEditForm.controls['CategoryId'].touched)
               }">
                 <option value="">--- Chọn thể loại ---</option>
                 <option *ngFor="let item of productCategoryHierachies" [value]="item.Id">{{item.Name}}</option>
               </select>
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('CategoryId').hasError('required')">
+                <div *ngIf="productEditForm.get('CategoryId').hasError('required')">
                   Vui lòng chọn thể loại sản phẩm.
                 </div>
               </div>
@@ -61,11 +53,11 @@
             <label class="col-md-2 col-form-label" for="txtDescription">Mô tả:</label>
             <div class="col-md-10">
               <textarea id="txtDescription" rows="3" class="form-control" formControlName="Description" [ngClass]="{
-                'is-valid': !productForm.controls['Description'].errors,
-                'is-invalid': productForm.controls['Description'].errors && (productForm.controls['Description'].dirty || productForm.controls['Description'].touched)
+                'is-valid': !productEditForm.controls['Description'].errors,
+                'is-invalid': productEditForm.controls['Description'].errors && (productEditForm.controls['Description'].dirty || productEditForm.controls['Description'].touched)
               }"></textarea>
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('Description').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('Description').hasError('maxlength')">
                   Vui lòng nhập mô tả không quá 500 ký tự.
                 </div>
               </div>
@@ -74,53 +66,61 @@
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtContent">Nội dung:</label>
             <div class="col-md-10">
-              <ckeditor formControlName="Content" [config]="{uiColor: '#a4a4a4', extraPlugins: 'colorbutton,uploadimage', filebrowserImageUploadUrl: 'http://localhost:53887/api/Upload/UploadImageForCKEditor'}"
-                debounce="500">
-              </ckeditor>
+              <!-- <ckeditor formControlName="Content" [config]="{uiColor: '#a4a4a4', extraPlugins: 'colorbutton,uploadimage', filebrowserImageUploadUrl: 'http://localhost:53887/api/Upload/UploadImageForCKEditor'}"
+                      debounce="500">
+                    </ckeditor> -->
+              <div formControlName="Content" [froalaEditor]="froalaOptions"></div>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtImage">Hình ảnh:</label>
             <div class="col-md-10">
-              <div class="input-group" (click)="btnSelectImage()">
-                <input id="txtImage" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Image" [ngClass]="{
-                  'is-valid': !productForm.controls['Image'].errors,
-                  'is-invalid': productForm.controls['Image'].errors && (productForm.controls['Image'].dirty || productForm.controls['Image'].touched)
+              <div class="input-group" (click)="fileImage.value='';fileImage.click()">
+                <input id="txtImage" #txtImage class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Image" [ngClass]="{
+                  'is-valid': !productEditForm.controls['Image'].errors,
+                  'is-invalid': productEditForm.controls['Image'].errors && (productEditForm.controls['Image'].dirty || productEditForm.controls['Image'].touched)
                 }">
-                <input type="file" id="fileInputImage" (change)="changeFileInputImage($event.target.files)">
+                <input type="file" #fileImage (change)="changeFileImage($event.target.files)" style="display: none;">
                 <span class="input-group-append">
                   <button class="btn btn-default" type="button">Trình duyệt</button>
                 </span>
               </div>
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('Image').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('Image').hasError('maxlength')">
                   Vui lòng chọn đường dẫn ảnh không quá 250 ký tự.
                 </div>
               </div>
-              <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
+              <div *ngIf="!!(imageUrl)">
+                <img [src]="imageUrl" alt="Xem trước" width="250" height="250" class="img-thumbnail mt-2">
+                <button type="button" id="btnRemoveImage" (click)="fileImage.value='';txtImage.value='';imageUrl=''" class="btn btn-light"
+                  tooltip="Xóa ảnh">
+                  <i class="fa fa-times"></i>
+                </button>
+              </div>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtPrice">Giá bán:</label>
             <div class="col-md-4">
               <input type="text" class="form-control" id="txtPrice" [textMask]="{mask: numberMask}" formControlName="Price" [ngClass]="{
-                'is-valid': !productForm.controls['Price'].errors,
-                'is-invalid': productForm.controls['Price'].errors && (productForm.controls['Price'].dirty || productForm.controls['Price'].touched)
+                'is-valid': !productEditForm.controls['Price'].errors,
+                'is-invalid': productEditForm.controls['Price'].errors && (productEditForm.controls['Price'].dirty || productEditForm.controls['Price'].touched)
               }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('Price').hasError('required')">
+                <div *ngIf="productEditForm.get('Price').hasError('required')">
                   Vui lòng nhập giá bán.
                 </div>
               </div>
             </div>
             <label class="col-md-2 col-form-label" for="txtOriginalPrice">Giá gốc:</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="txtOriginalPrice" [textMask]="{mask: numberMask}" formControlName="OriginalPrice" [ngClass]="{
-                'is-valid': !productForm.controls['OriginalPrice'].errors,
-                'is-invalid': productForm.controls['OriginalPrice'].errors && (productForm.controls['OriginalPrice'].dirty || productForm.controls['OriginalPrice'].touched)
-              }">
+              <input type="text" class="form-control" id="txtOriginalPrice" [textMask]="{mask: numberMask}" formControlName="OriginalPrice"
+                [ngClass]="{
+                  'is-valid': !productEditForm.controls['OriginalPrice'].errors,
+                  'is-invalid': productEditForm.controls['OriginalPrice'].errors && (productEditForm.controls['OriginalPrice'].dirty || productEditForm.controls['OriginalPrice'].touched)
+                }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('OriginalPrice').hasError('required')">
+                <div *ngIf="productEditForm.get('OriginalPrice').hasError('required')">
                   Vui lòng nhập giá gốc.
                 </div>
               </div>
@@ -129,19 +129,20 @@
           <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtPromotionPrice">Giá khuyến mãi:</label>
             <div class="col-md-4">
-              <input type="text" class="form-control" id="txtPromotionPrice" [textMask]="{mask: numberMask}" formControlName="PromotionPrice" [ngClass]="{
-                'is-valid': !productForm.controls['PromotionPrice'].errors,
-                'is-invalid': productForm.controls['PromotionPrice'].errors && (productForm.controls['PromotionPrice'].dirty || productForm.controls['PromotionPrice'].touched)
+              <input type="text" class="form-control" id="txtPromotionPrice" [textMask]="{mask: numberMask}" formControlName="PromotionPrice"
+                [ngClass]="{
+                  'is-valid': !productEditForm.controls['PromotionPrice'].errors,
+                  'is-invalid': productEditForm.controls['PromotionPrice'].errors && (productEditForm.controls['PromotionPrice'].dirty || productEditForm.controls['PromotionPrice'].touched)
               }">
             </div>
             <label class="col-md-2 col-form-label" for="txtUnit">Đơn vị:</label>
             <div class="col-md-4">
               <input type="text" class="form-control" id="txtUnit" formControlName="Unit" [ngClass]="{
-                'is-valid': !productForm.controls['Unit'].errors,
-                'is-invalid': productForm.controls['Unit'].errors && (productForm.controls['Unit'].dirty || productForm.controls['Unit'].touched)
+                'is-valid': !productEditForm.controls['Unit'].errors,
+                'is-invalid': productEditForm.controls['Unit'].errors && (productEditForm.controls['Unit'].dirty || productEditForm.controls['Unit'].touched)
               }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('Unit').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('Unit').hasError('maxlength')">
                   Vui lòng nhập đơn vị không quá 100 ký tự.
                 </div>
               </div>
@@ -158,11 +159,11 @@
             <label class="col-md-2 col-form-label" for="txtSeoPageTitle">Tiêu đề SEO:</label>
             <div class="col-md-10">
               <input type="text" id="txtSeoPageTitle" class="form-control" formControlName="SeoPageTitle" [ngClass]="{
-                'is-valid': !productForm.controls['SeoPageTitle'].errors,
-                'is-invalid': productForm.controls['SeoPageTitle'].errors && (productForm.controls['SeoPageTitle'].dirty || productForm.controls['SeoPageTitle'].touched)
+                'is-valid': !productEditForm.controls['SeoPageTitle'].errors,
+                'is-invalid': productEditForm.controls['SeoPageTitle'].errors && (productEditForm.controls['SeoPageTitle'].dirty || productEditForm.controls['SeoPageTitle'].touched)
               }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('SeoPageTitle').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('SeoPageTitle').hasError('maxlength')">
                   Vui lòng nhập tiêu đề seo không quá 200 ký tự.
                 </div>
               </div>
@@ -172,11 +173,11 @@
             <label class="col-md-2 col-form-label" for="txtSeoKeywords">Từ khóa SEO:</label>
             <div class="col-md-10">
               <input type="text" id="txtSeoKeywords" class="form-control" formControlName="SeoKeywords" [ngClass]="{
-                'is-valid': !productForm.controls['SeoKeywords'].errors,
-                'is-invalid': productForm.controls['SeoKeywords'].errors && (productForm.controls['SeoKeywords'].dirty || productForm.controls['SeoKeywords'].touched)
+                'is-valid': !productEditForm.controls['SeoKeywords'].errors,
+                'is-invalid': productEditForm.controls['SeoKeywords'].errors && (productEditForm.controls['SeoKeywords'].dirty || productEditForm.controls['SeoKeywords'].touched)
               }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('SeoKeywords').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('SeoKeywords').hasError('maxlength')">
                   Vui lòng nhập từ khóa seo không quá 250 ký tự.
                 </div>
               </div>
@@ -186,11 +187,11 @@
             <label class="col-md-2 col-form-label" for="txtSeoDescription">Mô tả SEO:</label>
             <div class="col-md-10">
               <input type="text" id="txtSeoDescription" class="form-control" formControlName="SeoDescription" [ngClass]="{
-                'is-valid': !productForm.controls['SeoDescription'].errors,
-                'is-invalid': productForm.controls['SeoDescription'].errors && (productForm.controls['SeoDescription'].dirty || productForm.controls['SeoDescription'].touched)
-              }">
+                  'is-valid': !productEditForm.controls['SeoDescription'].errors,
+                  'is-invalid': productEditForm.controls['SeoDescription'].errors && (productEditForm.controls['SeoDescription'].dirty || productEditForm.controls['SeoDescription'].touched)
+                }">
               <div class="invalid-feedback">
-                <div *ngIf="productForm.get('SeoDescription').hasError('maxlength')">
+                <div *ngIf="productEditForm.get('SeoDescription').hasError('maxlength')">
                   Vui lòng nhập mô tả seo không quá 250 ký tự.
                 </div>
               </div>
@@ -216,16 +217,19 @@
               </label>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" (click)="hideModal()">
-            <i class="fa fa-times"></i> Hủy
-          </button>
-          <button type="submit" [disabled]="productForm.invalid" class="btn btn-success">
-            <i class="fa fa-floppy-o"></i> Lưu
-          </button>
-        </div>
-      </form>
+          <div class="form-group row">
+            <div class="col-md-10 offset-md-2">
+              <button type="submit" [disabled]="productEditForm.invalid" class="btn btn-success">
+                <i class="fa fa-floppy-o"></i> Lưu
+              </button>
+              <button type="button" class="btn btn-danger" (click)="location.back()">
+                <i class="fa fa-times"></i> Hủy
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
+  <!--/.col-->
 </div>

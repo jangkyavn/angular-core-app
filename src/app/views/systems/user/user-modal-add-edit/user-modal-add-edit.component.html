@@ -136,14 +136,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="txtImage">Ảnh đại diện:</label>
+                        <label class="col-md-3 col-form-label" for="txtAvatar">Ảnh đại diện:</label>
                         <div class="col-md-9">
-                            <div class="input-group" (click)="btnSelectAvatar()">
-                                <input id="txtAvatar" class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Avatar" [ngClass]="{
+                            <div class="input-group" (click)="fileImage.value='';fileImage.click()">
+                                <input id="txtAvatar" #txtAvatar class="form-control" type="text" readonly placeholder="Chọn hình ảnh" formControlName="Avatar" [ngClass]="{
                                     'is-valid': !userForm.controls['Avatar'].errors,
                                     'is-invalid': userForm.controls['Avatar'].errors && (userForm.controls['Avatar'].dirty || userForm.controls['Avatar'].touched)
                                 }">
-                                <input type="file" id="fileInputAvatar" (change)="changeFileInputAvatar($event.target.files)">
+                                <input type="file" #fileImage (change)="changeFileImage($event.target.files)" style="display: none;">
                                 <span class="input-group-append">
                                     <button class="btn btn-default" type="button">Trình duyệt</button>
                                 </span>
@@ -153,7 +153,13 @@
                                     Vui lòng chọn đường dẫn ảnh không quá 200 ký tự.
                                 </div>
                             </div>
-                            <img *ngIf="!!(imageUrl)" [src]="imageUrl" alt="Xem trước" width="200" height="200" class="img-thumbnail mt-2">
+                            <div *ngIf="!!(imageUrl)">
+                                <img [src]="imageUrl" alt="Xem trước" width="250" height="250" class="img-thumbnail mt-2">
+                                <button type="button" id="btnRemoveImage" (click)="fileImage.value='';txtAvatar.value='';imageUrl=''" class="btn btn-light"
+                                    tooltip="Xóa ảnh">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">

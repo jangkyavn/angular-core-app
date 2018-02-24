@@ -36,9 +36,9 @@
                         <button type="button" (click)="downloadTemplate()" class="btn btn-primary float-right ml-1" tooltip="Tải mẫu excel">
                             <i class="fa fa-download"></i>
                         </button>
-                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
+                        <a routerLink="/products/product-add" *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <table class="table table-bordered table-hover">
@@ -88,10 +88,9 @@
                                 </td>
                                 <td class="cell-center">
                                     <div class="d-flex flex-row justify-content-around mb-2">
-                                        <button *ngIf="authService.hasPermission('PRODUCT_LIST', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
-                                            tooltip="Sửa">
+                                        <a routerLink="/products/product-edit/{{item.Id}}" *ngIf="authService.hasPermission('PRODUCT_LIST', 'update')" class="btn btn-primary btn-sm" tooltip="Sửa">
                                             <i class="fa fa-pencil"></i>
-                                        </button>
+                                        </a>
                                         <button type="button" (click)="showView(item.Id)" class="btn btn-info btn-sm" tooltip="Xem">
                                             <i class="fa fa-eye"></i>
                                         </button>
@@ -154,7 +153,6 @@
     <!--/.col-->
 </div>
 
-<product-modal-add-edit #productModalAddEdit (saveChangesResult)="saveChanges($event)"></product-modal-add-edit>
 <product-modal-import-excel #productModalImportExcel (saveChangesResult)="saveChangesImportExcel($event)"></product-modal-import-excel>
 <product-modal-quantity-management #productModalQuantityManagement (saveChangesResult)="saveChangesQuantities($event)"></product-modal-quantity-management>
 <product-modal-image-management #productModalImageManagement (saveChangesResult)="saveChangesImages($event)"></product-modal-image-management>

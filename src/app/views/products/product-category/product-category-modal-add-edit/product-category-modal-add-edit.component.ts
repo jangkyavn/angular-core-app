@@ -64,14 +64,22 @@ export class ProductCategoryModalAddEditComponent implements OnInit {
     const data: ProductCategory = this.productCategoryForm.value;
 
     if (data.Id === 0) {
-      this.dataService.post('/api/ProductCategory', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
-        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+      this.dataService.post('/api/ProductCategory', data).subscribe((response: any) => {
+        if (response !== undefined && response !== null) {
+          this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+        } else {
+          this.saveChangesResult.emit(false);
+        }
       });
     } else {
-      this.dataService.put('/api/ProductCategory', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
-        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+      this.dataService.put('/api/ProductCategory', data).subscribe((response: any) => {
+        if (response !== undefined && response !== null) {
+          this.saveChangesResult.emit(true);
+          this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+        } else {
+          this.saveChangesResult.emit(false);
+        }
       });
     }
   }
@@ -81,7 +89,6 @@ export class ProductCategoryModalAddEditComponent implements OnInit {
     this.modalTitle = title;
     this.imageUrl = '';
     this.seoAlias = '';
-    $('#fileInputImage').val(null);
 
     this.dataService.get(`/api/ProductCategory/LoadParent/${id}`).subscribe(data => {
       this.parentProductCategories = data;
@@ -115,11 +122,7 @@ export class ProductCategoryModalAddEditComponent implements OnInit {
     this.productCategoryModalAddEdit.hide();
   }
 
-  btnSelectImage() {
-    $('#fileInputImage').click();
-  }
-
-  changeFileInputImage(files: any) {
+  changeFileImage(files: any) {
     this.uploadService.postWithFile('/api/Upload/UploadImage?type=products', null, files).then((imageUrl: string) => {
       this.productCategoryForm.patchValue({
         Image: imageUrl

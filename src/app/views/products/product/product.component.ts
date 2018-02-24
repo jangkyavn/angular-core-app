@@ -11,7 +11,6 @@ import { PagedResult } from '../../../models/paged-result.model';
 import { Product } from '../../../models/product.model';
 import { ProductCategory } from '../../../models/product-category.model';
 
-import { ProductModalAddEditComponent } from './product-modal-add-edit/product-modal-add-edit.component';
 import { ProductModalImportExcelComponent } from './product-modal-import-excel/product-modal-import-excel.component';
 import { ProductModalImageManagementComponent } from './product-modal-image-management/product-modal-image-management.component';
 import { ProductModalQuantityManagementComponent } from './product-modal-quantity-management/product-modal-quantity-management.component';
@@ -23,7 +22,6 @@ import { ProductModalWholePriceManagementComponent } from './product-modal-whole
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  @ViewChild('productModalAddEdit') productModalAddEdit: ProductModalAddEditComponent;
   @ViewChild('productModalImportExcel') productModalImportExcel: ProductModalImportExcelComponent;
   @ViewChild('productModalQuantityManagement') productModalQuantityManagement: ProductModalQuantityManagementComponent;
   @ViewChild('productModalImageManagement') productModalImageManagement: ProductModalImageManagementComponent;
@@ -96,10 +94,6 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  showAddNew() {
-    this.productModalAddEdit.showModal('Thêm mới thông tin sản phẩm');
-  }
-
   importExcel() {
     this.productModalImportExcel.showModal();
   }
@@ -116,10 +110,6 @@ export class ProductComponent implements OnInit {
     window.location.href = this.baseApi + '/templates/ProductImportTemplate.xlsx';
   }
 
-  showEdit(id: number) {
-    this.productModalAddEdit.showModal('Sửa thông tin sản phẩm', id);
-  }
-
   showQuantityManagement(id: number, name: string) {
     this.productModalQuantityManagement.showModal(id, name);
   }
@@ -130,13 +120,6 @@ export class ProductComponent implements OnInit {
 
   showWholePriceManagement(id: number, name: string) {
     this.productModalWholePriceManagement.showModal(id, name);
-  }
-
-  saveChanges(result: boolean) {
-    if (result) {
-      this.loadData();
-      this.productModalAddEdit.hideModal();
-    }
   }
 
   saveChangesImportExcel(result: boolean) {

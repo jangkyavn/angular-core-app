@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
 import { DataService, NotificationService, UtilityService, UploadService } from '../../../../services';
@@ -10,29 +11,32 @@ import { SystemConstants } from '../../../../common/system.constants';
 import { MessageConstants } from '../../../../common';
 
 @Component({
-  selector: 'product-modal-add-edit',
-  templateUrl: './product-modal-add-edit.component.html',
-  styleUrls: ['./product-modal-add-edit.component.scss']
+  selector: 'app-product-edit',
+  templateUrl: './product-edit.component.html',
+  styleUrls: ['./product-edit.component.scss']
 })
-export class ProductModalAddEditComponent implements OnInit {
-  @Output() saveChangesResult = new EventEmitter<boolean>(false);
-  @ViewChild('productModalAddEdit') public productModalAddEdit: ModalDirective;
-
+export class ProductEditComponent implements OnInit {
+  froalaOptions: Object = {
+    language: 'vi',
+    height: 300,
+    theme: 'gray'
+  };
   numberMask = createNumberMask({
     prefix: '',
     suffix: ' VNĐ'
   });
-  productForm: FormGroup;
+  productEditForm: FormGroup;
   productCategoryHierachies: any[];
 
   tagItems: any[];
-  baseApi: string = SystemConstants.BASE_API;
-  modalTitle: string;
+  baseApi: string;
   imageUrl: string;
   seoAlias: string;
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
+    public location: Location,
     private dataService: DataService,
     private notificationService: NotificationService,
     private utilityService: UtilityService,
@@ -40,18 +44,43 @@ export class ProductModalAddEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.tagItems = [];
+    this.baseApi = SystemConstants.BASE_API;
+    this.imageUrl = '';
+    this.seoAlias = '';
+
+    this.getProduct();
     this.createForm();
     this.loadProductCategoryHierachies();
   }
 
-  loadProductCategoryHierachies() {
-    this.dataService.get('/api/ProductCategory/GetAllHierachy').subscribe(data => {
-      this.productCategoryHierachies = data;
+  getProduct() {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    this.dataService.get(`/api/Product/${id}`).subscribe((response: any) => {
+      let data: Product = response;
+
+      this.productEditForm.patchValue({
+        ...data,
+        ParentId: (data.CategoryId === null) ? '' : data.CategoryId
+      });
+
+      if (data.Tags !== null && data.Tags !== '') {
+        const tagArr = data.Tags.split(',');
+
+        this.tagItems = tagArr;
+      }
+      else {
+        this.tagItems = [];
+      }
+
+      this.seoAlias = data.SeoAlias;
+      this.imageUrl = data.Image == null ? '' : this.baseApi + data.Image;
     });
   }
 
   createForm() {
-    this.productForm = this.fb.group({
+    this.productEditForm = this.fb.group({
       Id: [0],
       Name: ['', [
         Validators.required,
@@ -79,79 +108,30 @@ export class ProductModalAddEditComponent implements OnInit {
     });
   }
 
+  loadProductCategoryHierachies() {
+    this.dataService.get('/api/ProductCategory/GetAllHierachy').subscribe(data => {
+      this.productCategoryHierachies = data;
+    });
+  }
+
   saveChanges() {
-    let data: Product = this.productForm.value;
+    let data: Product = this.productEditForm.value;
     data.Tags = this.tagItems.length > 0 ? this.tagItems.toString() : null;
     data.Price = this.utilityService.formatPrice(data.Price);
     data.OriginalPrice = this.utilityService.formatPrice(data.OriginalPrice);
     data.PromotionPrice = this.utilityService.formatPrice(data.PromotionPrice);
 
-    if (data.Id === 0) {
-      this.dataService.post('/api/Product', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
-        this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
-      });
-    } else {
-      this.dataService.put('/api/Product', data).subscribe(() => {
-        this.saveChangesResult.emit(true);
+    this.dataService.put('/api/Product', data).subscribe((response: any) => {
+      if (response !== null && response !== undefined) {
         this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-      });
-    }
+        this.location.back();
+      }
+    });
   }
 
-  showModal(title: string, id?: number) {
-    this.productForm.reset();
-    this.modalTitle = title;
-    this.imageUrl = '';
-    this.seoAlias = '';
-    $('#fileInputImage').val(null);
-
-    if (id !== undefined) {
-      this.dataService.get(`/api/Product/${id}`).subscribe((response: any) => {
-        let data: Product = response;
-
-        this.productForm.patchValue({
-          ...data,
-          ParentId: (data.CategoryId === null) ? '' : data.CategoryId
-        });
-
-        if (data.Tags !== null && data.Tags !== '') {
-          const tagArr = data.Tags.split(',');
-
-          this.tagItems = tagArr;
-        }
-        else {
-          this.tagItems = [];
-        }
-
-        this.seoAlias = data.SeoAlias;
-        this.imageUrl = data.Image == null ? '' : this.baseApi + data.Image;
-      });
-    } else {
-      this.productForm.patchValue({
-        Id: 0,
-        CategoryId: '',
-        HotFlag: 0,
-        Status: 0
-      });
-
-      this.tagItems = [];
-    }
-
-    this.productModalAddEdit.show();
-  }
-
-  hideModal() {
-    this.productModalAddEdit.hide();
-  }
-
-  btnSelectImage() {
-    $('#fileInputImage').click();
-  }
-
-  changeFileInputImage(files: any) {
+  changeFileImage(files: any) {
     this.uploadService.postWithFile('/api/Upload/UploadImage?type=products', null, files).then((imageUrl: string) => {
-      this.productForm.patchValue({
+      this.productEditForm.patchValue({
         Image: imageUrl
       })
 
@@ -162,7 +142,7 @@ export class ProductModalAddEditComponent implements OnInit {
   makeSeoAlias(value: string) {
     let seoAlias = this.utilityService.makeSeoAlias(value);
 
-    this.productForm.patchValue({
+    this.productEditForm.patchValue({
       SeoAlias: seoAlias
     });
 
