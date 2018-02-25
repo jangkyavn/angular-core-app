@@ -36,7 +36,8 @@ import {
   AppSidebarFormComponent,
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
-  APP_SIDEBAR_NAV
+  APP_SIDEBAR_NAV,
+  DialogConfirmComponent
 } from './components';
 
 const APP_COMPONENTS = [
@@ -50,6 +51,7 @@ const APP_COMPONENTS = [
   AppSidebarHeaderComponent,
   AppSidebarMinimizerComponent,
   APP_SIDEBAR_NAV,
+  DialogConfirmComponent
 ]
 
 // Import directives
@@ -72,8 +74,10 @@ import { AppRoutingModule } from './app.routing';
 
 // Import 3rd party components
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -82,8 +86,10 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     HttpClientModule,
     AppRoutingModule,
     BsDropdownModule.forRoot(),
+    ModalModule.forRoot(),
     TabsModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    ToastrModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -91,6 +97,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
     ...APP_COMPONENTS,
     ...APP_DIRECTIVES
   ],
+  entryComponents: [DialogConfirmComponent],
   providers: [{
     provide: LocationStrategy,
     useClass: HashLocationStrategy

@@ -124,29 +124,9 @@ export class ProductComponent implements OnInit {
 
   saveChangesImportExcel(result: boolean) {
     if (result) {
-      this.productModalImportExcel.hideModal();
+      this.loadData();
       this.notificationService.printSuccessMessage(MessageConstants.IMPORT_OK_MSG);
-    }
-  }
-
-  saveChangesQuantities(result: boolean) {
-    if (result) {
-      this.productModalQuantityManagement.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-    }
-  }
-
-  saveChangesImages(result: boolean) {
-    if (result) {
-      this.productModalImageManagement.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-    }
-  }
-
-  saveChangesWholePrices(result: boolean) {
-    if (result) {
-      this.productModalWholePriceManagement.hideModal();
-      this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+      this.productModalImportExcel.hideModal();
     }
   }
 

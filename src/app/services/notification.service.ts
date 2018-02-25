@@ -1,79 +1,47 @@
 import { Injectable } from '@angular/core';
 
-declare var alertify: any;
+import { ToastrService, IndividualConfig } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
+
+import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
 
 @Injectable()
 export class NotificationService {
-  private _notifier: any = alertify;
+  constructor(
+    private toastr: ToastrService,
+    private modal: BsModalService
+  ) {
 
-  constructor() {
-    alertify.defaults = {
-      // dialogs defaults
-      autoReset: true,
-      basic: false,
-      closable: true,
-      closableByDimmer: true,
-      frameless: false,
-      maintainFocus: true, // <== global default not per instance, applies to all dialogs
-      maximizable: true,
-      modal: true,
-      movable: true,
-      moveBounded: false,
-      overflow: true,
-      padding: true,
-      pinnable: true,
-      pinned: true,
-      preventBodyShift: false, // <== global default not per instance, applies to all dialogs
-      resizable: true,
-      startMaximized: false,
-      transition: 'pulse',
+  }
 
-      // notifier defaults
-      notifier: {
-        // auto-dismiss wait time (in seconds)  
-        delay: 5,
-        // default position
-        position: 'bottom-left',
-        // adds a close button to notifier messages
-        closeButton: false
-      },
+  config: Partial<IndividualConfig> = {
+    positionClass: 'toast-bottom-left',
+    timeOut: 2000
+  };
 
-      // language resources 
-      glossary: {
-        // dialogs default title
-        title: 'Thông báo',
-        // ok button text
-        ok: 'Đồng ý',
-        // cancel button text
-        cancel: 'Hủy'
-      },
+  printInfoMessage(message: string) {
+    this.toastr.info(message, null, this.config);
+  }
 
-      // theme settings
-      theme: {
-        // class name attached to prompt dialog input textbox.
-        input: 'ajs-input',
-        // class name attached to ok button
-        ok: 'ajs-ok',
-        // class name attached to cancel button 
-        cancel: 'ajs-cancel'
-      }
-    };
-
+  printWarningMessage(message: string) {
+    this.toastr.warning(message, null, this.config);
   }
 
   printSuccessMessage(message: string) {
-    this._notifier.success(message);
+    this.toastr.success(message, null, this.config);
   }
 
   printErrorMessage(message: string) {
-    this._notifier.error(message);
+    this.toastr.error(message, null, this.config);
   }
 
   printConfirmationDialog(message: string, okCallback: () => any) {
-    this._notifier.confirm(message, function (e) {
-      if (e) {
+    const modal = this.modal.show(DialogConfirmComponent);
+    (<DialogConfirmComponent>modal.content).showConfirmationModal('Thông báo', message);
+
+    (<DialogConfirmComponent>modal.content).onClose.subscribe(result => {
+      if (result === true) {
         okCallback();
-      } else {
       }
     });
   }

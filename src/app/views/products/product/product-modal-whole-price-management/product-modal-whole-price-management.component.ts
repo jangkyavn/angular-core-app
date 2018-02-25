@@ -4,8 +4,14 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
-import { DataService, UtilityService } from '../../../../services';
+import { DataService, NotificationService, UtilityService } from '../../../../services';
 import { WholePrice } from '../../../../models/whole-price.model';
+import { MessageConstants } from '../../../../common';
+
+export interface WholePriceForm {
+  productId?: number;
+  wholePrices: WholePrice[];
+}
 
 @Component({
   selector: 'product-modal-whole-price-management',
@@ -13,7 +19,6 @@ import { WholePrice } from '../../../../models/whole-price.model';
   styleUrls: ['./product-modal-whole-price-management.component.scss']
 })
 export class ProductModalWholePriceManagementComponent implements OnInit {
-  @Output() saveChangesResult = new EventEmitter<boolean>(false);
   @ViewChild('productModalWholePriceManagement') productModalWholePriceManagement: ModalDirective;
 
   modalTitle: string;
@@ -27,6 +32,7 @@ export class ProductModalWholePriceManagementComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService
   ) { }
 
@@ -50,7 +56,7 @@ export class ProductModalWholePriceManagementComponent implements OnInit {
   }
 
   saveChanges() {
-    let data = this.wholePriceForm.value;
+    let data: WholePriceForm = this.wholePriceForm.value;
     const length = data.wholePrices.length;
 
     for (let i = 0; i < length; i++) {
@@ -59,9 +65,8 @@ export class ProductModalWholePriceManagementComponent implements OnInit {
 
     this.dataService.post('/api/Product/SaveWholePrices', data).subscribe((response: any) => {
       if (response !== undefined && response !== null) {
-        this.saveChangesResult.emit(true);
-      } else {
-        this.saveChangesResult.emit(false);
+        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+        this.hideModal();
       }
     });
   }

@@ -101,7 +101,7 @@ export class RoleComponent implements OnInit {
           this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
         }
       })
-    })
+    });
   }
 
   changeLengthMenu(event: any) {

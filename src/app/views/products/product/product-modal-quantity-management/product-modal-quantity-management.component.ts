@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-import { DataService, UtilityService } from '../../../../services';
+import { DataService, NotificationService, UtilityService } from '../../../../services';
 import { ProductQuantity } from '../../../../models/product-quantity.model';
+import { MessageConstants } from '../../../../common';
 
 @Component({
   selector: 'product-modal-quantity-management',
@@ -12,7 +13,6 @@ import { ProductQuantity } from '../../../../models/product-quantity.model';
   styleUrls: ['./product-modal-quantity-management.component.scss']
 })
 export class ProductModalQuantityManagementComponent implements OnInit {
-  @Output() saveChangesResult = new EventEmitter<boolean>(false);
   @ViewChild('productModalQuantityManagement') productModalQuantityManagement: ModalDirective;
 
   modalTitle: string;
@@ -25,6 +25,7 @@ export class ProductModalQuantityManagementComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private utilityService: UtilityService
   ) { }
 
@@ -55,9 +56,8 @@ export class ProductModalQuantityManagementComponent implements OnInit {
 
     this.dataService.post('/api/Product/SaveQuantities', data).subscribe((response: any) => {
       if (response !== undefined && response !== null) {
-        this.saveChangesResult.emit(true);
-      } else {
-        this.saveChangesResult.emit(false);
+        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+        this.hideModal();
       }
     });
   }

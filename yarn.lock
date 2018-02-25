@@ -340,10 +340,6 @@ ajv@^6.1.0, ajv@^6.1.1:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-alertifyjs@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/alertifyjs/-/alertifyjs-1.11.0.tgz#646f0bbd62edac5bb03cce2d03f4379c84ffde19"
-
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/align-text/-/align-text-0.1.4.tgz#0cd90a561093f35d0a99256c22b7069433fad117"
@@ -4421,6 +4417,12 @@ ngx-chips@^1.6.3:
 ngx-spinner@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-1.0.6.tgz#75c255897b5c815d497e43a48c92f57f7be4e6a9"
+
+ngx-toastr@^8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/ngx-toastr/-/ngx-toastr-8.2.1.tgz#86cffec666a9dadde5f8a37f2a8fe2ab527b3dde"
+  dependencies:
+    tslib "^1.7.1"
 
 no-case@^2.2.0:
   version "2.3.2"

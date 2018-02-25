@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { DataService, UploadService } from '../../../../services';
 import { ProductCategory } from '../../../../models/product-category.model';
 import { SystemConstants } from '../../../../common/system.constants';
+import { MessageConstants } from '../../../../common/message.constants';
 
 @Component({
   selector: 'product-modal-import-excel',
@@ -22,7 +22,6 @@ export class ProductModalImportExcelComponent implements OnInit {
   files: any;
 
   constructor(
-    private http: HttpClient,
     private fb: FormBuilder,
     private dataService: DataService,
     private uploadService: UploadService
@@ -46,10 +45,9 @@ export class ProductModalImportExcelComponent implements OnInit {
     });
   }
 
-  saveChanges() {
-    let fileUpload: any = $("#fileInput").get(0);
+  saveChanges(fileUpload: any) {
     let files = fileUpload.files;
-
+    
     let fileData = new FormData();
     for (let i = 0; i < files.length; i++) {
       fileData.append("files", files[i]);
@@ -70,17 +68,12 @@ export class ProductModalImportExcelComponent implements OnInit {
       files: '',
       categoryId: ''
     });
-    $('#fileInput').val(null);
 
     this.productModalImportExcel.show();
   }
 
   hideModal() {
     this.productModalImportExcel.hide();
-  }
-
-  btnSelectFile() {
-    $('#fileInput').click();
   }
 
   changeFileInput(event: any) {

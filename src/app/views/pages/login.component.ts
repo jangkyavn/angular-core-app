@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
       this.utilityService.navigate('/');
     }, err => {
       console.log(err);
-      this.notificationService.printErrorMessage(err.error);
+      this.notificationService.printWarningMessage(err.error);
       this.spinner.hide();
     })
   }

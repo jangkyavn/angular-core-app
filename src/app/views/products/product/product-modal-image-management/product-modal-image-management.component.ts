@@ -17,7 +17,6 @@ export interface ImageManagement {
   styleUrls: ['./product-modal-image-management.component.scss']
 })
 export class ProductModalImageManagementComponent implements OnInit {
-  @Output() saveChangesResult = new EventEmitter<boolean>(false);
   @ViewChild('productModalImageManagement') productModalImageManagement: ModalDirective;
 
   baseUrl = SystemConstants.BASE_API;
@@ -38,10 +37,9 @@ export class ProductModalImageManagementComponent implements OnInit {
     let data = this.imageManagement;
 
     this.dataService.post('/api/Product/SaveImages', data).subscribe((response: any) => {
-      if (response === undefined || response === null) {
-        this.saveChangesResult.emit(false);
-      } else {
-        this.saveChangesResult.emit(true);
+      if (response !== undefined || response !== null) {
+        this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
+        this.hideModal();
       }
     });
   }
@@ -88,7 +86,7 @@ export class ProductModalImageManagementComponent implements OnInit {
         }).length > 0 ? true : false;
 
         if (checkExists) {
-          this.notificationService.printErrorMessage(MessageConstants.EXISTED_IMAGE);
+          this.notificationService.printWarningMessage(MessageConstants.EXISTED_IMAGE);
         } else {
           this.imageManagement.images.push({
             Path: item,

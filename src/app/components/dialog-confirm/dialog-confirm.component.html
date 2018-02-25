@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">
+    {{title}}
+  </h4>
+  <button type="button" class="close pull-right" (click)="hideConfirmationModal()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p>{{body}}</p>
+</div>
+<div class="modal-footer">
+  <div class="text-right">
+    <button type="button" class="btn btn-light" (click)="onCancel()">
+      <i class="fa fa-times"></i> Không
+    </button>
+    <button type="button" class="btn btn-danger" (click)="onConfirm()">
+      <i class="fa fa-check"></i> Có
+    </button>
+  </div>
+</div>
