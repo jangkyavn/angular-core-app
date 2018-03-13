@@ -7,6 +7,7 @@ import { DataService, NotificationService, UtilityService } from '../../../../se
 import { Bill } from '../../../../models/bill.model';
 import { BillDetail } from '../../../../models/bill-detail.model';
 import { MessageConstants } from '../../../../common';
+import { User } from '../../../../models/user.model';
 
 @Component({
   selector: 'bill-modal-add-edit',
@@ -20,6 +21,7 @@ export class BillModalAddEditComponent implements OnInit {
   maskPhone = ['+', '8', '4', ' ', /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
   modalTitle: string;
   billForm: FormGroup;
+  hasAccount: boolean;
 
   billStatuses: any[];
   paymentMethods: any[];
@@ -27,6 +29,7 @@ export class BillModalAddEditComponent implements OnInit {
   sizes: any[];
   products: any[];
   billDetails: any[];
+  users: any[];
 
   constructor(
     private fb: FormBuilder,
@@ -41,6 +44,7 @@ export class BillModalAddEditComponent implements OnInit {
     this.loadColors();
     this.loadSizes();
     this.loadProducts();
+    this.loadUser();
 
     this.createForm();
   }
@@ -74,6 +78,12 @@ export class BillModalAddEditComponent implements OnInit {
       SizeId: ['', Validators.required],
       Quantity: [1, Validators.required],
       Price: [0, Validators.required]
+    });
+  }
+
+  loadUser() {
+    this.dataService.get(`/api/User/GetUsersByRoleName?roleName=Customer`).subscribe(response => {
+      this.users = response;
     });
   }
 
@@ -152,6 +162,7 @@ export class BillModalAddEditComponent implements OnInit {
   }
 
   showModal(title: string, id?: number) {
+    this.hasAccount = false;
     this.modalTitle = title;
     this.billForm.reset();
     this.setDefaultBillDetails();
@@ -216,5 +227,41 @@ export class BillModalAddEditComponent implements OnInit {
 
   getControls(frmGrp: FormGroup, key: string) {
     return (<FormArray>frmGrp.controls[key]).controls;
+  }
+
+  changeModeHasAccount(event: any) {
+    this.hasAccount = event.target.value === 'yes' ? true : false;
+    this.billForm.reset();
+    this.setDefaultBillDetails();
+    this.billForm.patchValue({
+      Id: 0,
+      CustomerName: '',
+      PaymentMethod: '',
+      BillStatus: '',
+      BillDetails: [
+        {
+          Id: 0,
+          BillId: 0,
+          ProductId: '',
+          ColorId: '',
+          SizeId: '',
+          Quantity: 1,
+          Price: 0
+        }
+      ]
+    });
+  }
+
+  chooseUser(event: any) {
+    const userId = event.target.value;
+
+    this.dataService.get(`/api/User/${userId}`).subscribe((response: any) => {
+      const user: User = response;
+
+      this.billForm.patchValue({
+        CustomerMobile: user.PhoneNumber,
+        CustomerAddress: user.Address
+      });
+    });
   }
 }

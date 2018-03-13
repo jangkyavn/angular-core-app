@@ -36,9 +36,9 @@
                         <button type="button" (click)="downloadTemplate()" class="btn btn-primary float-right ml-1" tooltip="Tải mẫu excel">
                             <i class="fa fa-download"></i>
                         </button>
-                        <a routerLink="/products/product-add" *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
+                        <button type="button" (click)="redirectToAddForm()" *ngIf="authService.hasPermission('PRODUCT_LIST', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <table class="table table-bordered table-hover">
@@ -157,3 +157,4 @@
 <product-modal-image-management #productModalImageManagement></product-modal-image-management>
 <product-modal-quantity-management #productModalQuantityManagement></product-modal-quantity-management>
 <product-modal-whole-price-management #productModalWholePriceManagement></product-modal-whole-price-management>
+<product-modal-info-defail #productModalInfoDetail></product-modal-info-defail>

@@ -6,7 +6,9 @@ import { UrlConstants } from '../common/url.constants';
 @Injectable()
 export class UtilityService {
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router
+  ) { }
 
   navigate(path: string) {
     this.router.navigate([path]);

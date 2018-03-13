@@ -1,0 +1,97 @@
+<div bsModal #userModalInfoDetail="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Xem chi tiết người dùng</h4>
+        <button type="button" class="close" (click)="hideModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tr>
+            <td rowspan="10" style="width: 40%;">
+              <img [src]="baseApi + user?.Avatar" [alt]="user?.FullName" width="280">
+              <div class="text-center">
+                <strong>Ảnh đại diện</strong>
+              </div>
+            </td>
+            <td style="width: 20%;">
+              <strong>Họ tên:</strong>
+            </td>
+            <td style="width: 40%;">{{user?.FullName}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Email:</strong>
+            </td>
+            <td>{{user?.Email}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Giới tính:</strong>
+            </td>
+            <td>{{user?.Gender ? 'Nam': 'Nữ'}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Ngày sinh:</strong>
+            </td>
+            <td>{{user?.BirthDay | date:'dd/MM/yyyy'}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Số điện thoại:</strong>
+            </td>
+            <td>{{user?.PhoneNumber}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Địa chỉ:</strong>
+            </td>
+            <td>{{user?.Address}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Trạng thái:</strong>
+            </td>
+            <td>
+              <a href="javascript:void(0)">
+                <span [class]="user?.Status == 0 ? 'badge badge-danger': 'badge badge-success'">
+                  <i [class]="user?.Status == 0 ? 'fa fa-lock' : 'fa fa-check'"></i>
+                  {{user?.Status == 0 ? 'Khóa' : 'Kích hoạt'}}
+                </span>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Quyền:</strong>
+            </td>
+            <td>
+              <span *ngFor="let role of user?.Roles" class="badge badge-pill badge-primary">{{role}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Ngày tạo:</strong>
+            </td>
+            <td>{{user?.DateCreated | date:'dd/MM/yyyy'}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Ngày cập nhật:</strong>
+            </td>
+            <td>{{user?.DateModified | date:'dd/MM/yyyy'}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="hideModal()">
+          <i class="fa fa-times"></i> Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

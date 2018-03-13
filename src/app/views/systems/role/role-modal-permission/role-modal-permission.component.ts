@@ -3,7 +3,6 @@ import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/cor
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { DataService } from '../../../../services';
-
 import { Function } from '../../../../models/function.model';
 import { Permission } from '../../../../models/permission.model';
 
@@ -48,10 +47,12 @@ export class RoleModalPermissionComponent implements OnInit {
     this.nothingSelectedUpdate = true;
     this.nothingSelectedDelete = true;
 
-    $('#chkAllRead').prop('indeterminate', false);
-    $('#chkAllCreate').prop('indeterminate', false);
-    $('#chkAllUpdate').prop('indeterminate', false);
-    $('#chkAllDelete').prop('indeterminate', false);
+    setTimeout(() => {
+      (document.querySelector('#chkAllRead') as HTMLInputElement).indeterminate = false;
+      (document.querySelector('#chkAllCreate') as HTMLInputElement).indeterminate = false;
+      (document.querySelector('#chkAllUpdate') as HTMLInputElement).indeterminate = false;
+      (document.querySelector('#chkAllDelete') as HTMLInputElement).indeterminate = false;
+    }, 0);
   }
 
   loadFunctionList(roleId: string) {
@@ -95,9 +96,9 @@ export class RoleModalPermissionComponent implements OnInit {
           });
 
           if (!selectedAllChildRead && !nothingSelectedChildRead) {
-            $(`#chkRead${functions[i].Id}`).prop('indeterminate', true);
+            (document.querySelector(`#chkRead${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
           } else {
-            $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
+            (document.querySelector(`#chkRead${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
           }
 
           //----------------------------- Selected all child create -----------------------------
@@ -110,9 +111,9 @@ export class RoleModalPermissionComponent implements OnInit {
           });
 
           if (!selectedAllChildCreate && !nothingSelectedChildCreate) {
-            $(`#chkCreate${functions[i].Id}`).prop('indeterminate', true);
+            (document.querySelector(`#chkCreate${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
           } else {
-            $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
+            (document.querySelector(`#chkCreate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
           }
 
           //----------------------------- Selected all child update -----------------------------
@@ -125,9 +126,9 @@ export class RoleModalPermissionComponent implements OnInit {
           });
 
           if (!selectedAllChildUpdate && !nothingSelectedChildUpdate) {
-            $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', true);
+            (document.querySelector(`#chkUpdate${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
           } else {
-            $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
+            (document.querySelector(`#chkUpdate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
           }
 
           //----------------------------- Selected all child delete -----------------------------
@@ -140,9 +141,9 @@ export class RoleModalPermissionComponent implements OnInit {
           });
 
           if (!selectedAllChildDelete && !nothingSelectedChildDelete) {
-            $(`#chkDelete${functions[i].Id}`).prop('indeterminate', true);
+            (document.querySelector(`#chkDelete${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
           } else {
-            $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
+            (document.querySelector(`#chkDelete${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
           }
         }
       }
@@ -157,9 +158,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllRead && !this.nothingSelectedRead) {
-        $('#chkAllRead').prop('indeterminate', true);
+        (document.querySelector('#chkAllRead') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllRead').prop('indeterminate', false);
+        (document.querySelector('#chkAllRead') as HTMLInputElement).indeterminate = false;
       }
 
       //----------------------------- Selected all create -----------------------------
@@ -172,9 +173,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllCreate && !this.nothingSelectedCreate) {
-        $('#chkAllCreate').prop('indeterminate', true);
+        (document.querySelector('#chkAllCreate') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllCreate').prop('indeterminate', false);
+        (document.querySelector('#chkAllCreate') as HTMLInputElement).indeterminate = false;
       }
 
       //----------------------------- Selected all update -----------------------------
@@ -187,9 +188,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllUpdate && !this.nothingSelectedUpdate) {
-        $('#chkAllUpdate').prop('indeterminate', true);
+        (document.querySelector('#chkAllUpdate') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllUpdate').prop('indeterminate', false);
+        (document.querySelector('#chkAllUpdate') as HTMLInputElement).indeterminate = false;
       }
 
       //----------------------------- Selected all delete -----------------------------
@@ -202,9 +203,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllDelete && !this.nothingSelectedDelete) {
-        $('#chkAllDelete').prop('indeterminate', true);
+        (document.querySelector('#chkAllDelete') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllDelete').prop('indeterminate', false);
+        (document.querySelector('#chkAllDelete') as HTMLInputElement).indeterminate = false;
       }
     });
   }
@@ -257,31 +258,31 @@ export class RoleModalPermissionComponent implements OnInit {
     if (type === 'READ') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedRead = this.selectedAllRead;
-        $(`#chkRead${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
+        (document.querySelector(`#chkRead${this.functionHierarchies[i].Id}`) as HTMLInputElement).indeterminate = false;
       }
 
-      this.nothingSelectedRead = true;
+      this.nothingSelectedRead = !this.selectedAllRead;
     } else if (type === 'CREATE') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedCreate = this.selectedAllCreate;
-        $(`#chkCreate${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
+        (document.querySelector(`#chkCreate${this.functionHierarchies[i].Id}`) as HTMLInputElement).indeterminate = false;
       }
 
-      this.nothingSelectedCreate = true;
+      this.nothingSelectedCreate = !this.selectedAllCreate;
     } else if (type === 'UPDATE') {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedUpdate = this.selectedAllUpdate;
-        $(`#chkUpdate${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
+        (document.querySelector(`#chkUpdate${this.functionHierarchies[i].Id}`) as HTMLInputElement).indeterminate = false;
       }
 
-      this.nothingSelectedUpdate = true;
+      this.nothingSelectedUpdate = !this.selectedAllUpdate;
     } else {
       for (var i = 0; i < functionsLength; i++) {
         this.functionHierarchies[i].SelectedDelete = this.selectedAllDelete;
-        $(`#chkDelete${this.functionHierarchies[i].Id}`).prop('indeterminate', false);
+        (document.querySelector(`#chkDelete${this.functionHierarchies[i].Id}`) as HTMLInputElement).indeterminate = false;
       }
 
-      this.nothingSelectedDelete = true;
+      this.nothingSelectedDelete = !this.selectedAllDelete;
     }
   }
 
@@ -313,13 +314,13 @@ export class RoleModalPermissionComponent implements OnInit {
             });
 
             if (!selectedAllChildRead && !nothingSelectedChildRead) {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', true);
+              (document.querySelector(`#chkRead${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
               this.functionHierarchies[i].SelectedRead = true;
             } else if (selectedAllChildRead && !nothingSelectedChildRead) {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkRead${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedRead = true;
             } else if (!selectedAllChildRead && nothingSelectedChildRead) {
-              $(`#chkRead${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkRead${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedRead = false;
             }
 
@@ -337,9 +338,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllRead && !this.nothingSelectedRead) {
-        $('#chkAllRead').prop('indeterminate', true);
+        (document.querySelector('#chkAllRead') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllRead').prop('indeterminate', false);
+        (document.querySelector('#chkAllRead') as HTMLInputElement).indeterminate = false;
       }
     } else if (type === 'CREATE') {
       if (functionById.ParentId === null) {
@@ -364,13 +365,13 @@ export class RoleModalPermissionComponent implements OnInit {
             });
 
             if (!selectedAllChildCreate && !nothingSelectedChildCreate) {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', true);
+              (document.querySelector(`#chkCreate${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
               this.functionHierarchies[i].SelectedCreate = true;
             } else if (selectedAllChildCreate && !nothingSelectedChildCreate) {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkCreate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedCreate = true;
             } else if (!selectedAllChildCreate && nothingSelectedChildCreate) {
-              $(`#chkCreate${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkCreate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedCreate = false;
             }
 
@@ -388,9 +389,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllCreate && !this.nothingSelectedCreate) {
-        $('#chkAllCreate').prop('indeterminate', true);
+        (document.querySelector('#chkAllCreate') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllCreate').prop('indeterminate', false);
+        (document.querySelector('#chkAllCreate') as HTMLInputElement).indeterminate = false;
       }
     } else if (type === 'UPDATE') {
       if (functionById.ParentId === null) {
@@ -415,13 +416,13 @@ export class RoleModalPermissionComponent implements OnInit {
             });
 
             if (!selectedAllChildUpdate && !nothingSelectedChildUpdate) {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', true);
+              (document.querySelector(`#chkUpdate${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
               this.functionHierarchies[i].SelectedUpdate = true;
             } else if (selectedAllChildUpdate && !nothingSelectedChildUpdate) {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkUpdate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedUpdate = true;
             } else if (!selectedAllChildUpdate && nothingSelectedChildUpdate) {
-              $(`#chkUpdate${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkUpdate${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedUpdate = false;
             }
 
@@ -439,9 +440,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllUpdate && !this.nothingSelectedUpdate) {
-        $('#chkAllUpdate').prop('indeterminate', true);
+        (document.querySelector('#chkAllUpdate') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllUpdate').prop('indeterminate', false);
+        (document.querySelector('#chkAllUpdate') as HTMLInputElement).indeterminate = false;
       }
     } else if (type === 'DELETE') {
       if (functionById.ParentId === null) {
@@ -466,13 +467,13 @@ export class RoleModalPermissionComponent implements OnInit {
             });
 
             if (!selectedAllChildDelete && !nothingSelectedChildDelete) {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', true);
+              (document.querySelector(`#chkDelete${functions[i].Id}`) as HTMLInputElement).indeterminate = true;
               this.functionHierarchies[i].SelectedDelete = true;
             } else if (selectedAllChildDelete && !nothingSelectedChildDelete) {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkDelete${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedDelete = true;
             } else if (!selectedAllChildDelete && nothingSelectedChildDelete) {
-              $(`#chkDelete${functions[i].Id}`).prop('indeterminate', false);
+              (document.querySelector(`#chkDelete${functions[i].Id}`) as HTMLInputElement).indeterminate = false;
               this.functionHierarchies[i].SelectedDelete = false;
             }
 
@@ -490,9 +491,9 @@ export class RoleModalPermissionComponent implements OnInit {
       });
 
       if (!this.selectedAllDelete && !this.nothingSelectedDelete) {
-        $('#chkAllDelete').prop('indeterminate', true);
+        (document.querySelector('#chkAllDelete') as HTMLInputElement).indeterminate = true;
       } else {
-        $('#chkAllDelete').prop('indeterminate', false);
+        (document.querySelector('#chkAllDelete') as HTMLInputElement).indeterminate = false;
       }
     }
   }

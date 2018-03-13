@@ -47,7 +47,7 @@
             <tr>
               <th style="width: 5%; text-align: center;">
                 <div class="custom-control custom-checkbox" *ngIf="!(totalRow === 0)">
-                  <input type="checkbox" class="custom-control-input" id="chkAll" [(ngModel)]="selectedAll" (change)="selectAll();">
+                  <input type="checkbox" class="custom-control-input" #chkAll id="chkAll" [(ngModel)]="selectedAll" (change)="selectAll();">
                   <label class="custom-control-label" for="chkAll"></label>
                 </div>
               </th>

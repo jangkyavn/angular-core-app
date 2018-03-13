@@ -94,14 +94,12 @@ export class BillComponent implements OnInit {
 
     this.nothingSelected = true;
     this.selectedAll = false;
-    $('#chkAll').prop('indeterminate', false)
+    setTimeout(() => (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false, 0);
   }
 
   saveChanges(result: boolean) {
     if (result) {
       this.loadData();
-      this.billModalAddEdit.hideModal();
-    } else {
       this.billModalAddEdit.hideModal();
     }
   }
@@ -181,9 +179,9 @@ export class BillComponent implements OnInit {
     });
 
     if (!this.selectedAll && !this.nothingSelected) {
-      $('#chkAll').prop('indeterminate', true)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = true;
     } else {
-      $('#chkAll').prop('indeterminate', false)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false;
     }
   }
 

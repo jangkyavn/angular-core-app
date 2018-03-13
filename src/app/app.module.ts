@@ -12,8 +12,6 @@ import * as fromServices from './services';
 // Import guards
 import * as fromGuards from './guards';
 
-import * as $ from 'jquery';
-
 // Import containers
 import {
   FullLayoutComponent,

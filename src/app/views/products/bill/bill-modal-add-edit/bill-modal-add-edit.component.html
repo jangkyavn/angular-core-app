@@ -14,18 +14,45 @@
 
         <div class="modal-body">
           <div class="form-group row">
+            <div class="col-md-10 offset-md-2">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioHasNotAccount" name="customRadio" class="custom-control-input" value="no" [checked]="!hasAccount"
+                  (change)="changeModeHasAccount($event)">
+                <label class="custom-control-label" for="customRadioHasNotAccount">Không có tài khoản</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioHasAccount" name="customRadio" class="custom-control-input" value="yes" [checked]="hasAccount"
+                  (change)="changeModeHasAccount($event)">
+                <label class="custom-control-label" for="customRadioHasAccount">Có tài khoản</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-md-2 col-form-label" for="txtCustomerName">Tên khách hàng:</label>
             <div class="col-md-4">
-              <input type="text" id="txtCustomerName" class="form-control" formControlName="CustomerName" [ngClass]="{
+              <input *ngIf="!hasAccount" type="text" id="txtCustomerName" class="form-control" formControlName="CustomerName" [ngClass]="{
                 'is-valid': !billForm.controls['CustomerName'].errors,
                 'is-invalid': billForm.controls['CustomerName'].errors && (billForm.controls['CustomerName'].dirty || billForm.controls['CustomerName'].touched)
               }">
-              <div class="invalid-feedback">
+              <select *ngIf="hasAccount" type="text" id="txtCustomerName" class="form-control" formControlName="CustomerName" (change)="chooseUser($event)"
+                [ngClass]="{
+                'is-valid': !billForm.controls['CustomerName'].errors,
+                'is-invalid': billForm.controls['CustomerName'].errors && (billForm.controls['CustomerName'].dirty || billForm.controls['CustomerName'].touched)
+              }">
+                <option value="">Chọn khách hàng</option>
+                <option *ngFor="let item of users" [value]="item.Id">{{item.FullName}}</option>
+              </select>
+              <div *ngIf="!hasAccount" class="invalid-feedback">
                 <div *ngIf="billForm.get('CustomerName').hasError('required')">
                   Vui lòng nhập tên khách hàng.
                 </div>
                 <div *ngIf="billForm.get('CustomerName').hasError('maxlength')">
                   Vui lòng nhập tên khách hàng không quá 50 ký tự.
+                </div>
+              </div>
+              <div *ngIf="hasAccount" class="invalid-feedback">
+                <div *ngIf="billForm.get('CustomerName').hasError('required')">
+                  Vui lòng chọn tên khách hàng.
                 </div>
               </div>
             </div>

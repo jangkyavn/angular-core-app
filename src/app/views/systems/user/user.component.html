@@ -14,7 +14,8 @@
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
-                            <input type="text" id="txtSearchKeyword" class="form-control" placeholder="Nhập email, họ tên và nhấn enter để tìm" [(ngModel)]="filterKeyword" (keyup.enter)="loadData()">
+                            <input type="text" id="txtSearchKeyword" class="form-control" placeholder="Nhập email, họ tên và nhấn enter để tìm" [(ngModel)]="filterKeyword"
+                                (keyup.enter)="loadData()">
                             <select class="form-control" [(ngModel)]="filterGender" (change)="loadData()">
                                 <option value="">Chọn giới tính cần tìm</option>
                                 <option value="true">Nam</option>
@@ -24,8 +25,8 @@
                     </div>
                     <div class="col-6">
                         <button *ngIf="authService.hasPermission('USER', 'delete')" type="button" (click)="deleteMulti()" class="btn btn-danger float-right ml-1"
-                            tooltip="Xóa theo lựa chọn" [disabled]="!selectedAll && nothingSelected">
-                            <i class="fa fa-trash"></i>
+                            [disabled]="!selectedAll && nothingSelected">
+                            <i class="fa fa-trash"></i> Xóa
                         </button>
                         <button *ngIf="authService.hasPermission('USER', 'create')" type="button" (click)="showAddNew()" class="btn btn-success float-right">
                             <i class="fa fa-plus"></i> Thêm mới
@@ -133,3 +134,4 @@
 </div>
 
 <user-modal-add-edit #userModalAddEdit (saveChangesResult)="saveChanges($event)"></user-modal-add-edit>
+<user-modal-info-detail #userModalInfoDetail></user-modal-info-detail>

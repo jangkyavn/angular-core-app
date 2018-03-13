@@ -118,14 +118,18 @@ export class UserModalAddEditComponent implements OnInit {
     if (data.Id === null) {
       this.dataService.post('/api/User', data).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
-          this.saveChangesResult.emit(true);
-          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+          if (typeof response === 'boolean' && response === false) {
+            (document.querySelector('#txtEmail') as HTMLInputElement).focus();
+            this.saveChangesResult.emit(false);
+            this.notificationService.printWarningMessage(MessageConstants.EXISTED_EMAIL);
+          } else {
+            this.saveChangesResult.emit(true);
+            this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+          }
         }
         else {
           this.saveChangesResult.emit(false);
         }
-
-        this.loadRoles();
       });
     } else {
       this.dataService.put('/api/User', data).subscribe((response: any) => {
@@ -136,8 +140,6 @@ export class UserModalAddEditComponent implements OnInit {
         else {
           this.saveChangesResult.emit(false);
         }
-
-        this.loadRoles();
       });
     }
   }

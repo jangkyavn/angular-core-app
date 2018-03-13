@@ -52,10 +52,12 @@ import { LoadingSpinnerModule } from '../../components/loading-spinner/loading-s
 
 // Components Routing
 import { SystemsRoutingModule } from './systems-routing.module';
-import { UserComponent } from './user/user.component';
 import { RoleModalAddEditComponent } from './role/role-modal-add-edit/role-modal-add-edit.component';
-import { UserModalAddEditComponent } from './user/user-modal-add-edit/user-modal-add-edit.component';
 import { RoleModalPermissionComponent } from './role/role-modal-permission/role-modal-permission.component';
+
+import { UserComponent } from './user/user.component';
+import { UserModalAddEditComponent } from './user/user-modal-add-edit/user-modal-add-edit.component';
+import { UserModalInfoDetailComponent } from './user/user-modal-info-detail/user-modal-info-detail.component';
 
 @NgModule({
   imports: [
@@ -89,10 +91,11 @@ import { RoleModalPermissionComponent } from './role/role-modal-permission/role-
     PopoversComponent,
     ProgressComponent,
     TooltipsComponent,
-    UserComponent,
     RoleModalAddEditComponent,
+    RoleModalPermissionComponent,
+    UserComponent,
     UserModalAddEditComponent,
-    RoleModalPermissionComponent
+    UserModalInfoDetailComponent
   ]
 })
 export class SystemsModule { }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -15,6 +15,7 @@ import { ProductModalImportExcelComponent } from './product-modal-import-excel/p
 import { ProductModalImageManagementComponent } from './product-modal-image-management/product-modal-image-management.component';
 import { ProductModalQuantityManagementComponent } from './product-modal-quantity-management/product-modal-quantity-management.component';
 import { ProductModalWholePriceManagementComponent } from './product-modal-whole-price-management/product-modal-whole-price-management.component';
+import { ProductModalInfoDefailComponent } from './product-modal-info-defail/product-modal-info-defail.component';
 
 @Component({
   selector: 'app-product',
@@ -26,6 +27,7 @@ export class ProductComponent implements OnInit {
   @ViewChild('productModalQuantityManagement') productModalQuantityManagement: ProductModalQuantityManagementComponent;
   @ViewChild('productModalImageManagement') productModalImageManagement: ProductModalImageManagementComponent;
   @ViewChild('productModalWholePriceManagement') productModalWholePriceManagement: ProductModalWholePriceManagementComponent;
+  @ViewChild('productModalInfoDetail') productModalInfoDetail: ProductModalInfoDefailComponent;
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
@@ -85,7 +87,7 @@ export class ProductComponent implements OnInit {
 
     this.nothingSelected = true;
     this.selectedAll = false;
-    $('#chkAll').prop('indeterminate', false)
+    setTimeout(() => (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false, 0);
   }
 
   loadProductCategoryHierachies() {
@@ -110,6 +112,13 @@ export class ProductComponent implements OnInit {
     window.location.href = this.baseApi + '/templates/ProductImportTemplate.xlsx';
   }
 
+  showView(id: number) {
+    this.dataService.get(`/api/Product/${id}`).subscribe((data: any) => {
+      console.log(data);
+      this.productModalInfoDetail.showModal(data)
+    });
+  }
+
   showQuantityManagement(id: number, name: string) {
     this.productModalQuantityManagement.showModal(id, name);
   }
@@ -120,6 +129,10 @@ export class ProductComponent implements OnInit {
 
   showWholePriceManagement(id: number, name: string) {
     this.productModalWholePriceManagement.showModal(id, name);
+  }
+
+  redirectToAddForm() {
+    this.utilityService.navigate('/products/product-add');
   }
 
   saveChangesImportExcel(result: boolean) {
@@ -148,9 +161,11 @@ export class ProductComponent implements OnInit {
     }
 
     this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_SELECTED_MSG, () => {
-      this.dataService.delete(`/api/Product/DeleteMulti?strIds=${JSON.stringify(checkedIds)}`).subscribe(() => {
-        this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
-        this.loadData();
+      this.dataService.delete(`/api/Product/DeleteMulti?strIds=${JSON.stringify(checkedIds)}`).subscribe((response: any) => {
+        if (response !== undefined && response !== null) {
+          this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+          this.loadData();
+        }
       });
     });
   }
@@ -171,7 +186,7 @@ export class ProductComponent implements OnInit {
       this.products[i].Selected = this.selectedAll;
     }
 
-    this.nothingSelected = true;
+    this.nothingSelected = !this.selectedAll;
   }
 
   checkIfAllSelected() {
@@ -184,9 +199,9 @@ export class ProductComponent implements OnInit {
     });
 
     if (!this.selectedAll && !this.nothingSelected) {
-      $('#chkAll').prop('indeterminate', true)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = true;
     } else {
-      $('#chkAll').prop('indeterminate', false)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false;
     }
   }
 }

@@ -36,7 +36,7 @@ export class NotificationService {
   }
 
   printConfirmationDialog(message: string, okCallback: () => any) {
-    const modal = this.modal.show(DialogConfirmComponent);
+    const modal = this.modal.show(DialogConfirmComponent, { ignoreBackdropClick: true });
     (<DialogConfirmComponent>modal.content).showConfirmationModal('Thông báo', message);
 
     (<DialogConfirmComponent>modal.content).onClose.subscribe(result => {

@@ -49,8 +49,14 @@ export class RoleModalAddEditComponent implements OnInit {
     if (data.Id === null) {
       this.dataService.post('/api/Role', JSON.stringify(data)).subscribe((response: any) => {
         if (response !== null && response !== undefined) {
-          this.saveChangesResult.emit(true);
-          this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+          if (typeof response === 'boolean' && response === false) {
+            (document.querySelector('#txtName') as HTMLInputElement).focus();
+            this.saveChangesResult.emit(false);
+            this.notificationService.printWarningMessage('Tên quyền đã tồn tại.');
+          } else {
+            this.saveChangesResult.emit(true);
+            this.notificationService.printSuccessMessage(MessageConstants.CREATED_OK_MSG);
+          }
         } else {
           this.saveChangesResult.emit(false);
         }

@@ -10,6 +10,8 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 import { TagInputModule } from 'ngx-chips';
 import { TextMaskModule } from 'angular2-text-mask';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
@@ -23,6 +25,7 @@ import { ProductModalImportExcelComponent } from './product/product-modal-import
 import { ProductModalQuantityManagementComponent } from './product/product-modal-quantity-management/product-modal-quantity-management.component';
 import { ProductModalImageManagementComponent } from './product/product-modal-image-management/product-modal-image-management.component';
 import { ProductModalWholePriceManagementComponent } from './product/product-modal-whole-price-management/product-modal-whole-price-management.component';
+import { ProductModalInfoDefailComponent } from './product/product-modal-info-defail/product-modal-info-defail.component';
 
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductCategoryModalAddEditComponent } from './product-category/product-category-modal-add-edit/product-category-modal-add-edit.component';
@@ -42,6 +45,7 @@ import { BillModalAddEditComponent } from './bill/bill-modal-add-edit/bill-modal
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    TabsModule.forRoot(),
     TagInputModule,
     TextMaskModule,
     LoadingSpinnerModule.forRoot(),
@@ -55,7 +59,8 @@ import { BillModalAddEditComponent } from './bill/bill-modal-add-edit/bill-modal
     ProductModalImportExcelComponent,
     ProductModalQuantityManagementComponent,
     ProductModalImageManagementComponent,
-    ProductModalWholePriceManagementComponent,    
+    ProductModalWholePriceManagementComponent,   
+    ProductModalInfoDefailComponent, 
     ProductCategoryComponent,
     ProductCategoryModalAddEditComponent,
     BillComponent,

@@ -18,7 +18,7 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="txtEmail">Email:</label>
                         <div class="col-md-9">
-                            <input type="email" [readonly]="!isAddNew" id="txtEmail" class="form-control" formControlName="Email" [ngClass]="{
+                            <input type="email" id="txtEmail" [class]="isAddNew ? 'form-control' : 'form-control-plaintext'" formControlName="Email" [ngClass]="{
                                 'is-valid': !userForm.controls['Email'].errors,
                                 'is-invalid': userForm.controls['Email'].errors && (userForm.controls['Email'].dirty || userForm.controls['Email'].touched)
                             }">

@@ -40,15 +40,15 @@
                                 <td>{{item.Name}}</td>
                                 <td>{{item.Description}}</td>
                                 <td class="cell-center">
-                                    <button *ngIf="authService.hasPermission('ROLE', 'create')" type="button" (click)="showPermission(item.Id)" class="btn btn-warning btn-sm"
+                                    <button *ngIf="authService.hasPermission('ROLE', 'create') && item.Name !== 'Admin'" type="button" (click)="showPermission(item.Id)" class="btn btn-warning btn-sm"
                                         tooltip="Phân quyền">
                                         <i class="fa fa-eye-slash"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('ROLE', 'update')" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
+                                    <button *ngIf="authService.hasPermission('ROLE', 'update') && item.Name !== 'Admin'" type="button" (click)="showEdit(item.Id)" class="btn btn-primary btn-sm"
                                         tooltip="Sửa">
                                         <i class="fa fa-pencil"></i>
                                     </button>
-                                    <button *ngIf="authService.hasPermission('ROLE', 'delete')" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm"
+                                    <button *ngIf="authService.hasPermission('ROLE', 'delete') && item.Name !== 'Admin'" type="button" (click)="delete(item.Id)" class="btn btn-danger btn-sm"
                                         tooltip="Xóa">
                                         <i class="fa fa-trash"></i>
                                     </button>

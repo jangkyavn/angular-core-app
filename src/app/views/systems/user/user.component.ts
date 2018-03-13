@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService, DataService, NotificationService, UtilityService } from '../../../services';
 import { SystemConstants, MessageConstants } from '../../../common';
@@ -7,6 +7,7 @@ import { PagedResult } from '../../../models/paged-result.model';
 import { User } from '../../../models/user.model';
 
 import { UserModalAddEditComponent } from './user-modal-add-edit/user-modal-add-edit.component';
+import { UserModalInfoDetailComponent } from './user-modal-info-detail/user-modal-info-detail.component';
 
 @Component({
   selector: 'app-user',
@@ -15,6 +16,7 @@ import { UserModalAddEditComponent } from './user-modal-add-edit/user-modal-add-
 })
 export class UserComponent implements OnInit {
   @ViewChild('userModalAddEdit') userModalAddEdit: UserModalAddEditComponent;
+  @ViewChild('userModalInfoDetail') userModalInfoDetail: UserModalInfoDetailComponent;
 
   baseApi: string = SystemConstants.BASE_API;
   noImage: string = this.baseApi + '/uploaded/images/no_image.png';
@@ -71,7 +73,7 @@ export class UserComponent implements OnInit {
 
     this.nothingSelected = true;
     this.selectedAll = false;
-    $('#chkAll').prop('indeterminate', false)
+    setTimeout(() => (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false, 0);
   }
 
   showAddNew() {
@@ -82,11 +84,15 @@ export class UserComponent implements OnInit {
     this.userModalAddEdit.showModal('Sửa thông tin người dùng', id);
   }
 
+  showView(id: string) {
+    this.dataService.get(`/api/User/${id}`).subscribe((data: any) => {
+      this.userModalInfoDetail.showModal(data)
+    });
+  }
+
   saveChanges(result: boolean) {
     if (result) {
       this.loadData();
-      this.userModalAddEdit.hideModal();
-    } else {
       this.userModalAddEdit.hideModal();
     }
   }
@@ -111,9 +117,11 @@ export class UserComponent implements OnInit {
     }
 
     this.notificationService.printConfirmationDialog(MessageConstants.CONFIRM_DELETE_SELECTED_MSG, () => {
-      this.dataService.delete(`/api/User/DeleteMulti?strIds=${JSON.stringify(checkedIds)}`).subscribe(() => {
-        this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
-        this.loadData();
+      this.dataService.delete(`/api/User/DeleteMulti?strIds=${JSON.stringify(checkedIds)}`).subscribe((response: any) => {
+        if (response !== undefined && response !== null) {
+          this.notificationService.printSuccessMessage(MessageConstants.DELETED_OK_MSG);
+          this.loadData();
+        }
       });
     });
   }
@@ -134,7 +142,7 @@ export class UserComponent implements OnInit {
       this.users[i].Selected = this.selectedAll;
     }
 
-    this.nothingSelected = true;
+    this.nothingSelected = !this.selectedAll;
   }
 
   checkIfAllSelected() {
@@ -147,9 +155,9 @@ export class UserComponent implements OnInit {
     });
 
     if (!this.selectedAll && !this.nothingSelected) {
-      $('#chkAll').prop('indeterminate', true)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = true;
     } else {
-      $('#chkAll').prop('indeterminate', false)
+      (document.querySelector('#chkAll') as HTMLInputElement).indeterminate = false;
     }
   }
 }

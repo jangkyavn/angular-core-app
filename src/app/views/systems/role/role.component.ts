@@ -79,8 +79,6 @@ export class RoleComponent implements OnInit {
     if (result) {
       this.loadData();
       this.roleModalAddEdit.hideModal();
-    } else {
-      this.roleModalAddEdit.hideModal();
     }
   }
 
@@ -88,8 +86,6 @@ export class RoleComponent implements OnInit {
     if (result) {
       this.roleModalPermission.hideModal();
       this.notificationService.printSuccessMessage(MessageConstants.UPDATED_OK_MSG);
-    } else {
-      this.roleModalPermission.hideModal();
     }
   }
 
